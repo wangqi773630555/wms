@@ -1,0 +1,267 @@
+import 'package:dio/dio.dart';
+import 'package:wanma_print/common/config/config.dart';
+import 'package:wanma_print/common/dao/result_dao.dart';
+import 'package:wanma_print/common/local/local_storage.dart';
+import 'package:wanma_print/common/net/code.dart';
+import 'package:wanma_print/common/net/http_manager.dart';
+import 'package:wanma_print/common/net/url_constant.dart';
+
+///获取订单状态数据
+class DataDao {
+  static Future getAuthority(userName, password) async {
+    var url =
+        'http://app.wanmagroup.com:8988/wmgfzandroid/loginService/subsystem/login.do?userId=$userName&password=$password';
+    await HttpManager.netFetch(url, null, null, Options(method: 'get'));
+  }
+
+  //退出登录
+  static getOutLogin() async {
+    Map<String, String> header = {
+      'Authorization': await LocalStorage.get(Config.UA)
+    };
+    var res = await HttpManager.netFetch(
+        UrlConstant.getOutLogin(), null, header, Options(method: 'post'));
+    var resultData;
+    if (res != null && res.result) {
+      if (res.data['code'] == 200) {
+        return ResultDao(res.data, res.result);
+      } else {
+        resultData = ResultDao(
+            Code.errorHandleFunction(res.data['code'], res.data['msg'], false),
+            false);
+        return ResultDao(resultData, false);
+      }
+    } else {
+      resultData =
+          ResultDao(Code.errorHandleFunction(res.code, '', false), false);
+      return ResultDao(resultData, false);
+    }
+  }
+
+  ///修改密码
+  static updatePwd(oldPwd, newPwd, newPwd2, name, ids, mobile) async {
+    // var resultData;
+    // var _userId = await LocalStorage.get(Config.USER_NAME_KEY);
+    Map<String, String> header = {
+      'Authorization': await LocalStorage.get(Config.UA)
+    };
+    Map userList = {
+      'user_name': name.toString(),
+      'id': int.parse(ids),
+      'mobile': mobile.toString()
+    };
+    Map<String, dynamic> requestParams = {
+      'ctSysUser': userList,
+      'newpwd': newPwd.toString(),
+      'oldpwd': oldPwd.toString(),
+      'pwd2': newPwd2.toString(),
+    };
+
+    var res = await HttpManager.netFetch(UrlConstant.updatePwd(), requestParams,
+        header, Options(method: 'post'));
+    var resultData;
+    if (res != null && res.result) {
+      if (res.data['code'] == 200) {
+        return ResultDao(res.data, res.result);
+      } else {
+        resultData = ResultDao(
+            Code.errorHandleFunction(res.data['code'], res.data['msg'], false),
+            false);
+        return ResultDao(resultData, false);
+      }
+    } else {
+      resultData =
+          ResultDao(Code.errorHandleFunction(res.code, '', false), false);
+      return ResultDao(resultData, false);
+    }
+  }
+
+  //====================================================================================================
+
+  ///扫码获取设备详情
+  ///
+  ///
+  ///安装设备时选择信息
+  static getIndexList() async {
+    Map<String, String> header = {
+      'Authorization': await LocalStorage.get(Config.UA)
+    };
+    String setSk = '_SK_=${await LocalStorage.get(Config.SET_KEY)}';
+    var res = await HttpManager.netFetch(
+        '${UrlConstant.getIndexListData()}${setSk}',
+        null,
+        header,
+        Options(method: 'get'));
+    // var resultData;
+    // if (res != null && res.result) {
+    //   if (res.data['code'] == 200) {
+    // print('-----------------${res.data}');
+    return res.data;
+    //   } else {
+    //     resultData = ResultDao(
+    //         Code.errorHandleFunction(res.data['code'], res.data['msg'], false),
+    //         false);
+    //     return ResultDao(resultData, false);
+    //   }
+    // } else {
+    //   resultData =
+    //       ResultDao(Code.errorHandleFunction(res.code, '', false), false);
+    //   return ResultDao(resultData, false);
+    // }
+  }
+
+  static getBillCancel(String deliverNo) async {
+    Map<String, String> header = {
+      'Authorization': await LocalStorage.get(Config.UA)
+    };
+
+    // Map<String, dynamic> requestParams = {'deliver_no': deliverNo};
+
+    String setSk = '_SK_=${await LocalStorage.get(Config.SET_KEY)}';
+    var res = await HttpManager.netFetch(
+        '${UrlConstant.getBillCancelData()}${setSk}&deliverNo=$deliverNo',
+        null,
+        header,
+        Options(method: 'get'));
+
+    var resultData;
+    if (res != null && res.result) {
+      if (res.data['code'] == 200) {
+        return ResultDao(res.data, res.result);
+      } else {
+        resultData = ResultDao(
+            Code.errorHandleFunction(res.data['code'], res.data['msg'], false),
+            false);
+        return ResultDao(resultData, false);
+      }
+    } else {
+      resultData =
+          ResultDao(Code.errorHandleFunction(res.code, '', false), false);
+      return ResultDao(resultData, false);
+    }
+  }
+
+  static getInfoByDeliverNo(String deliverNo) async {
+    Map<String, String> header = {
+      'Authorization': await LocalStorage.get(Config.UA)
+    };
+    // Map<String, dynamic> requestParams = {'deliver_no': deliverNo};
+
+    String setSk = '_SK_=${await LocalStorage.get(Config.SET_KEY)}';
+
+    var res = await HttpManager.netFetch(
+        '${UrlConstant.getInfoByDeliverNoData()}${setSk}&deliverNo=$deliverNo',
+        null,
+        header,
+        Options(method: 'get'));
+    var resultData;
+    if (res != null && res.result) {
+      if (res.data['code'] == 200) {
+        return ResultDao(res.data, res.result);
+      } else {
+        resultData = ResultDao(
+            Code.errorHandleFunction(res.data['code'], res.data['msg'], false),
+            false);
+        return ResultDao(resultData, false);
+      }
+    } else {
+      resultData =
+          ResultDao(Code.errorHandleFunction(res.code, '', false), false);
+      return ResultDao(resultData, false);
+    }
+  }
+
+  static getUpdateQty(wlId, qty) async {
+    Map<String, String> header = {
+      'Authorization': await LocalStorage.get(Config.UA)
+    };
+
+    // Map<String, dynamic> requestParams = {'id': wlId, 'qty': qty};
+    String setSk = '_SK_=${await LocalStorage.get(Config.SET_KEY)}';
+    var url = '${UrlConstant.getUpdateQtyData()}${setSk}&id=$wlId&qty=$qty';
+
+    var res =
+        await HttpManager.netFetch(url, null, header, Options(method: 'get'));
+    var resultData;
+    if (res != null && res.result) {
+      if (res.data['code'] == 200) {
+        return ResultDao(res.data, res.result);
+      } else {
+        resultData = ResultDao(
+            Code.errorHandleFunction(res.data['code'], res.data['msg'], false),
+            false);
+        return ResultDao(resultData, false);
+      }
+    } else {
+      resultData =
+          ResultDao(Code.errorHandleFunction(res.code, '', false), false);
+      return ResultDao(resultData, false);
+    }
+  }
+
+  static getBillAcc(deliverNo, postDate, wareId, isUseForklift, isNeedUnloading,
+      detailIds) async {
+    Map<String, String> header = {
+      'Authorization': await LocalStorage.get(Config.UA)
+    };
+    String setSk = '_SK_=${await LocalStorage.get(Config.SET_KEY)}';
+    Map<String, dynamic> requestParams = {
+      'deliver_no': deliverNo, //必须  发货单二维码
+      'post_date': postDate, //过账日期(yyyy-MM-dd)
+      'ware_id': wareId, // string 必须  入库库位
+      'is_use_forklift': isUseForklift, // string 必须  使用叉车(是: Y, 否: N)
+      'is_need_unloading': isNeedUnloading, // string 必须  需要装卸(是: Y, 否: N)
+      'detail_ids': detailIds, // number [] 必须  勾选物料行 item 类型: number
+    };
+
+    var res = await HttpManager.netFetch(
+        '${UrlConstant.getBillAccData()}${setSk}',
+        requestParams,
+        header,
+        Options(method: 'post'));
+    var resultData;
+    if (res != null && res.result) {
+      if (res.data['code'] == 200) {
+        return ResultDao(res.data, res.result);
+      } else {
+        resultData = ResultDao(
+            Code.errorHandleFunction(res.data['code'], res.data['msg'], false),
+            false);
+        return ResultDao(resultData, false);
+      }
+    } else {
+      resultData =
+          ResultDao(Code.errorHandleFunction(res.code, '', false), false);
+      return ResultDao(resultData, false);
+    }
+  }
+
+  static getWareList() async {
+    Map<String, String> header = {
+      'Authorization': await LocalStorage.get(Config.UA)
+    };
+    String setSk = '_SK_=${await LocalStorage.get(Config.SET_KEY)}';
+    // Map<String, dynamic> requestParams = {'eqp_code': eqpCode};
+
+    var res = await HttpManager.netFetch(
+        '${UrlConstant.getWareListData()}${setSk}',
+        null,
+        header,
+        Options(method: 'get'));
+    var resultData;
+    if (res != null && res.result) {
+      if (res.data['code'] == 200) {
+        return ResultDao(res.data, res.result);
+      } else {
+        resultData = ResultDao(
+            Code.errorHandleFunction(res.data['code'], res.data['msg'], false),
+            false);
+        return ResultDao(resultData, false);
+      }
+    } else {
+      resultData =
+          ResultDao(Code.errorHandleFunction(res.code, '', false), false);
+      return ResultDao(resultData, false);
+    }
+  }
+}

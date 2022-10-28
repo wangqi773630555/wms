@@ -444,7 +444,7 @@ class _MaterialDetailBodyState extends State<MaterialDetailBody> {
                                   String part_name = _wlList[index]['part_name'] ?? '';
                                   String part_id =  _wlList[index]['part_id'] ?? '';
                                   String part_batch = _wlList[index]['part_batch'] ?? '';
-                                  toPrint(part_name+";"+part_id+";"+part_batch+";"+'${_wlList[index]['sum_qty'] ?? ''}'+";"+'${dyWlNum}'+";"+'${dyPageNum}');
+                                  toPrint(part_name+";"+part_id+";"+part_batch+";"+'${_wlList[index]['acc_qty'] ?? ''}'+";"+'${dyWlNum}'+";"+'${dyPageNum}');
                                   Navigator.pop(context);
                                 },
                                 c1: (int c) {

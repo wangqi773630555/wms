@@ -41,9 +41,13 @@ class MainActivity: FlutterActivity() {
                     printContent= call.arguments.toString().split(";")
                     initPrinter()
                     var  count:Int = printContent.get(5).toDouble().toInt()
+                    if(count==0){
+                        Toast.makeText(context, "请设置打印张数", Toast.LENGTH_SHORT).show()
+                    }
+                    var  showCount:Int = printContent.get(3).toDouble().toInt()
                     //Toast.makeText(context, count.toString()+"", Toast.LENGTH_SHORT).show()
                     for (i in 0 until count) {
-                        print(printContent.get(0),printContent.get(1),printContent.get(2),printContent.get(3),printContent.get(4))
+                        print(printContent.get(0),printContent.get(1),printContent.get(2),showCount.toString(),printContent.get(4))
                     }
                     //print(printContent.get(0),printContent.get(1),printContent.get(2),printContent.get(3))
                 }catch (e:Exception){

@@ -8,6 +8,8 @@ import 'package:wanma_print/common/net/code.dart';
 import 'package:wanma_print/common/net/result_data.dart';
 import 'dart:collection';
 
+import 'LogUtil.dart';
+
 class HttpManager {
   static const CONTENT_TYPE_JSON = 'application/json';
   static const CONTENT_TYPE_FORM = 'application/x-www-form-urlencoded';
@@ -94,7 +96,7 @@ class HttpManager {
         print('请求参数: ' + params.toString());
       }
       if (response != null) {
-        print('返回参数: ' + response.toString());
+        LogUtil.d('返回参数: ' + response.toString());
       }
     }
 

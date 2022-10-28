@@ -23,6 +23,7 @@ class MiddleText extends StatelessWidget {
       child: Text(
         text?.toString() ?? '',
         style: TextStyle(fontSize: 15),
+
       ),
     );
   }

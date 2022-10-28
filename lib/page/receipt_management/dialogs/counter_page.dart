@@ -1,6 +1,5 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-// import 'package:get/get.dart';
-import 'package:bruno/bruno.dart';
 
 typedef _AddCallBack = void Function(
   int selectIndex,
@@ -11,10 +10,12 @@ typedef _MzeCallBack = void Function(
 typedef _EnterDelete = void Function(
   int selectIndex,
 );
+final TextEditingController textController = TextEditingController();
 
 class CounterPage extends StatefulWidget {
   /// 默认数
   final int count;
+  final bool isClick;
 
   /// 是否显示删除提示框
   final bool isShowDialog;
@@ -34,6 +35,7 @@ class CounterPage extends StatefulWidget {
   const CounterPage(
       {Key? key,
       this.count = 0,
+      this.isClick = false,
       required this.addCallBack,
       required this.mzeCallBack,
       required this.enterDelete,
@@ -51,12 +53,15 @@ class _CounterPageState extends State<CounterPage> {
   @override
   void initState() {
     // TODO: implement initState
+
     super.initState();
+
     count = widget.count;
   }
 
   @override
   Widget build(BuildContext context) {
+    textController.text = count.toString();
     return Container(
       alignment: Alignment.center,
       // color: Colors.red,
@@ -65,7 +70,6 @@ class _CounterPageState extends State<CounterPage> {
           Container(
             // width: 100,
             alignment: Alignment.center,
-            padding: const EdgeInsets.only(bottom: 9),
             child: IconButton(
               onPressed: () {
                 if (count == 0) {
@@ -92,7 +96,7 @@ class _CounterPageState extends State<CounterPage> {
 
                 setState(() {});
               },
-              icon: const Icon(Icons.minimize_rounded),
+              icon: const Icon(Icons.indeterminate_check_box),
               iconSize: 30,
               color: Colors.grey,
             ),
@@ -102,9 +106,29 @@ class _CounterPageState extends State<CounterPage> {
             alignment: Alignment.center,
             width: 100,
             color: Colors.grey.shade200,
-            child: Text(
-              '$count',
-              style: const TextStyle(fontWeight: FontWeight.w800),
+            child: CupertinoTextField(
+              keyboardType: TextInputType.number,
+              controller: TextEditingController.fromValue(TextEditingValue(
+                  text: textController.text,
+                  // 保持光标在最后
+                  selection: TextSelection.fromPosition(TextPosition(
+                      affinity: TextAffinity.downstream,
+                      offset: '$count'.length)))),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade50,
+                border: Border.all(color: Colors.grey, width: 0.3),
+                borderRadius: BorderRadius.all(Radius.circular(5)),
+              ),
+              onChanged: (text) {
+                setState(() {
+                  count = int.parse(text);
+                  textController.text = '$count';
+                  widget.addCallBack(count);
+                });
+              },
+              textAlign: TextAlign.center,
+              autofocus: false,
+              cursorColor: Colors.green,
             ),
           ),
           IconButton(
@@ -118,11 +142,13 @@ class _CounterPageState extends State<CounterPage> {
                 count++;
               }
               widget.addCallBack(count);
-              setState(() {});
+              setState(() {
+                // widget.isClick = true;
+              });
             },
-            icon: const Icon(Icons.add_rounded),
+            icon: const Icon(Icons.add_box),
             iconSize: 30,
-            color: Colors.grey,
+            color: Colors.green,
           ),
         ],
       ),

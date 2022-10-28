@@ -51,7 +51,8 @@ class _MaterialReceiptDetailStateBody extends State<MaterialReceiptDetailBody> {
   TextEditingController _searController = TextEditingController();
   late double _wwidth;
   late double _hheight;
-
+  var dyPageNum = 0;
+  var dyWlNum = 0;
   final List<Map<String, dynamic>> _dataList = [];
   late Map _fhList;
   List _wlList = [];
@@ -398,6 +399,8 @@ class _MaterialReceiptDetailStateBody extends State<MaterialReceiptDetailBody> {
                     children: <Widget>[
                       _buttonStyle('打印', Colors.white, Colors.blue, 100, 20,
                           Colors.grey, 30, () {
+                        dyPageNum = 0;
+                        dyWlNum = 0;
                         showDialog(
                             context: context,
                             builder: (context) {
@@ -406,14 +409,32 @@ class _MaterialReceiptDetailStateBody extends State<MaterialReceiptDetailBody> {
                                 content: "打印张数",
                                 title2: '单张物料',
                                 flag: "dayin",
-                                model: {},
-                                f: () {},
-                                c1: (int) {},
-                                c2: (int) {},
-                                c3: (int) {},
+                                model: _fhList,
+                                f: () {
+                                  print('====$dyPageNum==+++++$dyWlNum');
+                                },
+                                c1: (int c) {
+                                  dyPageNum = c;
+                                },
+                                c2: (int c) {
+                                  dyPageNum = c;
+                                },
+                                c3: (int c) {
+                                  dyPageNum = c;
+                                },
+                                c11: (int c) {
+                                  dyWlNum = c;
+                                },
+                                c22: (int c) {
+                                  dyWlNum = c;
+                                },
+                                c33: (int c) {
+                                  dyWlNum = c;
+                                },
+                                // isClick: false,
                               );
                             });
-                      }),
+                      })
                     ],
                   ),
                 )

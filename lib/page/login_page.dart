@@ -61,7 +61,7 @@ class _LoginPageState extends State<LoginPage> {
 //              color: Theme.of(context).primaryColor,
                 height: h_height,
                 width: w_width,
-                padding: EdgeInsets.only(left: 50, right: 50, top: 130),
+                padding: EdgeInsets.only(left: 50, right: 50, top: 50),
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     image: AssetImage('images/login_background.png'),
@@ -80,7 +80,7 @@ class _LoginPageState extends State<LoginPage> {
                           child: Text(
                             '欢 迎 使 用',
                             style: TextStyle(
-                                fontSize: 28,
+                                fontSize: 22,
                                 fontWeight: FontWeight.w600,
                                 color: Color.fromARGB(255, 46, 46, 46)),
                             textAlign: TextAlign.left,
@@ -92,7 +92,7 @@ class _LoginPageState extends State<LoginPage> {
                           child: Text(
                             '天 屹 数 据 缆 数 字 工 厂',
                             style: TextStyle(
-                                fontSize: 28,
+                                fontSize: 22,
                                 fontWeight: FontWeight.w600,
                                 color: Color.fromARGB(255, 46, 46, 46)),
                           ),
@@ -101,7 +101,7 @@ class _LoginPageState extends State<LoginPage> {
                           child: Container(
                             child: Column(
                               children: [
-                                Padding(padding: EdgeInsets.all(30.0)),
+                                Padding(padding: EdgeInsets.all(10.0)),
                                 TextField(
                                   focusNode: userNameFocusNode,
                                   decoration: InputDecoration(
@@ -113,7 +113,7 @@ class _LoginPageState extends State<LoginPage> {
                                   },
                                   controller: userController,
                                 ),
-                                Padding(padding: new EdgeInsets.all(10.0)),
+                                Padding(padding: new EdgeInsets.all(5.0)),
                                 TextField(
                                   focusNode: passwordFocusNode,
                                   decoration: InputDecoration(
@@ -126,7 +126,7 @@ class _LoginPageState extends State<LoginPage> {
                                   },
                                   controller: pwController,
                                 ),
-                                Padding(padding: new EdgeInsets.all(30.0)),
+                                Padding(padding: new EdgeInsets.all(20.0)),
                                 MaterialButton(
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(20)),
@@ -182,7 +182,17 @@ class _LoginPageState extends State<LoginPage> {
                                           LocalStorage.save(
                                               Config.LOGIN_TITLE, '');
                                           LocalStorage.save(Config.USER_ID, '');
-                                          NavigatorUtils.goHome(context);
+
+                                          UserDao.getSk().then((res) {
+                                            if (res != null && res.result) {
+                                              String data = res.data['data'];
+                                              LocalStorage.save(
+                                                  Config.SET_KEY, data);
+                                             /* Fluttertoast.showToast(
+                                                  msg: 'SK值设置成功');*/
+                                              NavigatorUtils.goHome(context);
+                                            }
+                                          });
                                           return true;
                                         });
                                       }

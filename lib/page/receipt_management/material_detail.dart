@@ -52,8 +52,8 @@ class _MaterialDetailBodyState extends State<MaterialDetailBody> {
   bool _cirCular = false;
   int _pageNum = 1;
   var qtyCount = 0;
-  var printCount = 0;
-  var singleCount = 0;
+  var dyPageNum = 0;
+  var dyWlNum = 0;
   List _wlList = [];
   List _selectList = [];
   List detail_ids_list = [];
@@ -125,6 +125,8 @@ class _MaterialDetailBodyState extends State<MaterialDetailBody> {
   }
 
   postAlert() {
+    NavigatorUtils.goMaterialReceiptDetail(context, _fhList['deliver_no']);
+
     detail_ids_list = [];
     for (var i = 0; i < _wlList.length; i++) {
       if (_selectList[i] == true) {
@@ -426,8 +428,8 @@ class _MaterialDetailBodyState extends State<MaterialDetailBody> {
                     children: <Widget>[
                       _buttonStyle('打印', Colors.white, Colors.blue, 100, 20,
                           Colors.grey, 30, () {
-                            printCount = 0;
-                            singleCount = 0;
+                        dyPageNum = 0;
+                        dyWlNum = 0;
                         showDialog(
                             context: context,
                             builder: (context) {
@@ -438,23 +440,33 @@ class _MaterialDetailBodyState extends State<MaterialDetailBody> {
                                 flag: "dayin",
                                 model: _fhList,
                                 f: () {
+                                  print('====$dyPageNum==+++++$dyWlNum');
                                   String part_name = _wlList[index]['part_name'] ?? '';
                                   String part_id =  _wlList[index]['part_id'] ?? '';
                                   String part_batch = _wlList[index]['part_batch'] ?? '';
-                                  toPrint(part_name+";"+part_id+";"+part_batch+";"+'${_wlList[index]['qty'] ?? ''}'+";"+'${singleCount}'+";"+'${printCount}');
+                                  toPrint(part_name+";"+part_id+";"+part_batch+";"+'${_wlList[index]['qty'] ?? ''}'+";"+'${dyWlNum}'+";"+'${dyPageNum}');
                                   Navigator.pop(context);
-                                  },
-                                c1: (int) {
-                                  printCount = int;
                                 },
-                                c2: (int) {
-                                  printCount = int;
+                                c1: (int c) {
+                                  dyPageNum = c;
                                 },
-                                c3: (int) {
-                                  printCount = int;
+                                c2: (int c) {
+                                  dyPageNum = c;
                                 },
+                                c3: (int c) {
+                                  dyPageNum = c;
+                                },
+                                c11: (int c) {
+                                  dyWlNum = c;
+                                },
+                                c22: (int c) {
+                                  dyWlNum = c;
+                                },
+                                c33: (int c) {
+                                  dyWlNum = c;
+                                },
+                                // isClick: false,
                               );
-
                             });
                       }),
                       _buttonStyle(
@@ -482,17 +494,18 @@ class _MaterialDetailBodyState extends State<MaterialDetailBody> {
                                   c1: (c) {
                                     //++
                                     qtyCount = c;
-                                    print('${qtyCount}999');
                                   },
                                   c2: (c) {
                                     //--
                                     qtyCount = c;
-                                    print('${qtyCount}999');
                                   },
                                   c3: (c) {
                                     qtyCount = c;
-                                    print('${qtyCount}999');
                                   },
+                                  c11: (int) {},
+                                  c22: (int) {},
+                                  c33: (int) {},
+                                  // isClick: false,
                                 );
                               });
                         }

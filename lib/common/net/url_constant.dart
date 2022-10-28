@@ -55,4 +55,8 @@ class UrlConstant {
   static getWareListData() {
     return '${host2}wm/ctWmWare/wareList?';
   }
+
+  static getSk() {
+    return '${host}auth/sk/gfz';
+  }
 }

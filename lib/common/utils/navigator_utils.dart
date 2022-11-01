@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wanma_print/page/app.dart';
+import 'package:wanma_print/page/print_page.dart';
 import '../../page/login_page.dart';
 import '../../page/param_setting.dart';
 import '../../page/receipt_management/material_detail.dart';
@@ -58,5 +59,9 @@ class NavigatorUtils {
   static goMaterialReceiptDetail(BuildContext context, deliverNo) {
     Navigator.pushNamed(context, MaterialReceiptDetail.sName,
         arguments: deliverNo);
+  }
+
+  static goMaterialPrint(BuildContext context) {
+    Navigator.pushNamed(context, ToPrint.sName);
   }
 }

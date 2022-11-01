@@ -11,6 +11,7 @@ import 'package:wanma_print/common/redux/wm_state.dart';
 import 'package:wanma_print/common/style/wm_style.dart';
 import 'package:wanma_print/common/utils/common_utils.dart';
 import 'package:wanma_print/common/utils/navigator_utils.dart';
+import 'package:wanma_print/page/print_page.dart';
 import 'package:wanma_print/page/receipt_management/material_detail.dart';
 import 'package:wanma_print/page/receipt_management/material_receipt.dart';
 import 'package:wanma_print/page/app.dart';
@@ -99,6 +100,9 @@ class MyApp extends StatelessWidget {
             MaterialReceiptDetail.sName: (context) => CommonLayer(
                   child: MaterialReceiptDetail(),
                 ),
+            ToPrint.sName: (context) => CommonLayer(
+              child: ToPrint(),
+            ),
 //===================
             // NewReportOrder.sName: (context) => CommonLayer(
             //       child: NewReportOrder(),

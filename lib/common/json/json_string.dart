@@ -35,6 +35,12 @@ abstract class JsonString {
             "functionName": "materialDetail",
             "id": 1,
             "icon": "Icons.qr_code"
+        },
+        {
+            "title": "自助打印",
+            "functionName": "materialPrint",
+            "id": 1,
+            "icon": "Icons.qr_code"
         }
        
     ],

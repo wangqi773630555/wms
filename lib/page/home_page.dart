@@ -120,7 +120,7 @@ class AreaItem extends StatelessWidget {
   final icons = <IconData>[
     Icons.list_alt,
     Icons.qr_code,
-    Icons.post_add,
+    Icons.print,
     Icons.playlist_add_outlined,
     Icons.featured_play_list_outlined,
     Icons.home_repair_service_outlined

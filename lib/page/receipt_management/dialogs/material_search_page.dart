@@ -115,16 +115,16 @@ class _MaterialSearchPageState extends State<MaterialSearchPage> {
           isShow = false;
           getInfoByDeliverNoData();
         },
-        speakClick: () async {
-          //扫码
-          await _scan();
-          if (scanResult?.type != ResultType.Error) {
-            _controller.text = query = scanResult!.rawContent;
-            isShow = false;
-            getInfoByDeliverNoData();
-            setState(() {});
-          }
-        },
+        // speakClick: () async {
+        //   //扫码
+        //   await _scan();
+        //   if (scanResult?.type != ResultType.Error) {
+        //     _controller.text = query = scanResult!.rawContent;
+        //     isShow = false;
+        //     getInfoByDeliverNoData();
+        //     setState(() {});
+        //   }
+        // },
       ),
     );
   }

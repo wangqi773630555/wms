@@ -119,7 +119,7 @@ class DataDao {
 
     String setSk = '_SK_=${await LocalStorage.get(Config.SET_KEY)}';
     var res = await HttpManager.netFetch(
-        '${UrlConstant.getBillCancelData()}${setSk}&deliverNo=$deliverNo',
+        '${UrlConstant.getBillCancelData()}${setSk}&deliver_no=$deliverNo',
         null,
         header,
         Options(method: 'get'));
@@ -150,7 +150,7 @@ class DataDao {
     String setSk = '_SK_=${await LocalStorage.get(Config.SET_KEY)}';
 
     var res = await HttpManager.netFetch(
-        '${UrlConstant.getInfoByDeliverNoData()}${setSk}&deliverNo=$deliverNo',
+        '${UrlConstant.getInfoByDeliverNoData()}${setSk}&deliver_no=$deliverNo',
         null,
         header,
         Options(method: 'get'));

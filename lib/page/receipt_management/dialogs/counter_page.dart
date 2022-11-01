@@ -14,7 +14,7 @@ final TextEditingController textController = TextEditingController();
 
 class CounterPage extends StatefulWidget {
   /// 默认数
-  final int count;
+  final count;
   final bool isClick;
 
   /// 是否显示删除提示框
@@ -34,7 +34,7 @@ class CounterPage extends StatefulWidget {
 
   const CounterPage(
       {Key? key,
-      this.count = 0,
+      required this.count,
       this.isClick = false,
       required this.addCallBack,
       required this.mzeCallBack,
@@ -107,7 +107,7 @@ class _CounterPageState extends State<CounterPage> {
             width: 100,
             color: Colors.grey.shade200,
             child: CupertinoTextField(
-              keyboardType: TextInputType.number,
+              // keyboardType: TextInputType.number,
               controller: TextEditingController.fromValue(TextEditingValue(
                   text: textController.text,
                   // 保持光标在最后

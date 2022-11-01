@@ -163,7 +163,7 @@ class _SearchBarState extends State<SearchBar> {
                       controller: _controller,
                       onChanged: _onChanged,
                       onSubmitted: (text) {
-                        if(widget.onSubmitted != null) {
+                        if (widget.onSubmitted != null) {
                           widget.onSubmitted!(text);
                         }
                       },
@@ -191,17 +191,16 @@ class _SearchBarState extends State<SearchBar> {
                       ),
                       widget.inputBoxClick)),
           !showClear
-              ?
-          _wrapTap(
+              ? _wrapTap(
                   Icon(
-                    Icons.qr_code_scanner_outlined,
+                    null,
                     size: 22,
                     color: widget.searchBarType == SearchBarType.normal
                         ? Colors.blue
                         : Colors.grey,
                   ),
                   widget.speakClick)
-          // Container()
+              // Container()
               : _wrapTap(
                   Icon(
                     Icons.clear,

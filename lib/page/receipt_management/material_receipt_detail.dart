@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:wanma_print/page/receipt_management/dialogs/material_search_page.dart';
 import 'package:wanma_print/page/receipt_management/dialogs/print_dialog.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../FlutterPlugins.dart';
 import '../../common/config/config.dart';
 
 import '../../common/dao/data_dao.dart';
@@ -25,7 +27,7 @@ class MaterialReceiptDetail extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('报修单'),
+        title: Text('材料收货单'),
       ),
       body: SingleChildScrollView(
         child: MaterialReceiptDetailBody(args),
@@ -97,10 +99,11 @@ class _MaterialReceiptDetailStateBody extends State<MaterialReceiptDetailBody> {
             color: Colors.white,
             child: Column(
               children: [
-                _searchRow(),
+                // _searchRow(),
                 Container(
+                  padding: EdgeInsets.only(top: 10),
                   width: _wwidth - 14,
-                  height: 200,
+                  height: 240,
                   child: _cardForfirst(),
                 ),
 
@@ -390,51 +393,77 @@ class _MaterialReceiptDetailStateBody extends State<MaterialReceiptDetailBody> {
               children: <Widget>[
                 _getRowText('物料描述:', _wlList[index]['part_name'] ?? ''),
                 _getRowText('数量:',
-                    '${_wlList[index]['qty'] ?? ''}/${_wlList[index]['sum_qty'] ?? ''}${_wlList[index]['part_unit'] ?? ''}'),
+                    '${_wlList[index]['qty'] ?? ''}/${_wlList[index]['acc_qty'] ?? ''}${_wlList[index]['part_unit'] ?? ''}'),
                 _getRowText('物料号:', _wlList[index]['part_id'] ?? ''),
                 _getRowText('物料批次:', _wlList[index]['part_batch'] ?? ''),
-                _getRowText('过账明细行:', _wlList[index]['detail_no'] ?? ''),
+                _getRowText('明细行:', _wlList[index]['detail_no'] ?? ''),
                 ButtonTheme(
                   child: ButtonBar(
                     children: <Widget>[
                       _buttonStyle('打印', Colors.white, Colors.blue, 100, 20,
-                          Colors.grey, 30, () {
-                        dyPageNum = 0;
-                        dyWlNum = 0;
+                          Colors.grey, 30, () async {
+                        final prefs = await SharedPreferences.getInstance();
+                        dyPageNum = 1;
+                        // dyWlNum = 1;
+
+                        double upNum = _wlList[index]['acc_qty'];
+                        prefs.setDouble('wl', upNum);
                         showDialog(
                             context: context,
                             builder: (context) {
                               return MyDialog(
                                 title: "物料信息",
-                                content: "打印张数",
-                                title2: '单张物料',
+                                content: '单张物料',
+                                title2: "打印张数",
                                 flag: "dayin",
                                 model: _fhList,
                                 f: () {
-                                  print('====$dyPageNum==+++++$dyWlNum');
+                                  upNum = prefs.getDouble('wl')!;
+                                  print('====$dyPageNum==+++++$upNum');
+                                  String part_name =
+                                      _wlList[index]['part_name'] ?? '';
+                                  String part_id =
+                                      _wlList[index]['part_id'] ?? '';
+                                  String part_batch =
+                                      _wlList[index]['part_batch'] ?? '';
+                                  toPrint(part_name +
+                                      ";" +
+                                      part_id +
+                                      ";" +
+                                      part_batch +
+                                      ";" +
+                                      '${_wlList[index]['acc_qty'] ?? ''}' +
+                                      ";" +
+                                      '${dyPageNum}' +
+                                      ";" +
+                                      '${upNum}');
+                                  Navigator.pop(context);
                                 },
                                 c1: (int c) {
-                                  dyPageNum = c;
+                                  // upNum = c;
                                 },
                                 c2: (int c) {
-                                  dyPageNum = c;
+                                  // upNum = c;
                                 },
                                 c3: (int c) {
-                                  dyPageNum = c;
+                                  // upNum = c;
                                 },
                                 c11: (int c) {
-                                  dyWlNum = c;
+                                  dyPageNum = c;
                                 },
                                 c22: (int c) {
-                                  dyWlNum = c;
+                                  dyPageNum = c;
                                 },
                                 c33: (int c) {
-                                  dyWlNum = c;
+                                  dyPageNum = c;
                                 },
+                                // f2: (String) {},
+                                // dyzs: dyWlNum,
+                                dyzs: dyPageNum, upDataNum: upNum,
                                 // isClick: false,
                               );
                             });
-                      })
+                      }),
                     ],
                   ),
                 )
@@ -455,6 +484,10 @@ class _MaterialReceiptDetailStateBody extends State<MaterialReceiptDetailBody> {
               ],
             ),
           );
+  }
+
+  void toPrint(String result) {
+    FlutterPlugins.print(result).then((value) => {setState(() {})});
   }
 
   Widget _buttonStyle(titles, Color bgColore, Color textColor, double ww,

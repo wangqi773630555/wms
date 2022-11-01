@@ -179,7 +179,7 @@ class HomeDrawer extends StatelessWidget {
                         ),
                         ListTile(
                           title: Text(
-                            '走纸',
+                            '纸张矫正',
                             style: WMConstant.normalText,
                           ),
                           onTap: () {

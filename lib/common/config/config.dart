@@ -34,4 +34,5 @@ class Config {
   static const MATERIAL_RECEIPT = "materialReceipt";
   static const MATERIAL_DETAIL = "materialDetail";
   static const MATERIAL_RECEIPT_DETAIL = 'MaterialReceiptDetail';
+
 }

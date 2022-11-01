@@ -1,5 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:wanma_print/page/receipt_management/dialogs/counter_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../widget/middle_text.dart';
 
@@ -9,8 +12,13 @@ class MyDialog extends Dialog {
   final String content;
   // final bool isClick;
   // var count;
+  int dyzs;
+  // int dzwl;
+
+  double upDataNum;
   var model;
   Function() f;
+  // Function(String) f2;
   Function(int) c1;
   Function(int) c2;
   Function(int) c3;
@@ -26,7 +34,11 @@ class MyDialog extends Dialog {
       // required this.isClick,
       this.title2 = "",
       this.flag = "",
+      required this.dyzs,
+      // required this.dzwl,
+      required this.upDataNum,
       required this.f,
+      // required this.f2,
       required this.c1,
       required this.c2,
       required this.c3,
@@ -35,13 +47,14 @@ class MyDialog extends Dialog {
       required this.c33,
       this.model});
 
-  @override
   Widget build(BuildContext context) {
     if (this.flag == "dayin") {
       _h_height = 5 * 26 + 200;
-    }else{
+    } else {
       _h_height = 5 * 26 + 160;
     }
+    TextEditingController textController = TextEditingController();
+    textController.text = upDataNum.toString();
     return Material(
         type: MaterialType.transparency,
         child: Scaffold(
@@ -93,6 +106,7 @@ class MyDialog extends Dialog {
                               child: Column(
                                 children: [
                                   centerWg(),
+                                  _dayinWg(),
                                   Container(
                                     margin: EdgeInsets.only(
                                       left: 10,
@@ -106,16 +120,68 @@ class MyDialog extends Dialog {
                                             fontSize: 14,
                                           ),
                                         ),
-                                        CounterPage(
-                                          addCallBack: c1,
-                                          mzeCallBack: c2,
-                                          enterDelete: c3,
-                                          // isClick: isClick,
+
+                                        Container(
+                                          margin: EdgeInsets.only(
+                                              left: 20, top: 5, bottom: 5),
+                                          height: 35,
+                                          alignment: Alignment.center,
+                                          width: 150,
+                                          // color: Colors.grey.shade200,
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey.shade50,
+                                            border: Border.all(
+                                                color: Colors.grey, width: 1),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(5)),
+                                          ),
+                                          child: TextField(
+                                            decoration: InputDecoration(
+                                              border: InputBorder.none,
+                                            ),
+                                            inputFormatters: [
+                                              FilteringTextInputFormatter.allow(
+                                                  RegExp("[0-9.]")),
+                                            ],
+                                            // keyboardType: TextInputType.number,
+
+                                            controller: TextEditingController
+                                                .fromValue(TextEditingValue(
+                                                    text: textController.text,
+                                                    // 保持光标在最后
+                                                    selection: TextSelection
+                                                        .fromPosition(TextPosition(
+                                                            affinity:
+                                                                TextAffinity
+                                                                    .downstream,
+                                                            offset:
+                                                                '${this.upDataNum}'
+                                                                    .length)))),
+
+                                            onChanged: (text) async {
+                                              print(
+                                                  'objecdddddddddddddddd$text');
+                                              final prefs =
+                                                  await SharedPreferences
+                                                      .getInstance();
+
+                                              prefs.setDouble(
+                                                  'wl', double.parse(text));
+                                            },
+                                            textAlign: TextAlign.center,
+                                            autofocus: false,
+                                            cursorColor: Colors.green,
+                                          ),
                                         ),
+                                        // CounterPage(
+                                        //   addCallBack: c1,
+                                        //   mzeCallBack: c2,
+                                        //   enterDelete: c3, count: this.dyzs,
+                                        //   // isClick: isClick,
+                                        // ),
                                       ],
                                     ),
                                   ),
-                                  _dayinWg(),
                                   InkWell(
                                       child: Container(
                                         decoration: BoxDecoration(
@@ -222,7 +288,7 @@ class MyDialog extends Dialog {
                 CounterPage(
                   addCallBack: c11,
                   mzeCallBack: c22,
-                  enterDelete: c33,
+                  enterDelete: c33, count: this.dyzs,
                   // isClick: isClick,
                 ),
                 Text('个', style: TextStyle(fontSize: 18)),

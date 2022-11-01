@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wanma_print/common/utils/navigator_utils.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:wanma_print/page/receipt_management/dialogs/material_search_page.dart';
+// import 'package:wanma_print/page/receipt_management/dialogs/material_search_page.dart';
 import '../../common/config/config.dart';
 import '../../common/dao/data_dao.dart';
 import '../../widget/middle_text.dart';
@@ -43,16 +43,37 @@ class _MaterialReceiptState extends State<MaterialReceipt> {
   }
 
   dataBillCancel(deliver_no) {
-    DataDao.getBillCancel(deliver_no).then((res) {
-      if (res != null && res.result) {
-        // Fluttertoast.
-        Fluttertoast.showToast(msg: '取消成功');
-      }
-      _cirCular = true;
-      setState(() {
-        // getInintData();
-      });
-    });
+    // _cirCular = false;
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('是否确定取消单据'),
+            actions: [
+              TextButton(
+                child: Text("确定"),
+                onPressed: () {
+                  DataDao.getBillCancel(deliver_no).then((res) {
+                    if (res != null && res.result) {
+                      // Fluttertoast.
+                      Fluttertoast.showToast(msg: '取消成功');
+                    }
+                    Navigator.pop(context);
+                    setState(() {
+                      getInintData();
+                    });
+                  });
+                },
+              ),
+              TextButton(
+                child: Text("取消"),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              )
+            ],
+          );
+        });
   }
 
   @override
@@ -64,6 +85,21 @@ class _MaterialReceiptState extends State<MaterialReceipt> {
         appBar: AppBar(
           title: Text('材料收货单'),
           centerTitle: true,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.center_focus_strong_rounded),
+              // Icons.qr_code_scanner_outlined,
+              tooltip: 'Open shopping cart',
+              onPressed: () async {
+                // NavigatorUtils.goMaterialDetail(context, '');
+                var result = await NavigatorUtils.goMaterialDetail(context, '');
+
+                setState(() {
+                  getInintData();
+                });
+              },
+            ),
+          ],
         ),
         body: SingleChildScrollView(
           child: Container(
@@ -72,7 +108,7 @@ class _MaterialReceiptState extends State<MaterialReceipt> {
                 children: [
                   _searchRow(),
                   Container(
-                    margin: EdgeInsets.only(top: 5),
+                    // margin: EdgeInsets.only(top: 5),
                     height: _hheight - 180,
                     width: _wwidth - 14,
                     child: _listWidget(),
@@ -86,9 +122,17 @@ class _MaterialReceiptState extends State<MaterialReceipt> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    _searController.text = '';
     getInintData();
     _easyfreshController = EasyRefreshController();
   }
+
+  // back() {
+  //   setState(() {
+  //     getInintData();
+
+  //   });
+  // }
 
   Widget _searchRow() {
     return Container(
@@ -100,6 +144,7 @@ class _MaterialReceiptState extends State<MaterialReceipt> {
 
   Widget _searchWidget() {
     return TextField(
+      textAlign: TextAlign.center,
       controller: _searController,
       decoration: InputDecoration(
         contentPadding: EdgeInsets.all(5),
@@ -107,23 +152,19 @@ class _MaterialReceiptState extends State<MaterialReceipt> {
             borderRadius: BorderRadius.all(Radius.circular(5))),
         hintStyle:
             TextStyle(color: Color.fromARGB(179, 153, 149, 149), fontSize: 14),
-        hintText: '点击进入查询页',
-        prefixIcon: Icon(Icons.search),
-        suffixIcon: Icon(Icons.center_focus_strong_rounded),
+        hintText: '请输入发货单号',
+        // prefixIcon:
+        suffixIcon: Icon(Icons.search),
         fillColor: Colors.white,
       ),
-      onTap: () async {
-        FocusScope.of(context).requestFocus(FocusNode());
-        var result =
-            await Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return MaterialSearchPage('1');
-        }));
+      onSubmitted: (text) async {
+        var result = await NavigatorUtils.goMaterialDetail(context, text);
 
-        setState(() {});
-        // print('result[0]: ${result[0]}, result[1]: ${result[1]}, result[2]: ${result[2]}');
-      },
-      onSubmitted: (text) {
-        //内容提交(按回车)的回调
+        // print('**result******++++$result');
+        setState(() {
+          getInintData();
+        });
+        // NavigatorUtils.goMaterialDetail(context, text);
       },
     );
   }
@@ -202,11 +243,14 @@ class _MaterialReceiptState extends State<MaterialReceipt> {
                       '发货单号:',
                       style:
                           TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                      // showCursor: true,
                     ),
-                    Text(_modelList[index]['deliver_no'],
-                        style: TextStyle(
-                          fontSize: 18,
-                        )),
+                    SelectableText(
+                      _modelList[index]['deliver_no'],
+                      style: TextStyle(
+                        fontSize: 18,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -226,35 +270,40 @@ class _MaterialReceiptState extends State<MaterialReceipt> {
             ),
           ),
           Divider(),
-          ButtonTheme(
-            // make buttons use the appropriate styles for cards
-            child: ButtonBar(
-              children: <Widget>[
-                // _buttonStyle(, bgColore, textColor, ww, rightWW)
-                _buttonStyle(
-                    '取消单据', Colors.white, Colors.blue, 100, 20, Colors.grey, 30,
-                    () {
-                  _cirCular = false;
-                  dataBillCancel(_modelList[index]['deliver_no']);
-                }),
-                _buttonStyle(
-                    '查看详情',
-                    Color.fromARGB(255, 209, 232, 251),
-                    Color.fromARGB(255, 15, 86, 144),
-                    100,
-                    10,
-                    Colors.white,
-                    30, () {
-                  print('-----${_modelList[index]['deliver_no']}--');
-                  if (_modelList[index]['deliver_no'] != null &&
-                      _modelList[index]['deliver_no'] != '') {
-                    NavigatorUtils.goMaterialDetail(
-                        context, _modelList[index]['deliver_no']);
-                  }
-                })
-              ],
-            ),
-          ),
+          _modelList[index]['status_text'] == '已取消'
+              ? Container()
+              : ButtonTheme(
+                  // make buttons use the appropriate styles for cards
+                  child: ButtonBar(
+                    children: <Widget>[
+                      // _buttonStyle(, bgColore, textColor, ww, rightWW)
+                      (_modelList[index]['status_text'] == '已取消' ||
+                              _modelList[index]['status_text'] == '已过帐' ||
+                              _modelList[index]['status_text'] == '部分过账')
+                          ? Container()
+                          : _buttonStyle('取消单据', Colors.white, Colors.blue, 100,
+                              20, Colors.grey, 30, () {
+                              _cirCular = false;
+                              dataBillCancel(_modelList[index]['deliver_no']);
+                            }),
+                      _buttonStyle(
+                          '查看详情',
+                          Color.fromARGB(255, 209, 232, 251),
+                          Color.fromARGB(255, 15, 86, 144),
+                          100,
+                          10,
+                          Colors.white,
+                          30, () {
+                        //  ModalRoute.of(context)!.s
+                        NavigatorUtils.goMaterialDetail(
+                                context, _modelList[index]['deliver_no'])
+                            .then((result) {
+                          print('111111111111111');
+                        });
+                      })
+                    ],
+                  ),
+                ),
         ],
       ),
     );

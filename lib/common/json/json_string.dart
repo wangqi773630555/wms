@@ -25,8 +25,14 @@ abstract class JsonString {
   {
     "result": [
         {
-            "title": "扫码收货",
+            "title": "收货单管理",
             "functionName": "materialReceipt",
+            "id": 1,
+            "icon": "Icons.qr_code"
+        },
+        {
+            "title": "扫码收货",
+            "functionName": "materialDetail",
             "id": 1,
             "icon": "Icons.qr_code"
         }

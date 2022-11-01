@@ -1,7 +1,10 @@
 package com.wanma.wanma_equipment
 
 import Printer.PrintHelper
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.os.Handler
@@ -25,6 +28,7 @@ class MainActivity: FlutterActivity() {
     val mKeyTextSize = 24
     val mValueTextSize = 22
     val mOffsetX = 210
+    var methodChannel_toFlutter: MethodChannel? = null
 
     lateinit var printHelper: PrintHelper
     lateinit var methodChannel: MethodChannel
@@ -40,14 +44,14 @@ class MainActivity: FlutterActivity() {
                 try {
                     printContent= call.arguments.toString().split(";")
                     initPrinter()
-                    var  count:Int = printContent.get(5).toDouble().toInt()
+                    var  count:Int = printContent.get(4).toDouble().toInt()
                     if(count==0){
                         Toast.makeText(context, "请设置打印张数", Toast.LENGTH_SHORT).show()
                     }
-                    var  showCount:Int = printContent.get(3).toDouble().toInt()
+                   // var  showCount:Int = printContent.get(3).toDouble().toInt()
                     //Toast.makeText(context, count.toString()+"", Toast.LENGTH_SHORT).show()
                     for (i in 0 until count) {
-                        print(printContent.get(0),printContent.get(1),printContent.get(2),showCount.toString(),printContent.get(4))
+                        print(printContent.get(0),printContent.get(1),printContent.get(2),printContent.get(3),printContent.get(5))
                     }
                     //print(printContent.get(0),printContent.get(1),printContent.get(2),printContent.get(3))
                 }catch (e:Exception){
@@ -63,9 +67,52 @@ class MainActivity: FlutterActivity() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        methodChannel_toFlutter =
+            getFlutterEngine()?.getDartExecutor()?.getBinaryMessenger()?.let {
+                MethodChannel(it,"toFlutterChannelName"
+                )
+            };
+        scanSetting()
+
     }
+
+
+    fun scanSetting(){
+        Handler().postDelayed({
+            App.mScanManage.setScanSwitchLeft(true)
+            App.mScanManage.setScanSwitchRight(true)
+            App.mScanManage.setBarcodeReceiveModel(2)
+        }, 5000)
+
+    }
+
+    override fun onResume() {
+        val intentFilter = IntentFilter()
+        intentFilter.addAction("com.barcode.sendBroadcast")
+        registerReceiver(myBroastcast, intentFilter)
+        super.onResume()
+    }
+
+    override fun onPause() {
+        unregisterReceiver(myBroastcast);
+        super.onPause()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+    }
+
+    private val myBroastcast: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            val str = intent.getStringExtra("BARCODE")
+            if (str != null) {
+                invokeFlutterMethod_toAllFlutter(str)
+            }
+        }
+    }
+
 
     fun initPrinter() {
         printHelper = PrintHelper()
@@ -96,9 +143,11 @@ class MainActivity: FlutterActivity() {
         printHelper.PrintLineString(singleCount, mValueTextSize, mOffsetX, false) //160
         printHelper.PrintLineEnd()
 
+        //Toast.makeText(context, count+","+singleCount, Toast.LENGTH_SHORT).show()
+
         var bm: Bitmap? = null
         try {
-            var content:String = name+";"+no+";"+lot+";"+count
+            var content:String = no+";"+lot+";"+count+";"+singleCount
             bm = Create2DCode(content);
         } catch (e: WriterException) {
             e.printStackTrace()
@@ -108,6 +157,7 @@ class MainActivity: FlutterActivity() {
         }
         // printHelper.printBlankLine(80)
         printHelper.GoToNextPage()
+
 
     }
 
@@ -130,5 +180,27 @@ class MainActivity: FlutterActivity() {
             Bitmap.Config.ARGB_8888)
         bitmap.setPixels(pixels, 0, width, 0, 0, width, height)
         return bitmap
+    }
+
+    fun invokeFlutterMethod_toAllFlutter(str:String) {
+        if (methodChannel_toFlutter != null) {
+            methodChannel_toFlutter!!.invokeMethod("flutterMethod",
+                str,
+                object : MethodChannel.Result {
+                    override fun success(o: Any?) {
+                        Log.e("MainActivity", "invokeFlutterMethod_toAllFlutter success")
+                    }
+
+                    override fun error(s: String, s1: String?, o: Any?) {
+                        Log.e("MainActivity", "invokeFlutterMethod_toAllFlutter error")
+                    }
+
+                    override fun notImplemented() {
+                        Log.e("MainActivity", "invokeFlutterMethod_toAllFlutter notImplemented")
+                    }
+                })
+        }else{
+            Toast.makeText(context, "null", Toast.LENGTH_SHORT).show()
+        }
     }
 }

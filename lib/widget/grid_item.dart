@@ -53,6 +53,23 @@ class GridItemWidget extends StatelessWidget {
             }
 
             break;
+          case Config.MATERIAL_DETAIL:
+            //拍照权限
+            // bool isCamera = await CommonUtils.checkPermissionCamera();
+            // if (!isCamera) {
+            //   Fluttertoast.showToast(msg: '没有拍照权限');
+            //   return;
+            // }
+
+            var sk = await LocalStorage.get(Config.SET_KEY);
+
+            if (sk != null && sk != '') {
+              NavigatorUtils.goMaterialDetail(context,'');
+            } else {
+              Fluttertoast.showToast(msg: '请设置参数');
+            }
+
+            break;
           // case Config.NEW_REPORT_ORDER:
           //   await LocalStorage.save(Config.FLAG_REPORT_MODIFY, '0');
           //   NavigatorUtils.goNewReportOrder(context);
@@ -67,7 +84,8 @@ class GridItemWidget extends StatelessWidget {
           //   NavigatorUtils.goMaterialReceipt(context);
           //   break;
           default:
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('暂未开通')));
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text('暂未开通')));
             break;
         }
       },

@@ -1,9 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:wanma_print/common/json/json_string.dart';
 import 'package:wanma_print/widget/grid_item.dart';
 import 'package:wanma_print/widget/layout_log_print.dart';
+
+import '../common/utils/navigator_utils.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -29,11 +32,26 @@ class ItemMenu extends StatefulWidget {
 class _ItemMenuState extends State<ItemMenu>
     with AutomaticKeepAliveClientMixin<ItemMenu> {
   late Future _futureStr;
+  static const _platform = MethodChannel('toFlutterChannelName');
+
 
   @override
   void initState() {
     super.initState();
     _futureStr = _getAppMenu();
+    _platform.setMethodCallHandler(flutterMethod);
+  }
+
+  //接收二维码
+  Future<dynamic> flutterMethod(MethodCall methodCall) async {
+    switch (methodCall.method) {
+      case 'flutterMethod':
+        debugPrint('Android传递给flutter的参数是：' + methodCall.arguments);
+        NavigatorUtils.goMaterialDetail(context, methodCall.arguments.toString());
+        break;
+      default:
+        debugPrint('Android调用了flutterMethod失败！！！\t\t' + methodCall.method);
+    }
   }
 
   @override
@@ -100,8 +118,8 @@ class AreaItem extends StatelessWidget {
   AreaItem(this.data);
   final items = <Widget>[];
   final icons = <IconData>[
-    Icons.qr_code,
     Icons.list_alt,
+    Icons.qr_code,
     Icons.post_add,
     Icons.playlist_add_outlined,
     Icons.featured_play_list_outlined,
@@ -159,4 +177,6 @@ class AreaItem extends StatelessWidget {
       ),
     );
   }
+
+
 }

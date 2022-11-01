@@ -270,7 +270,7 @@ class _PrintDialogState extends State<PrintDialog> {
 
   Widget _swichWg(String mark, bool states, String title) {
     return Container(
-        padding: EdgeInsets.only(right: 20),
+        padding: EdgeInsets.only(right: 25),
         child: Row(
           children: [
             Container(
@@ -282,7 +282,7 @@ class _PrintDialogState extends State<PrintDialog> {
               ),
             )),
             FlutterSwitch(
-                width: 55.0,
+                width: 45.0,
                 height: 25.0,
                 valueFontSize: 15.0,
                 toggleSize: 18.0,
@@ -290,7 +290,7 @@ class _PrintDialogState extends State<PrintDialog> {
                 borderRadius: 20.0,
                 // padding: 8.0,
 
-                showOnOff: true,
+                showOnOff: false,
                 onToggle: (val) async {
                   final prefs = await SharedPreferences.getInstance();
                   setState(() {

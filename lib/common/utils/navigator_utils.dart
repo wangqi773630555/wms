@@ -52,8 +52,9 @@ class NavigatorUtils {
     Navigator.pushNamed(context, MaterialReceipt.sName);
   }
 
-  static goMaterialDetail(BuildContext context, deliverNo) {
-    Navigator.pushNamed(context, MaterialDetail.sName, arguments: deliverNo);
+  static goMaterialDetail(BuildContext context, deliverNo) async {
+    await Navigator.pushNamed(context, MaterialDetail.sName,
+        arguments: deliverNo);
   }
 
   static goMaterialReceiptDetail(BuildContext context, deliverNo) {

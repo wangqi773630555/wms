@@ -293,11 +293,11 @@ class _MaterialReceiptState extends State<MaterialReceipt> {
                           100,
                           10,
                           Colors.white,
-                          30, () {
-                        //  ModalRoute.of(context)!.s
-                        NavigatorUtils.goMaterialDetail(
+                          30, () async {
+                        await NavigatorUtils.goMaterialDetail(
                                 context, _modelList[index]['deliver_no'])
                             .then((result) {
+                          getInintData();
                           print('111111111111111');
                         });
                       })

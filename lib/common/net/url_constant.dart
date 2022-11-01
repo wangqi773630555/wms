@@ -7,10 +7,14 @@ class UrlConstant {
   // static const String host2 = 'http://wms.wanmagroup.com/';//正式
   // static const String host = 'http://172.18.2.254:8004/';//测试
   // static const String host = 'https://eqptest.wanmaco.com/api/'; //测试
+  /*static const String host =
+      'https://gatewaydev.wanmaco.com/authority-system/'; //登录测试
+  static const String host2 = 'http://itest.wanmagroup.com/'; //测试*/
   static const String host =
-      'https://gatewaydev.wanmaco.com/authority-system/'; //测试
-  static const String host2 = 'http://itest.wanmagroup.com/'; //测试
-  // static const String host = 'https://eqp.wanmaco.com/api/'; //正式
+      'https://gateway.wanmaco.com/authority-system/'; //登录正式
+  static const String host2 = 'http://wms.wanmagroup.com/'; //正式
+
+
   ///登陆
   static getLogin() {
     return '${host}auth/app/login';

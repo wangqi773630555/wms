@@ -16,6 +16,8 @@ class PrintDialog extends StatefulWidget {
   var zxMark;
   bool status1; //0/1
   bool status2; //0/1
+  bool deferentWare;
+  String wareValue;
   VoidCallback? okBtnTap;
   List<SelectItem> selectValuesetList;
   // 构造函数赋值
@@ -30,6 +32,8 @@ class PrintDialog extends StatefulWidget {
     this.status2 = false,
     this.ccMark,
     this.zxMark,
+    required this.wareValue,
+    required this.deferentWare,
   });
 
   State<PrintDialog> createState() => _PrintDialogState();
@@ -40,6 +44,8 @@ class _PrintDialogState extends State<PrintDialog> {
   void initState() {
     // TODO: implement initState
     time();
+
+    // print('____+++++++${widget.selectValuesetList}');
     super.initState();
   }
 
@@ -48,13 +54,14 @@ class _PrintDialogState extends State<PrintDialog> {
 
     widget._startTime = widget._selectDate1.toString().substring(0, 10);
     prefs.setString('time', widget._startTime);
-    prefs.setString('kw', '');
+    prefs.setString('kw', widget.wareValue);
     prefs.setBool('cc', false);
     prefs.setBool('zx', false);
   }
 
   Widget build(BuildContext context) {
     widget._startTime = widget._selectDate1.toString().substring(0, 10);
+    var itemValue = widget.wareValue;
     return Material(
         type: MaterialType.transparency,
         child: Center(
@@ -132,14 +139,15 @@ class _PrintDialogState extends State<PrintDialog> {
                                     child: SelectWidget(
                                       items: widget.selectValuesetList,
                                       selectWidth: 220,
-                                      value: '1',
+                                      value: itemValue,
                                       valueChanged: (ral) async {
                                         final prefs = await SharedPreferences
                                             .getInstance();
                                         setState(() {
+                                          itemValue = ral;
                                           prefs.setString('kw', ral);
                                         });
-                                        print('===$ral=');
+                                        // print('===$itemValue=');
                                       },
                                       leftPosition: 10,
                                     ),
@@ -149,6 +157,14 @@ class _PrintDialogState extends State<PrintDialog> {
                                 ],
                               ),
                             ),
+
+                            widget.deferentWare == true
+                                ? Container(
+                                    child: Text(
+                                    '库位不一致请检查',
+                                    style: TextStyle(color: Colors.red),
+                                  ))
+                                : Container(),
                             Container(
                               padding: EdgeInsets.all(10),
                               child: Row(

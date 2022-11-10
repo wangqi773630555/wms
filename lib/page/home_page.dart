@@ -6,7 +6,9 @@ import 'package:wanma_print/common/json/json_string.dart';
 import 'package:wanma_print/widget/grid_item.dart';
 import 'package:wanma_print/widget/layout_log_print.dart';
 
+import '../common/config/scanConfig.dart';
 import '../common/utils/navigator_utils.dart';
+import '../common/utils/scanevent_utils.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -47,7 +49,15 @@ class _ItemMenuState extends State<ItemMenu>
     switch (methodCall.method) {
       case 'flutterMethod':
         debugPrint('Android传递给flutter的参数是：' + methodCall.arguments);
-        NavigatorUtils.goMaterialDetail(context, methodCall.arguments.toString());
+        switch(ScanConfig.scanPage){
+          case ScanConfig.PAGE_PRINT:
+            ScanEventUtils.send(ScanConfig.PAGE_PRINT, methodCall.arguments.toString());
+            break;
+          default:
+            NavigatorUtils.goMaterialDetail(context, methodCall.arguments.toString());
+            break;
+        }
+
         break;
       default:
         debugPrint('Android调用了flutterMethod失败！！！\t\t' + methodCall.method);

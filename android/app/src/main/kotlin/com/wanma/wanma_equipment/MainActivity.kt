@@ -41,6 +41,7 @@ class MainActivity: FlutterActivity() {
         methodChannel.setMethodCallHandler { call, result ->
             if(call.method.equals("print")){
                 var printContent:List<String>
+                var ids:List<String>
                 try {
                     printContent= call.arguments.toString().split(";")
                     initPrinter()
@@ -50,8 +51,10 @@ class MainActivity: FlutterActivity() {
                     }
                    // var  showCount:Int = printContent.get(3).toDouble().toInt()
                     //Toast.makeText(context, count.toString()+"", Toast.LENGTH_SHORT).show()
+                    ids = printContent.get(6).split(",")
+
                     for (i in 0 until count) {
-                        print(printContent.get(0),printContent.get(1),printContent.get(2),printContent.get(3),printContent.get(5))
+                        print(printContent.get(0),printContent.get(1),printContent.get(2),printContent.get(3),printContent.get(5),ids.get(i))
                     }
                     //print(printContent.get(0),printContent.get(1),printContent.get(2),printContent.get(3))
                 }catch (e:Exception){
@@ -120,12 +123,18 @@ class MainActivity: FlutterActivity() {
         printHelper.SetGrayLevel(6.toByte())
     }
 
-    fun print(name:String, no:String, lot:String, count:String,singleCount:String) {
+    fun print(name:String, no:String, lot:String, count:String,singleCount:String,id:String) {
 
         // TODO Auto-generated method stub
         printHelper.printBlankLine(5)
         printHelper.PrintStringEx(name, mKeyTextSize, false, true,PrintHelper.PrintType.Centering)
-        printHelper.printBlankLine(15)
+        printHelper.printBlankLine(5)
+
+        printHelper.PrintLineInit(mKeyTextSize)
+        printHelper.PrintLineStringByType("  标签号", mKeyTextSize, PrintHelper.PrintType.Left, true)
+        printHelper.PrintLineString(id, mValueTextSize, mOffsetX, false) //160
+        printHelper.PrintLineEnd()
+
         printHelper.PrintLineInit(mKeyTextSize)
         printHelper.PrintLineStringByType("  物料号", mKeyTextSize, PrintHelper.PrintType.Left, true)
         printHelper.PrintLineString(no, mValueTextSize, mOffsetX, false) //160
@@ -147,8 +156,8 @@ class MainActivity: FlutterActivity() {
 
         var bm: Bitmap? = null
         try {
-            var content:String = no+";"+lot+";"+count+";"+singleCount
-            bm = Create2DCode(content);
+            //var content:String = no+";"+lot+";"+count+";"+singleCount
+            bm = Create2DCode(id);
         } catch (e: WriterException) {
             e.printStackTrace()
         }

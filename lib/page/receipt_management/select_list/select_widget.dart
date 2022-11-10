@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:wanma_print/page/common_widgit/select_list/select_item.dart';
+import 'package:flutter/material.dart';
 
 /// 弹出菜单按钮组件
 class SelectWidget extends StatefulWidget {
@@ -12,7 +12,7 @@ class SelectWidget extends StatefulWidget {
   final ValueChanged<dynamic>? valueChanged; // 选中数据的回调事件
   const SelectWidget(
       {Key? key,
-      this.items = const [],
+      required this.items,
       this.value,
       this.valueChanged,
       this.title,
@@ -26,16 +26,15 @@ class SelectWidget extends StatefulWidget {
 }
 
 class _SelectWidgetState extends State<SelectWidget> {
-  String label = '请选择';
+  var label = '';
   bool isExpand = false; // 是否展开下拉按钮
-  dynamic currentValue; // 此时的值
+  var currentValue; // 此时的值
 
-  @override
   void initState() {
     // initTitle();
     currentValue = widget.value;
     // label = widget.items[0].label;
-    print('value==${widget.value}');
+    // print('value==${widget.value}');
     super.initState();
   }
 
@@ -51,14 +50,6 @@ class _SelectWidgetState extends State<SelectWidget> {
         }
       }
     }
-    //  else {
-    //   // 没值默认取第一个
-    //   if (widget.items.isNotEmpty) {
-    //     label = widget.items[0].label;
-    //     // print('widget.items[0].value${widget.items[0].value}');
-    //     // print('widget.items[0].label${widget.items[0].label}');
-    //   }
-    // }
   }
 
   @override
@@ -93,16 +84,15 @@ class _SelectWidgetState extends State<SelectWidget> {
                         ),
                       ],
                     )),
-                isExpand
-                    ? const Icon(Icons.arrow_drop_down)
-                    : const Icon(Icons.arrow_drop_down)
               ],
             ),
           ),
           onSelected: (value) {
+            // print('----$value');
             widget.valueChanged?.call(value);
             setState(() {
               currentValue = value;
+
               isExpand = !isExpand;
             });
           },

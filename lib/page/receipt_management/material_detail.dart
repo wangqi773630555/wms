@@ -72,7 +72,9 @@ class _MaterialDetailBodyState extends State<MaterialDetailBody> {
   List detail_ids_list = [];
   late List<SelectItem> _selectValueList = [];
   int cellSelectCount = 0;
-
+  bool isDeferentWare = false;
+  bool isShowPost = false;
+  var defaultWare;
   // bool selectCell = false;
   var imgUrl = 'images/on.png';
   @override
@@ -93,7 +95,7 @@ class _MaterialDetailBodyState extends State<MaterialDetailBody> {
             format: BarcodeFormat.unknown,
             rawContent: args.toString());
       }
-      print('---------------scanResult------------' + scanResult!.rawContent);
+      // print('---------------scanResult------------' + scanResult!.rawContent);
       if (scanResult?.rawContent != "") {
         initDatas(scanResult!.rawContent, false);
       } else {
@@ -136,10 +138,15 @@ class _MaterialDetailBodyState extends State<MaterialDetailBody> {
           // _wlList.add(_wlList[0]);
           // _wlList.add(_wlList[0]);
           // _wlList.add(_wlList[0]);
+          print('-----${_fhList['status_text']}--$isPost');
+          if (_fhList['status_text'] == '已过帐' ||
+              _fhList['status_text'] == '部分过账') {
+            isShowPost = true;
+          }
           if (isPost == true) {
             postDialog();
           }
-          print('objec-------$_postList---t');
+          // print('objec-------$_postList---t');
           _selectList = [];
           if (_selectList.length == 0) {
             for (var element in _wlList) {
@@ -197,8 +204,12 @@ class _MaterialDetailBodyState extends State<MaterialDetailBody> {
         var data = res.data['data'];
         for (Map element in data) {
           _selectValueList.add(SelectItem(
-              label: element['ware_name'], value: element['ware_id']));
+              label: element['ware_name'],
+              value: element['ware_id'],
+              checked: false));
         }
+
+        postAlert();
       } else {}
       _cirCular = true;
       setState(() {});
@@ -209,17 +220,29 @@ class _MaterialDetailBodyState extends State<MaterialDetailBody> {
     // NavigatorUtils.goMaterialReceiptDetail(context, _fhList['deliver_no']);
 
     detail_ids_list = [];
+    var ware = [];
     for (var i = 0; i < _wlList.length; i++) {
       if (_selectList[i] == true) {
         detail_ids_list.add(_wlList[i]['id']);
+        ware.add(_wlList[i]['default_ware']);
       }
     }
+    // print('33333#####$ware');
+    defaultWare = ware[0];
+    for (var element in ware) {
+      if (element != defaultWare) {
+        isDeferentWare = true;
+      }
+    }
+
     if (detail_ids_list.length > 0) {
+      // print('~~~~~~~~~~$_selectValueList');
       showDialog(
           context: context,
           builder: (context) {
             return PrintDialog(
               title: "修改信息",
+              deferentWare: isDeferentWare,
               content: "",
               rowsNum: '',
               okBtnTap: () async {
@@ -240,24 +263,53 @@ class _MaterialDetailBodyState extends State<MaterialDetailBody> {
                   zx_flag = 'Y';
                 }
 
-                String ware_id_select = prefs.getString('kw')!;
-                print('+++$ware_id_select++++++$cc_flag++$zx_flag++++');
-                print('=====$detail_ids_list==+++__-$startTime-----3333####');
+                defaultWare = prefs.getString('kw')!;
+                // print('+++$ware_id_select++++++$cc_flag++$zx_flag++++');
+                // print('=====$detail_ids_list==+++__-$startTime-----3333####');
                 if (_fhList['deliver_no'] == null ||
                     _fhList['deliver_no'] == '') {
                   Fluttertoast.showToast(msg: '发货单号为空');
                   return;
                 }
-                if (ware_id_select == '') {
+                if (defaultWare == '') {
                   Fluttertoast.showToast(msg: '库位号为空');
                   return;
                 }
 
-                postDatas(_fhList['deliver_no'], startTime, ware_id_select,
-                    cc_flag, zx_flag, detail_ids_list);
+                Navigator.pop(context);
+
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: Text('是否确认过账'),
+                        actions: [
+                          TextButton(
+                              onPressed: () {
+                                // _cirCular = false;
+
+                                postDatas(
+                                    _fhList['deliver_no'],
+                                    startTime,
+                                    defaultWare,
+                                    cc_flag,
+                                    zx_flag,
+                                    detail_ids_list);
+                              },
+                              child: Text('确认')),
+                          TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text('取消'))
+                        ],
+                      );
+                    });
               },
               selectValuesetList: _selectValueList,
               title2: '${detail_ids_list.length}',
+              wareValue:
+                  (defaultWare == '' || defaultWare == null) ? '' : defaultWare,
             );
           });
     } else {
@@ -270,51 +322,45 @@ class _MaterialDetailBodyState extends State<MaterialDetailBody> {
     _wwidth = MediaQuery.of(context).size.width;
     // ignore: non_constant_identifier_names
     _hheight = MediaQuery.of(context).size.height;
-    return Container(
-      child: Column(
-        children: [
-          Container(
-              height: _hheight - 145,
-              child: Column(
-                children: [
-                  _searchRow(),
-                  Container(
-                    width: _wwidth - 14,
-                    height: 200,
-                    child: _cardForfirst(),
-                  ),
-                  _wlList.length > 0
-                      ? Container(
-                          padding: EdgeInsets.only(left: 20, top: 5),
-                          width: _wwidth - 23,
-                          height: 35,
-                          color: Colors.white,
-                          child: Text(
-                            '物料明细',
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                        )
-                      : Container(),
-                  Container(
-                    width: _wwidth - 23,
-                    height: 0.5,
-                    color: Colors.grey,
-                  ),
-                  _wlList.length > 0
-                      ? Container(
-                          color: Colors.white,
-                          height: _hheight - 440,
-                          width: _wwidth - 18,
-                          child: _listWidget(),
-                        )
-                      : Container(),
-                ],
-              )),
-          backAndToNext(),
-        ],
-      ),
-    );
+    return !_cirCular
+        ? Center(
+            child: Container(
+            margin: EdgeInsets.only(top: 200),
+            child: CircularProgressIndicator(
+              semanticsLabel: '加载中...',
+            ),
+          ))
+        : Container(
+            child: Column(
+              children: [
+                Container(
+                    height: _hheight - 150,
+                    // color: Colors.cyan,
+                    child: SingleChildScrollView(
+                      child: Container(
+                        child: Column(
+                          children: [
+                            Container(
+                                // height: _hheight - 145,
+                                child: Column(
+                              children: [
+                                _searchRow(),
+                                _cardForDeliver(),
+                                _cardForPost(),
+                                _cardForMaterial()
+                              ],
+                            )),
+                          ],
+                        ),
+                      ),
+                    )),
+                Container(
+                  // color: Colors.red,
+                  child: backAndToNext(),
+                )
+              ],
+            ),
+          );
   }
 
   Widget _searchRow() {
@@ -340,328 +386,335 @@ class _MaterialDetailBodyState extends State<MaterialDetailBody> {
         suffixIcon: Icon(Icons.search),
         fillColor: Colors.white,
       ),
-      // onTap: () async {
-      //   FocusScope.of(context).requestFocus(FocusNode());
-      //   // var result =
-      //   //     await Navigator.push(context, MaterialPageRoute(builder: (context) {
-      //   //   return MaterialSearchPage('1');
-      //   // }));
-
-      //   setState(() {});
-      //   // print('result[0]: ${result[0]}, result[1]: ${result[1]}, result[2]: ${result[2]}');
-      // },
-      // onChanged: (text) {
-      //   _searController.text = text;
-      // },
-
       onSubmitted: (text) {
         NavigatorUtils.goMaterialDetail(context, text);
       },
     );
   }
 
-  Widget _cardForfirst() {
-    return !_cirCular
-        ? Center(
-            child: CircularProgressIndicator(
-              semanticsLabel: '加载中...',
-            ),
-          )
-        : Card(
-            elevation: 1,
-            color: Colors.white,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Row(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.only(left: 15, top: 5, bottom: 5),
-                      width: _wwidth - 120,
-                      child: Row(
-                        children: [
-                          Text(
-                            '发货单号:',
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.w600),
-                          ),
-                          SelectableText(
-                            _fhList['deliver_no'] ?? '',
-                            style: TextStyle(
-                              fontSize: 18,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    _statusStyle(_fhList['status_text'] ?? ""),
-                  ],
-                ),
-                Divider(),
-                _getRowText('供应商:', _fhList['supplier_name'] ?? ''),
-                _getRowText('供应商编码:', _fhList['supplier_no'] ?? ''),
-                _getRowText('内向交货单号:', _fhList['inbound_deliver_no'] ?? ""),
-                _getRowText('送货日期:', _fhList['deliver_time'] ?? ''),
-                _getRowText('订单号:', _fhList['order_no'] ?? ''),
-              ],
-            ),
-          );
-  }
-
-//列表
-  Widget _listWidget() {
-    return !_cirCular
-        ? Center(
-            child: CircularProgressIndicator(
-              semanticsLabel: '加载中...',
-            ),
-          )
-        : EasyRefresh.custom(
-            controller: _easyfreshController,
-            enableControlFinishRefresh: false,
-            enableControlFinishLoad: true,
-            header: CustomRefreshHeader(
-                Colors.white, Colors.grey, Color.fromARGB(255, 244, 158, 54)),
-            footer: CustomRefreshFooter(Colors.grey, Colors.grey),
-            onRefresh: () async {
-              initDatas(_fhList['deliver_no'], false);
-              setState(() {});
-              _easyfreshController.resetLoadState();
-            },
-            onLoad: () async {
-              setState(() {});
-
-              Future.delayed(Duration(milliseconds: 200), () {
-                _easyfreshController.finishLoad(
-                    noMore: (_pageNum >= _wlList.length));
-              });
-            },
-            slivers: <Widget>[
-              // 这里设置列表
-              SliverList(
-                delegate: SliverChildBuilderDelegate((context, index) {
-                  // 这里为iOS UITableViewCell （android的adapter）,样式大家自定义即可
-                  return _cellForRow(context, index);
-                },
-                    // 设置返回数据个数
-                    childCount: _wlList.length),
+//发货
+  Widget _cardForDeliver() {
+    return ExpansionTile(
+      initiallyExpanded: true,
+      textColor: Colors.black,
+      children: [
+        _getRowText('供应商:', _fhList['supplier_name'] ?? ''),
+        _getRowText('供应商编码:', _fhList['supplier_no'] ?? ''),
+        _getRowText('内向交货单号:', _fhList['inbound_deliver_no'] ?? ""),
+        _getRowText('送货日期:', _fhList['deliver_time'] ?? ''),
+        _getRowText('订单号:', _fhList['order_no'] ?? ''),
+      ],
+      title: Container(
+        child: Row(
+          children: [
+            Container(
+              width: 100,
+              child: Text(
+                '发货单号:',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
               ),
-            ],
-          );
+            ),
+            Expanded(
+              child: SelectableText(
+                _fhList['deliver_no'] ?? '',
+                style: TextStyle(
+                  fontSize: 18,
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
   }
 
-  //cell
-  Widget _cellForRow(conttext, int index) {
+  Widget _cardForPost() {
+    return isShowPost == true
+        ? ExpansionTile(
+            initiallyExpanded: true,
+            textColor: Colors.black,
+            title: Text(
+              '过账详情',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            children: _postList
+                .map((e) => postCellForRow(
+                    e['post_date'],
+                    e['ekotx'],
+                    e['mblnr'],
+                    e['acc_user'],
+                    e['ware_name'],
+                    e['operate_time']))
+                .toList(),
+          )
+        : Container();
+  }
+
+  Widget _cardForMaterial() {
+    List<Widget> widgetList = [];
+    for (var i = 0; i < _wlList.length; i++) {
+      widgetList.add(materialCellForRow(i));
+    }
+    if (widgetList.length > _wlList.length) {
+      print('物料列表数据列表错误');
+    }
     return !_cirCular
         ? Center(
             child: CircularProgressIndicator(
               semanticsLabel: '加载中...',
             ),
           )
-        : Card(
-            color: Colors.white,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Container(
-                  height: 180,
-                  child: Row(
-                    children: [
-                      _wlList[index]['is_acc'] == 'N'
-                          ? Container(
-                              width: 30,
-                              height: 30,
-                              child: Checkbox(
-                                value: _selectList[index],
-                                activeColor: Color.fromARGB(255, 54, 244, 67),
-                                onChanged: (value) {
-                                  setState(() {
-                                    _selectList[index] = value!;
-                                    if (value == true) {
-                                      cellSelectCount++;
-                                    } else if (value == false) {
-                                      cellSelectCount--;
-                                    }
-                                    // print('value:--$value---');
-                                    // print('cellSelectList---$_selectList');
-                                  });
-                                },
-                              ),
-                            )
-                          : Container(
-                              width: 19,
-                              height: 19,
-                              margin: EdgeInsets.only(right: 11),
-                              color: Color.fromARGB(255, 229, 226, 226),
-                              child: Checkbox(
-                                value: false,
-                                activeColor: Color.fromARGB(255, 54, 244, 67),
-                                onChanged: (value) {
-                                  // Fluttertoast.showToast(msg: '已过账不能勾选');
-                                  // _selectList.removeAt(index);
-                                  // print('value:--$value---');
-                                  print('cellSelectList---$_selectList');
-                                },
-                              ),
-                            ),
-                      Container(
-                        height: 165,
-                        width: 300,
-                        child: Column(children: [
-                          // _getRowText('id:', _wlList[index]['id'] ?? ''),
-                          _getRowText(
-                              '物料描述:', _wlList[index]['part_name'] ?? ''),
-                          _numRowText(
-                              '数量:',
-                              '${_wlList[index]['qty'] ?? ''}/${_wlList[index]['acc_qty'] ?? ''}${_wlList[index]['part_unit'] ?? ''}',
-                              index),
-                          _getRowText('物料号:', _wlList[index]['part_id'] ?? ''),
-                          _getRowText(
-                              '物料批次:', _wlList[index]['part_batch'] ?? ''),
-                          _getRowText(
-                              '明细行:', _wlList[index]['detail_no'] ?? ''),
-                        ]),
-                      ),
-                    ],
-                  ),
-                ),
+        : ExpansionTile(
+            initiallyExpanded: true,
+            textColor: Colors.black,
+            title: Text(
+              '物料明细',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            children: widgetList
+            //  _wlList.map((e) => null).toList(),
+            );
+  }
 
-                // Divider(),
-                ButtonTheme(
-                  child: ButtonBar(
-                    children: <Widget>[
-                      _buttonStyle('打印', Colors.white, Colors.blue, 100, 20,
-                          Colors.grey, 30, () async {
-                        final prefs = await SharedPreferences.getInstance();
-                        dyPageNum = 1;
-                        // dyWlNum = 1;
+  Widget postCellForRow(p, e, m, a, w, o) {
+    return Card(
+      color: Colors.white,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          _getRowText('过账日期:', p ?? ''),
+          _getRowText('采购组织:', e ?? ''),
+          _getRowText('凭证号:', m ?? ''),
+          _getRowText('过账人:', a ?? ''),
+          _getRowText('库位:', w ?? ''),
+          _getRowText('操作实际时间:', o ?? ''),
+        ],
+      ),
+    );
+  }
 
-                        double upNum = _wlList[index]['acc_qty'];
-                        prefs.setDouble('wl', upNum);
-                        showDialog(
-                            context: context,
-                            builder: (context) {
-                              return MyDialog(
-                                title: "物料信息",
-                                content: '单张物料',
-                                title2: "打印张数",
-                                flag: "dayin",
-                                model: _fhList,
-                                f: () {
-                                  upNum = prefs.getDouble('wl')!;
-                                  print('====$dyPageNum==+++++$upNum');
-                                  String part_name =
-                                      _wlList[index]['part_name'] ?? '';
-                                  String part_id =
-                                      _wlList[index]['part_id'] ?? '';
-                                  String part_batch =
-                                      _wlList[index]['part_batch'] ?? '';
-                                  toPrint(part_name +
-                                      ";" +
-                                      part_id +
-                                      ";" +
-                                      part_batch +
-                                      ";" +
-                                      '${_wlList[index]['acc_qty'] ?? ''}' +
-                                      ";" +
-                                      '${dyPageNum}' +
-                                      ";" +
-                                      '${upNum}');
-                                  Navigator.pop(context);
-                                },
-                                c1: (int c) {
-                                  // upNum = c;
-                                },
-                                c2: (int c) {
-                                  // upNum = c;
-                                },
-                                c3: (int c) {
-                                  // upNum = c;
-                                },
-                                c11: (int c) {
-                                  dyPageNum = c;
-                                },
-                                c22: (int c) {
-                                  dyPageNum = c;
-                                },
-                                c33: (int c) {
-                                  dyPageNum = c;
-                                },
-                                // f2: (String) {},
-                                // dyzs: dyWlNum,
-                                dyzs: dyPageNum, upDataNum: upNum,
-                                // isClick: false,
-                              );
-                            });
-                      }),
-                      _wlList[index]['is_acc'] == 'N'
-                          ? _buttonStyle(
-                              '修改',
-                              Color.fromARGB(255, 209, 232, 251),
-                              Color.fromARGB(255, 15, 86, 144),
-                              100,
-                              10,
-                              Colors.white,
-                              30, () async {
-                              final prefs =
-                                  await SharedPreferences.getInstance();
-
-                              if (_fhList.isNotEmpty) {
-                                // dyWlNum = (_wlList[index]['acc_qty']).toInt();
-
-                                double upNum = _wlList[index]['acc_qty'];
-                                prefs.setDouble('wl', upNum);
-                                showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return MyDialog(
-                                        title: "修改信息",
-                                        content: "实际收货",
-                                        model: _fhList,
-                                        f: () {
-                                          // _cirCular = false;
-
-                                          var numStr = prefs.getDouble('wl');
-                                          print('======+++++$numStr');
-                                          upDatas(_wlList[index]['id'], numStr);
-                                        },
-                                        // f2: (String text) {
-                                        //   print('==+++++++=====$text');
-                                        //   setState(() {});
-                                        // },
-                                        c1: (c) {
-                                          //++
-                                          // qtyCount = c;
-                                        },
-                                        c2: (c) {
-                                          //--
-                                          // qtyCount = c;
-                                        },
-                                        c3: (c) {
-                                          // qtyCount = c;
-                                        },
-                                        c11: (int) {},
-                                        c22: (int) {},
-                                        c33: (int) {},
-                                        dyzs: dyPageNum,
-                                        // dzwl: dyPageNum,
-                                        upDataNum: upNum,
-                                        // isClick: false,
-                                      );
-                                    });
+  Widget materialCellForRow(index) {
+    return Card(
+      color: Colors.white,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Container(
+            height: 180,
+            child: Row(
+              children: [
+                _wlList[index]['is_acc'] == 'N'
+                    ? Container(
+                        width: 30,
+                        height: 30,
+                        child: Checkbox(
+                          value: _selectList[index],
+                          activeColor: Color.fromARGB(255, 54, 244, 67),
+                          onChanged: (value) {
+                            setState(() {
+                              _selectList[index] = value!;
+                              if (value == true) {
+                                cellSelectCount++;
+                              } else if (value == false) {
+                                cellSelectCount--;
                               }
-                            })
-                          : Container()
-                    ],
-                  ),
+                              // print('value:--$value---');
+                              // print('cellSelectList---$_selectList');
+                            });
+                          },
+                        ),
+                      )
+                    : Container(
+                        width: 19,
+                        height: 19,
+                        margin: EdgeInsets.only(right: 11),
+                        color: Color.fromARGB(255, 229, 226, 226),
+                        child: Checkbox(
+                          value: false,
+                          activeColor: Color.fromARGB(255, 54, 244, 67),
+                          onChanged: (value) {
+                            // print('cellSelectList---$_selectList');
+                          },
+                        ),
+                      ),
+                Container(
+                  height: 165,
+                  width: 300,
+                  child: Column(children: [
+                    // _getRowText('id:', _wlList[index]['id'] ?? ''),
+                    _getRowText('物料描述:', _wlList[index]['part_name'] ?? ''),
+                    _numRowText(
+                        '数量:',
+                        '${_wlList[index]['qty'] ?? ''}/${_wlList[index]['acc_qty'] ?? ''}${_wlList[index]['part_unit'] ?? ''}',
+                        index),
+                    _getRowText('物料号:', _wlList[index]['part_id'] ?? ''),
+                    _getRowText('物料批次:', _wlList[index]['part_batch'] ?? ''),
+                    _getRowText('明细行:', _wlList[index]['detail_no'] ?? ''),
+                  ]),
                 ),
               ],
             ),
-          );
+          ),
+
+          // Divider(),
+          ButtonTheme(
+            child: ButtonBar(
+              children: <Widget>[
+                _buttonStyle(
+                    '打印', Colors.white, Colors.blue, 100, 20, Colors.grey, 30,
+                    () async {
+                  final prefs = await SharedPreferences.getInstance();
+                  dyPageNum = 1;
+                  // dyWlNum = 1;
+
+                  double upNum = _wlList[index]['acc_qty'];
+                  prefs.setDouble('wl', upNum);
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return MyDialog(
+                          title: "物料信息",
+                          content: '单张物料',
+                          title2: "打印张数",
+                          flag: "dayin",
+                          model: _fhList,
+                          f: () {
+                            upNum = prefs.getDouble('wl')!;
+                            print('====$dyPageNum==+++++$upNum');
+                            String part_name =
+                                _wlList[index]['part_name'] ?? '';
+                            String part_id = _wlList[index]['part_id'] ?? '';
+                            String part_batch =
+                                _wlList[index]['part_batch'] ?? '';
+                            var id = _wlList[index]['id'];
+
+                            String ids = '001';
+                            for (int i = 0; i < dyPageNum; i++) {
+                              ids = ids + "001,";
+                            }
+                            print('${id}');
+                            toPrint(
+                                part_name +
+                                    ";" +
+                                    part_id +
+                                    ";" +
+                                    part_batch +
+                                    ";" +
+                                    '${_wlList[index]['acc_qty'] ?? ''}' +
+                                    ";" +
+                                    '${dyPageNum}' +
+                                    ";" +
+                                    '${upNum}' +
+                                    ";",
+                                id,
+                                dyPageNum,
+                                upNum);
+
+                            Navigator.pop(context);
+                          },
+                          c1: (int c) {
+                            // upNum = c;
+                          },
+                          c2: (int c) {
+                            // upNum = c;
+                          },
+                          c3: (int c) {
+                            // upNum = c;
+                          },
+                          c11: (int c) {
+                            dyPageNum = c;
+                          },
+                          c22: (int c) {
+                            dyPageNum = c;
+                          },
+                          c33: (int c) {
+                            dyPageNum = c;
+                          },
+                          // f2: (String) {},
+                          // dyzs: dyWlNum,
+                          dyzs: dyPageNum, upDataNum: upNum,
+                          // isClick: false,
+                        );
+                      });
+                }),
+                _wlList[index]['is_acc'] == 'N'
+                    ? _buttonStyle(
+                        '修改',
+                        Color.fromARGB(255, 209, 232, 251),
+                        Color.fromARGB(255, 15, 86, 144),
+                        100,
+                        10,
+                        Colors.white,
+                        30, () async {
+                        final prefs = await SharedPreferences.getInstance();
+
+                        if (_fhList.isNotEmpty) {
+                          // dyWlNum = (_wlList[index]['acc_qty']).toInt();
+
+                          double upNum = _wlList[index]['acc_qty'];
+                          prefs.setDouble('wl', upNum);
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return MyDialog(
+                                  title: "修改信息",
+                                  content: "实际收货",
+                                  model: _fhList,
+                                  f: () {
+                                    // _cirCular = false;
+
+                                    var numStr = prefs.getDouble('wl');
+                                    print('======+++++$numStr');
+                                    upDatas(_wlList[index]['id'], numStr);
+                                  },
+                                  // f2: (String text) {
+                                  //   print('==+++++++=====$text');
+                                  //   setState(() {});
+                                  // },
+                                  c1: (c) {
+                                    //++
+                                    // qtyCount = c;
+                                  },
+                                  c2: (c) {
+                                    //--
+                                    // qtyCount = c;
+                                  },
+                                  c3: (c) {
+                                    // qtyCount = c;
+                                  },
+                                  c11: (int) {},
+                                  c22: (int) {},
+                                  c33: (int) {},
+                                  dyzs: dyPageNum,
+                                  // dzwl: dyPageNum,
+                                  upDataNum: upNum,
+                                  // isClick: false,
+                                );
+                              });
+                        }
+                      })
+                    : Container()
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
-  void toPrint(String result) {
-    FlutterPlugins.print(result).then((value) => {setState(() {})});
+  void toPrint(String result, var detail_id, var qty_print, var part_per_qty) {
+    DataDao.genPrintIdsByDetailId(detail_id, qty_print, part_per_qty)
+        .then((res) {
+      if (res != null && res.result) {
+        var data = res.data['data'];
+        var idsList = data['ids'];
+        String ids = '';
+        for (var id in idsList) {
+          ids = ids + '$id,';
+        }
+        FlutterPlugins.print(result + ids).then((value) => {setState(() {})});
+      }
+    });
   }
 
   Widget _numRowText(t1, t2, index) {
@@ -795,10 +848,6 @@ class _MaterialDetailBodyState extends State<MaterialDetailBody> {
         });
   }
 
-  // Widget _getTextDetail() {
-  //   return Column(children: [Text('data'), Text('data')]);
-  //   // _dataList.map((e) => .toList());
-  // }
   Widget backAndToNext() {
     return InkWell(
       child: Container(
@@ -822,7 +871,7 @@ class _MaterialDetailBodyState extends State<MaterialDetailBody> {
       onTap: () {
         wareListData();
 
-        postAlert();
+        // postAlert();
       },
     );
   }

@@ -264,4 +264,155 @@ class DataDao {
       return ResultDao(resultData, false);
     }
   }
+
+  /**
+   * 根据物料号搜索物料信息
+   */
+  static getPartInfoById(String id) async {
+    Map<String, String> header = {
+      'Authorization': await LocalStorage.get(Config.UA)
+    };
+    // Map<String, dynamic> requestParams = {'deliver_no': deliverNo};
+
+    String setSk = '_SK_=${await LocalStorage.get(Config.SET_KEY)}';
+
+    var res = await HttpManager.netFetch(
+        '${UrlConstant.getPartInfoById()}${setSk}&id=$id',
+        null,
+        header,
+        Options(method: 'get'));
+    var resultData;
+    if (res != null && res.result) {
+      if (res.data['code'] == 200) {
+        return ResultDao(res.data, res.result);
+      } else {
+        resultData = ResultDao(
+            Code.errorHandleFunction(res.data['code'], res.data['msg'], false),
+            false);
+        return ResultDao(resultData, false);
+      }
+    } else {
+      resultData =
+          ResultDao(Code.errorHandleFunction(res.code, '', false), false);
+      return ResultDao(resultData, false);
+    }
+  }
+
+
+  /**
+   * 物料明细打印
+   */
+  static genPrintIdsByDetailId(detail_id, qty_print, part_per_qty) async {
+    Map<String, String> header = {
+      'Authorization': await LocalStorage.get(Config.UA)
+    };
+    String setSk = '_SK_=${await LocalStorage.get(Config.SET_KEY)}';
+    Map<String, dynamic> requestParams = {
+      'detail_id': detail_id,
+      'qty_print': qty_print,
+      'part_per_qty': part_per_qty,
+
+    };
+
+    var res = await HttpManager.netFetch(
+        '${UrlConstant.genPrintIdsByDetailId()}${setSk}',
+        requestParams,
+        header,
+        Options(method: 'post'));
+    var resultData;
+    if (res != null && res.result) {
+      if (res.data['code'] == 200) {
+        return ResultDao(res.data, res.result);
+      } else {
+        resultData = ResultDao(
+            Code.errorHandleFunction(res.data['code'], res.data['msg'], false),
+            false);
+        return ResultDao(resultData, false);
+      }
+    } else {
+      resultData =
+          ResultDao(Code.errorHandleFunction(res.code, '', false), false);
+      return ResultDao(resultData, false);
+    }
+  }
+
+  /**
+   * 扫二维码/输入物料号返回物料信息
+   */
+  static getPartInfoByParas(id, part_id) async {
+    Map<String, String> header = {
+      'Authorization': await LocalStorage.get(Config.UA)
+    };
+    String setSk = '_SK_=${await LocalStorage.get(Config.SET_KEY)}';
+    Map<String, dynamic> requestParams;
+    if(id==null) {
+     requestParams = {
+        'part_id': part_id,
+      };
+    }else{
+      requestParams = {
+        'id': id,
+      };
+    }
+
+    var res = await HttpManager.netFetch(
+        '${UrlConstant.getPartInfoByParas()}${setSk}',
+        requestParams,
+        header,
+        Options(method: 'post'));
+    var resultData;
+    if (res != null && res.result) {
+      if (res.data['code'] == 200) {
+        return ResultDao(res.data, res.result);
+      } else {
+        resultData = ResultDao(
+            Code.errorHandleFunction(res.data['code'], res.data['msg'], false),
+            false);
+        return ResultDao(resultData, false);
+      }
+    } else {
+      resultData =
+          ResultDao(Code.errorHandleFunction(res.code, '', false), false);
+      return ResultDao(resultData, false);
+    }
+  }
+
+
+
+  /**
+   * 自助打印
+   */
+  static genPrintIdsByDetailIdAtSelfPrint(detail_id, qty_print, part_per_qty) async {
+    Map<String, String> header = {
+      'Authorization': await LocalStorage.get(Config.UA)
+    };
+    String setSk = '_SK_=${await LocalStorage.get(Config.SET_KEY)}';
+    Map<String, dynamic> requestParams = {
+      'detail_id': detail_id,
+      'qty_print': qty_print,
+      'part_per_qty': part_per_qty,
+
+    };
+
+    var res = await HttpManager.netFetch(
+        '${UrlConstant.genPrintIdsByDetailIdAtSelfPrint()}${setSk}',
+        requestParams,
+        header,
+        Options(method: 'post'));
+    var resultData;
+    if (res != null && res.result) {
+      if (res.data['code'] == 200) {
+        return ResultDao(res.data, res.result);
+      } else {
+        resultData = ResultDao(
+            Code.errorHandleFunction(res.data['code'], res.data['msg'], false),
+            false);
+        return ResultDao(resultData, false);
+      }
+    } else {
+      resultData =
+          ResultDao(Code.errorHandleFunction(res.code, '', false), false);
+      return ResultDao(resultData, false);
+    }
+  }
 }

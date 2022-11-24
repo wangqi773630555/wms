@@ -36,7 +36,6 @@ class _ToPrintState extends State<ToPrint> {
   var _lotName;
   var _noList = <String>[];
   var jsonData;
-  var _id;
 
   @override
   void initState() {
@@ -274,9 +273,9 @@ class _ToPrintState extends State<ToPrint> {
           var data = res.data['data'];
           _partName = data['part_name'];
           _nameController.text = _partName;
-          String _batch_info =  data['batch_info'];
+           jsonData =  data['batch_info'];
 
-           jsonData = json.decode(_batch_info);
+          // jsonData = json.decode(_batch_info);
           _noList.clear();
           if(jsonData!=null) {
             for (int i = 0; i < jsonData.length; i++) {
@@ -284,9 +283,6 @@ class _ToPrintState extends State<ToPrint> {
               if(i==0){
                 _lotController.text = jsonData[i]['part_batch'].toString();
                 _countController.text = jsonData[i]['qty'].toString();
-                _singelCountController.text =  jsonData[i]['part_per_qty'].toString();
-
-                _id = jsonData[i]['id'].toString();
               }
             }
           }
@@ -306,9 +302,9 @@ class _ToPrintState extends State<ToPrint> {
           _partName = data['part_name'];
           _noController.text = data['part_id'];
           _nameController.text = _partName;
-          String _batch_info =  data['batch_info'];
+           jsonData =  data['batch_info'];
 
-          jsonData = json.decode(_batch_info);
+          //jsonData = json.decode(_batch_info);
           _noList.clear();
           if(jsonData!=null) {
             for (int i = 0; i < jsonData.length; i++) {
@@ -316,8 +312,8 @@ class _ToPrintState extends State<ToPrint> {
               if(i==0){
                 _lotController.text = jsonData[i]['part_batch'].toString();
                 _countController.text = jsonData[i]['qty'].toString();
-                _singelCountController.text =  jsonData[i]['part_per_qty'].toString();
-                _id = jsonData[i]['id'].toString();
+
+
               }
             }
           }
@@ -355,8 +351,7 @@ class _ToPrintState extends State<ToPrint> {
       Fluttertoast.showToast(msg: '打印张数必填');
       return;
     }
-
-    DataDao.genPrintIdsByDetailIdAtSelfPrint(_id, _pageCountController.text,_singelCountController.text).then((res) {
+    DataDao.genPrintIdsByDetailIdAtSelfPrint(_noController.text,_lotController.text, _pageCountController.text,_singelCountController.text).then((res) {
       if (res != null && res.result) {
         var data = res.data['data'];
         var idsList =data['ids'];
@@ -450,7 +445,6 @@ class _ToPrintState extends State<ToPrint> {
                           _lotName = _noList[index].toString();
                           _lotController.text = _lotName;
                           _countController.text = jsonData[index]['qty'].toString();
-                          _id = jsonData[index]['id'].toString();
 
                         });
                       },

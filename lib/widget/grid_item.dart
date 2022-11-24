@@ -56,6 +56,10 @@ class GridItemWidget extends StatelessWidget {
           case Config.MATERIAL_PRINT:
             NavigatorUtils.goMaterialPrint(context);
             break;
+            //设备上料列表
+          case Config.Material_LoadList:
+            NavigatorUtils.goMaterialLoadList(context);
+            break;
           case Config.MATERIAL_DETAIL:
             //拍照权限
             // bool isCamera = await CommonUtils.checkPermissionCamera();

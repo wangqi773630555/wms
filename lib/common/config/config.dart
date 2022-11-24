@@ -35,5 +35,8 @@ class Config {
   static const MATERIAL_DETAIL = "materialDetail";
   static const MATERIAL_RECEIPT_DETAIL = 'MaterialReceiptDetail';
   static const MATERIAL_PRINT = 'materialPrint';
+  static const Material_LoadList = 'materialLoadList';
+  static const Material_LoadProcess = 'materialLoadProcess';
+  static const Material_LoadDetails = 'materialLoadDetails';
 
 }

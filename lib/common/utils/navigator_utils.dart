@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:wanma_print/page/app.dart';
+import 'package:wanma_print/page/load%20material/load_process.dart';
 import 'package:wanma_print/page/print_page.dart';
+import '../../page/load material/load_details.dart';
+import '../../page/load material/load_list.dart';
 import '../../page/login_page.dart';
 import '../../page/param_setting.dart';
 import '../../page/receipt_management/material_detail.dart';
@@ -64,5 +67,21 @@ class NavigatorUtils {
 
   static goMaterialPrint(BuildContext context) {
     Navigator.pushNamed(context, ToPrint.sName);
+  }
+
+  static goMaterialLoadList(BuildContext context) {
+    Navigator.pushNamed(context, MaterialLoadList.sName);
+  }
+
+  static goMaterialLoadProcess(BuildContext context,data) {
+    Navigator.pushNamed(context, MaterialLoadProcess.sName,arguments: data);
+  }
+
+  static goMaterialLoadDetails(BuildContext context,data) {
+    Navigator.pushReplacementNamed(context, MaterialLoadDetails.sName,arguments: data);
+  }
+
+  static goMaterialLoadDetails1(BuildContext context,data) {
+    Navigator.pushNamed(context, MaterialLoadDetails.sName,arguments: data);
   }
 }

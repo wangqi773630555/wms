@@ -53,6 +53,12 @@ class _ItemMenuState extends State<ItemMenu>
           case ScanConfig.PAGE_PRINT:
             ScanEventUtils.send(ScanConfig.PAGE_PRINT, methodCall.arguments.toString());
             break;
+          case ScanConfig.PAGE_LOAD:
+            ScanEventUtils.send(ScanConfig.PAGE_LOAD, methodCall.arguments.toString());
+            break;
+          case ScanConfig.PAGE_LOAD_PART:
+            ScanEventUtils.send(ScanConfig.PAGE_LOAD_PART, methodCall.arguments.toString());
+            break;
           default:
             NavigatorUtils.goMaterialDetail(context, methodCall.arguments.toString());
             break;
@@ -131,7 +137,7 @@ class AreaItem extends StatelessWidget {
     Icons.list_alt,
     Icons.qr_code,
     Icons.print,
-    Icons.playlist_add_outlined,
+    Icons.upload,
     Icons.featured_play_list_outlined,
     Icons.home_repair_service_outlined
   ];

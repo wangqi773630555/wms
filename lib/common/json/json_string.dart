@@ -41,6 +41,12 @@ abstract class JsonString {
             "functionName": "materialPrint",
             "id": 1,
             "icon": "Icons.qr_code"
+        },
+        {
+            "title": "设备上料",
+            "functionName": "materialLoadList",
+            "id": 1,
+            "icon": "Icons.qr_code"
         }
        
     ],

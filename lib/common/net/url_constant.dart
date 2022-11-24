@@ -77,4 +77,22 @@ class UrlConstant {
   static genPrintIdsByDetailIdAtSelfPrint() {
     return '${host2}wm/rtWmMaterialBillPrint/genPrintIdsByDetailIdAtSelfPrint?';
   }
+
+  static getInfoById() {
+    return '${host2}wm/rtWmMaterialBillPrint/infoById?';
+  }
+
+  static getSaveData() {
+    return '${host2}sync/mesProxy/mesJsonReq?route=/lot/rtLotPickRelease/saveData&';
+  }
+
+  static getorderInfoAndRecipeDataListByParas() {
+    return '${host2}sync/mesProxy/mesJsonReq?route=/lot/rtLotOrder/orderInfoAndRecipesByOrderId&';
+  }
+
+  static getLoadIndexListData() {
+    return '${host2}sync/mesProxy/mesJsonReq?route=/lot/rtLotPickRelease/indexList&';
+  }
+
+
 }

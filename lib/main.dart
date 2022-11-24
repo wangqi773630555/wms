@@ -11,6 +11,9 @@ import 'package:wanma_print/common/redux/wm_state.dart';
 import 'package:wanma_print/common/style/wm_style.dart';
 import 'package:wanma_print/common/utils/common_utils.dart';
 import 'package:wanma_print/common/utils/navigator_utils.dart';
+import 'package:wanma_print/page/load%20material/load_details.dart';
+import 'package:wanma_print/page/load%20material/load_list.dart';
+import 'package:wanma_print/page/load%20material/load_process.dart';
 import 'package:wanma_print/page/print_page.dart';
 import 'package:wanma_print/page/receipt_management/material_detail.dart';
 import 'package:wanma_print/page/receipt_management/material_receipt.dart';
@@ -101,7 +104,19 @@ class MyApp extends StatelessWidget {
                   child: MaterialReceiptDetail(),
                 ),
             ToPrint.sName: (context) => CommonLayer(
-              child: ToPrint(),
+                  child: ToPrint(),
+                ),
+            //上料列表
+            MaterialLoadList.sName: (context) => CommonLayer(
+                  child: MaterialLoadList(),
+                ),
+            //上料工序选择
+            MaterialLoadProcess.sName: (context) => CommonLayer(
+              child: MaterialLoadProcess(),
+            ),
+            //设备上料
+            MaterialLoadDetails.sName: (context) => CommonLayer(
+              child: MaterialLoadDetails(),
             ),
 //===================
             // NewReportOrder.sName: (context) => CommonLayer(

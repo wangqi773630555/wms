@@ -96,7 +96,7 @@ class HttpManager {
         print('请求参数: ' + params.toString());
       }
       if (response != null) {
-        LogUtil.d('返回参数: ' + response.toString());
+        LogUtil.d(': ' + response.toString());
       }
     }
 

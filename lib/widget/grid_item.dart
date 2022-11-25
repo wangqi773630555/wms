@@ -56,11 +56,14 @@ class GridItemWidget extends StatelessWidget {
           case Config.MATERIAL_PRINT:
             NavigatorUtils.goMaterialPrint(context);
             break;
-            //设备上料列表
+          case Config.PRO_REPORT:
+            NavigatorUtils.goProductionReport(context);
+            break;
+          case Config.MATERIAL_DETAIL:
+          //设备上料列表
           case Config.Material_LoadList:
             NavigatorUtils.goMaterialLoadList(context);
             break;
-          case Config.MATERIAL_DETAIL:
             //拍照权限
             // bool isCamera = await CommonUtils.checkPermissionCamera();
             // if (!isCamera) {
@@ -71,7 +74,7 @@ class GridItemWidget extends StatelessWidget {
             var sk = await LocalStorage.get(Config.SET_KEY);
 
             if (sk != null && sk != '') {
-              NavigatorUtils.goMaterialDetail(context,'');
+              NavigatorUtils.goMaterialDetail(context, '');
             } else {
               Fluttertoast.showToast(msg: '请设置参数');
             }

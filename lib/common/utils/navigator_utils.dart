@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:wanma_print/page/app.dart';
-import 'package:wanma_print/page/load%20material/load_process.dart';
 import 'package:wanma_print/page/print_page.dart';
+import 'package:wanma_print/page/production_report/cabling.dart';
+import 'package:wanma_print/page/production_report/form_circle.dart';
+import 'package:wanma_print/page/production_report/select_work.dart';
+import 'package:wanma_print/page/production_report/series_connection.dart';
+import 'package:wanma_print/page/production_report/sheath.dart';
+import 'package:wanma_print/page/production_report/twisted_pair.dart';
+// import 'package:wanma_print/page/task/task_list.dart';
 import '../../page/load material/load_details.dart';
 import '../../page/load material/load_list.dart';
+import '../../page/load material/load_process.dart';
 import '../../page/login_page.dart';
 import '../../page/param_setting.dart';
+import '../../page/production_report/production_report.dart';
 import '../../page/receipt_management/material_detail.dart';
 import '../../page/receipt_management/material_receipt.dart';
 import '../../page/receipt_management/material_receipt_detail.dart';
@@ -69,19 +77,61 @@ class NavigatorUtils {
     Navigator.pushNamed(context, ToPrint.sName);
   }
 
+  // static goTaskList(BuildContext context) {
+  //   Navigator.pushNamed(context, TaskList.sName);
+  // }
+  static goProductionReport(BuildContext context) {
+    Navigator.pushNamed(context, ProductionReport.sName);
+  }
+
+  static goSelectWork(BuildContext context, ids) async {
+    await Navigator.pushNamed(context, SelectWork.sName, arguments: ids);
+  }
+
+  static goCabling(
+      BuildContext context, ids, order_id, id_from_list, flag) async {
+    await Navigator.pushNamed(context, Cabling.sName,
+        arguments: [ids, order_id, id_from_list, flag]);
+  }
+
+  static goFormCircle(
+      BuildContext context, ids, order_id, id_from_list, flag) async {
+    await Navigator.pushNamed(context, FromCircle.sName,
+        arguments: [ids, order_id, id_from_list, flag]);
+  }
+
+  static goSeriesConnection(
+      BuildContext context, ids, order_id, id_from_list, flag) async {
+    await Navigator.pushNamed(context, SeriesConnection.sName,
+        arguments: [ids, order_id, id_from_list, flag]);
+  }
+
+  static goSheath(
+      BuildContext context, ids, order_id, id_from_list, flag) async {
+    await Navigator.pushNamed(context, Sheath.sName,
+        arguments: [ids, order_id, id_from_list, flag]);
+  }
+
+  static goTwistedPair(
+      BuildContext context, ids, order_id, id_from_list, flag) async {
+    await Navigator.pushNamed(context, TwistedPair.sName,
+        arguments: [ids, order_id, id_from_list, flag]);
+  }
+
   static goMaterialLoadList(BuildContext context) {
     Navigator.pushNamed(context, MaterialLoadList.sName);
   }
 
-  static goMaterialLoadProcess(BuildContext context,data) {
-    Navigator.pushNamed(context, MaterialLoadProcess.sName,arguments: data);
+  static goMaterialLoadProcess(BuildContext context, data) {
+    Navigator.pushNamed(context, MaterialLoadProcess.sName, arguments: data);
   }
 
-  static goMaterialLoadDetails(BuildContext context,data) {
-    Navigator.pushReplacementNamed(context, MaterialLoadDetails.sName,arguments: data);
+  static goMaterialLoadDetails(BuildContext context, data) {
+    Navigator.pushReplacementNamed(context, MaterialLoadDetails.sName,
+        arguments: data);
   }
 
-  static goMaterialLoadDetails1(BuildContext context,data) {
-    Navigator.pushNamed(context, MaterialLoadDetails.sName,arguments: data);
+  static goMaterialLoadDetails1(BuildContext context, data) {
+    Navigator.pushNamed(context, MaterialLoadDetails.sName, arguments: data);
   }
 }

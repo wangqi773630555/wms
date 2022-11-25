@@ -309,6 +309,8 @@ class _MaterialLoadDetailsState extends State<MaterialLoadDetails> {
             _id, _order_id, _recipe_id, _eqp_id, _code, _countController.text)
         .then((res) {
       if (res != null && res.result) {
+        ScanConfig.scanPage = ScanConfig.PAGE_LOAD;
+        ScanEventUtils.send(ScanConfig.PAGE_LOAD, "refresh");
         showDialog(
             context: context,
             builder: (context) {
@@ -469,8 +471,6 @@ class _MaterialLoadDetailsState extends State<MaterialLoadDetails> {
   @override
   void dispose() async {
     super.dispose();
-    ScanConfig.scanPage = ScanConfig.PAGE_LOAD;
-    ScanEventUtils.send(ScanConfig.PAGE_LOAD, "refresh");
     if (stream != null) {
       stream?.cancel();
       stream = null;

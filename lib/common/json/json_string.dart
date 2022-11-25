@@ -42,12 +42,18 @@ abstract class JsonString {
             "id": 1,
             "icon": "Icons.qr_code"
         },
-        {
-            "title": "设备上料",
-            "functionName": "materialLoadList",
+         {
+            "title": "产量报工",
+            "functionName": "ProductionReport",
             "id": 1,
             "icon": "Icons.qr_code"
-        }
+        },
+        {
+    "title": "设备上料",
+    "functionName": "materialLoadList",
+    "id": 1,
+    "icon": "Icons.qr_code"
+}
        
     ],
     "msg": "成功",

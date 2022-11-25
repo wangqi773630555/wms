@@ -29,14 +29,22 @@ class Config {
 
   static const LOGIN = "login";
   static const HOME = "home";
-
+  static const TASK_LIST = "TASK_LIST";
+  static const PRO_REPORT = "ProductionReport";
   static const LOGIN_TITLE = "LOGIN_TITLE";
   static const MATERIAL_RECEIPT = "materialReceipt";
   static const MATERIAL_DETAIL = "materialDetail";
   static const MATERIAL_RECEIPT_DETAIL = 'MaterialReceiptDetail';
   static const MATERIAL_PRINT = 'materialPrint';
+  static const SELECT_WORK = 'SELECT_WORK';
+  static const FORM_CIRCLE = 'FORM_CIRCLE';
+  static const CABLING = 'CABLING';
+  static const PRODUCTION_REPORT = 'PRODUCTION_REPORT';
+  static const SERIES_CONNECTION = 'SERIES_CONNECTION';
+  static const SHEATH = 'SHEATH';
+  static const TWISTED_PAIR = 'TWISTED_PAIR';
+//####
   static const Material_LoadList = 'materialLoadList';
   static const Material_LoadProcess = 'materialLoadProcess';
   static const Material_LoadDetails = 'materialLoadDetails';
-
 }

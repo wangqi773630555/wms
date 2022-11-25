@@ -36,7 +36,6 @@ class _ItemMenuState extends State<ItemMenu>
   late Future _futureStr;
   static const _platform = MethodChannel('toFlutterChannelName');
 
-
   @override
   void initState() {
     super.initState();
@@ -49,18 +48,22 @@ class _ItemMenuState extends State<ItemMenu>
     switch (methodCall.method) {
       case 'flutterMethod':
         debugPrint('Android传递给flutter的参数是：' + methodCall.arguments);
-        switch(ScanConfig.scanPage){
+        switch (ScanConfig.scanPage) {
           case ScanConfig.PAGE_PRINT:
-            ScanEventUtils.send(ScanConfig.PAGE_PRINT, methodCall.arguments.toString());
+            ScanEventUtils.send(
+                ScanConfig.PAGE_PRINT, methodCall.arguments.toString());
             break;
           case ScanConfig.PAGE_LOAD:
-            ScanEventUtils.send(ScanConfig.PAGE_LOAD, methodCall.arguments.toString());
+            ScanEventUtils.send(
+                ScanConfig.PAGE_LOAD, methodCall.arguments.toString());
             break;
           case ScanConfig.PAGE_LOAD_PART:
-            ScanEventUtils.send(ScanConfig.PAGE_LOAD_PART, methodCall.arguments.toString());
+            ScanEventUtils.send(
+                ScanConfig.PAGE_LOAD_PART, methodCall.arguments.toString());
             break;
           default:
-            NavigatorUtils.goMaterialDetail(context, methodCall.arguments.toString());
+            NavigatorUtils.goMaterialDetail(
+                context, methodCall.arguments.toString());
             break;
         }
 
@@ -137,8 +140,8 @@ class AreaItem extends StatelessWidget {
     Icons.list_alt,
     Icons.qr_code,
     Icons.print,
-    Icons.upload,
     Icons.featured_play_list_outlined,
+    Icons.upload,
     Icons.home_repair_service_outlined
   ];
 
@@ -193,6 +196,4 @@ class AreaItem extends StatelessWidget {
       ),
     );
   }
-
-
 }

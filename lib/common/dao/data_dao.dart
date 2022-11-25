@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:wanma_print/common/config/config.dart';
 import 'package:wanma_print/common/dao/result_dao.dart';
 import 'package:wanma_print/common/local/local_storage.dart';
@@ -92,22 +93,7 @@ class DataDao {
         null,
         header,
         Options(method: 'get'));
-    // var resultData;
-    // if (res != null && res.result) {
-    //   if (res.data['code'] == 200) {
-    // print('-----------------${res.data}');
     return res.data;
-    //   } else {
-    //     resultData = ResultDao(
-    //         Code.errorHandleFunction(res.data['code'], res.data['msg'], false),
-    //         false);
-    //     return ResultDao(resultData, false);
-    //   }
-    // } else {
-    //   resultData =
-    //       ResultDao(Code.errorHandleFunction(res.code, '', false), false);
-    //   return ResultDao(resultData, false);
-    // }
   }
 
   static getBillCancel(String deliverNo) async {
@@ -298,7 +284,6 @@ class DataDao {
     }
   }
 
-
   /**
    * 物料明细打印
    */
@@ -311,7 +296,6 @@ class DataDao {
       'detail_id': detail_id,
       'qty_print': qty_print,
       'part_per_qty': part_per_qty,
-
     };
 
     var res = await HttpManager.netFetch(
@@ -345,11 +329,11 @@ class DataDao {
     };
     String setSk = '_SK_=${await LocalStorage.get(Config.SET_KEY)}';
     Map<String, dynamic> requestParams;
-    if(id==null) {
-     requestParams = {
+    if (id == null) {
+      requestParams = {
         'part_id': part_id,
       };
-    }else{
+    } else {
       requestParams = {
         'id': id,
       };
@@ -377,11 +361,201 @@ class DataDao {
     }
   }
 
+  //------------------产量报工
+  static getSelectProduction(
+    productionId,
+  ) async {
+    Map<String, String> header = {
+      'Authorization': await LocalStorage.get(Config.UA)
+    };
+    String setSk = '_SK_=${await LocalStorage.get(Config.SET_KEY)}';
+    Map<String, dynamic> requestParams = {
+      'id': productionId, // string 必须  入库库位
+    };
 
+    var res = await HttpManager.netFetch(
+        '${UrlConstant.getSelectProduction()}${setSk}',
+        requestParams,
+        header,
+        Options(method: 'post'));
+    var resultData;
+    if (res != null && res.result) {
+      if (res.data['code'] == 200) {
+        return ResultDao(res.data, res.result);
+      } else {
+        resultData = ResultDao(
+            Code.errorHandleFunction(res.data['code'], res.data['msg'], false),
+            false);
+        return ResultDao(resultData, false);
+      }
+    } else {
+      resultData =
+          ResultDao(Code.errorHandleFunction(res.code, '', false), false);
+      return ResultDao(resultData, false);
+    }
+  }
+
+//工序
+  static getProductions(orderId, recipeId, ids, flag) async {
+    Map<String, String> header = {
+      'Authorization': await LocalStorage.get(Config.UA)
+    };
+    String setSk = '_SK_=${await LocalStorage.get(Config.SET_KEY)}';
+    Map<String, dynamic> requestParams;
+    if (flag == true) {
+      requestParams = {'id': ids.toString()};
+    } else {
+      requestParams = {
+        "orderId": orderId,
+        "recipeId": recipeId.toString(),
+      };
+    }
+
+    print('======-----##$requestParams');
+    var res = await HttpManager.netFetch(
+        '${UrlConstant.getProduction()}${setSk}',
+        requestParams,
+        header,
+        Options(method: 'post'));
+    var resultData;
+    if (res != null && res.result) {
+      if (res.data['code'] == 200) {
+        return ResultDao(res.data, res.result);
+      } else {
+        resultData = ResultDao(
+            Code.errorHandleFunction(res.data['code'], res.data['msg'], false),
+            false);
+        return ResultDao(resultData, false);
+      }
+    } else {
+      resultData =
+          ResultDao(Code.errorHandleFunction(res.code, '', false), false);
+      return ResultDao(resultData, false);
+    }
+  }
+
+//产量列表
+  static getProductionList() async {
+    Map<String, String> header = {
+      'Authorization': await LocalStorage.get(Config.UA)
+    };
+    String setSk = '_SK_=${await LocalStorage.get(Config.SET_KEY)}';
+    // Map<String, dynamic> requestParams = {
+    //   "orderId": 306018, "recipeId": '100001'
+    //   // 'id': ids
+    // };
+    // print('======-----##$requestParams');
+    var res = await HttpManager.netFetch(
+        '${UrlConstant.getProductionList()}${setSk}',
+        null,
+        header,
+        Options(method: 'post'));
+    var resultData;
+    if (res != null && res.result) {
+      if (res.data['code'] == 200) {
+        return ResultDao(res.data, res.result);
+      } else {
+        resultData = ResultDao(
+            Code.errorHandleFunction(res.data['code'], res.data['msg'], false),
+            false);
+        return ResultDao(resultData, false);
+      }
+    } else {
+      resultData =
+          ResultDao(Code.errorHandleFunction(res.code, '', false), false);
+      return ResultDao(resultData, false);
+    }
+  }
+
+  //申报
+  static getProductionSave(orderId, recipeId, ids, flag, paras) async {
+    Map<String, String> header = {
+      'Authorization': await LocalStorage.get(Config.UA)
+    };
+    String setSk = '_SK_=${await LocalStorage.get(Config.SET_KEY)}';
+    var requestParams;
+    // Map<String, dynamic> requestParams = {
+    //   "orderId": orderId,
+    //   "recipeId": recipeId,
+    //   'id': ids,
+    //   'paras': paras
+    // };
+    if (flag == true) {
+      requestParams = {'id': ids, 'paras': paras};
+    } else {
+      requestParams = {
+        "orderId": orderId,
+        "recipeId": recipeId,
+        'paras': paras
+      };
+    }
+    // print('======-----##$requestParams');
+    var res = await HttpManager.netFetch(
+        '${UrlConstant.getSaveProduction()}${setSk}',
+        requestParams,
+        header,
+        Options(method: 'post'));
+    var resultData;
+    // print('+++++++${res.data}');
+
+    if (res != null && res.result) {
+      // if (res.data['code'] == 200) {
+      return ResultDao(res.data, res.result);
+      //   } else {
+      //     resultData = ResultDao(
+      //         Code.errorHandleFunction(res.data['code'], res.data['msg'], false),
+      //         false);
+      //     return ResultDao(resultData, false);
+      //   }
+      // } else {
+      //   resultData =
+      //       ResultDao(Code.errorHandleFunction(res.code, '', false), false);
+      //   return ResultDao(resultData, false);
+    }
+  }
+
+  //申报
+  static getScanUrl(scanStr, url) async {
+    Map<String, String> header = {
+      'Authorization': await LocalStorage.get(Config.UA)
+    };
+    String setSk = '_SK_=${await LocalStorage.get(Config.SET_KEY)}';
+    // var requestParams;
+    // Map<String, dynamic> requestParams = {
+    //   "orderId": orderId,
+    //   "recipeId": recipeId,
+    //   'id': ids,
+    //   'paras': paras
+    // };
+
+    // print('======-----##$requestParams');
+    var res = await HttpManager.netFetch(
+        '${UrlConstant.getProductionQueryURL(url)}${scanStr}&${setSk}',
+        null,
+        header,
+        Options(method: 'get'));
+    var resultData;
+    // print('+++++++${res.data}');
+
+    if (res != null && res.result) {
+      // if (res.data['code'] == 200) {
+      return ResultDao(res.data, res.result);
+      //   } else {
+      //     resultData = ResultDao(
+      //         Code.errorHandleFunction(res.data['code'], res.data['msg'], false),
+      //         false);
+      //     return ResultDao(resultData, false);
+      //   }
+      // } else {
+      //   resultData =
+      //       ResultDao(Code.errorHandleFunction(res.code, '', false), false);
+      //   return ResultDao(resultData, false);
+    }
+  }
 
   /**
-   * 自助打印
-   */
+ * 自助打印
+ */
   static genPrintIdsByDetailIdAtSelfPrint(
       part_id, part_batch, qty_print, part_per_qty) async {
     Map<String, String> header = {
@@ -417,9 +591,9 @@ class DataDao {
     }
   }
 
-  /**
-   * 扫描物料号返回物料信息
-   */
+/**
+ * 扫描物料号返回物料信息
+ */
   static getInfoById(id) async {
     Map<String, String> header = {
       'Authorization': await LocalStorage.get(Config.UA)
@@ -429,11 +603,8 @@ class DataDao {
     requestParams = {
       'id': id,
     };
-    var res = await HttpManager.netFetch(
-        '${UrlConstant.getInfoById()}${setSk}',
-        requestParams,
-        header,
-        Options(method: 'post'));
+    var res = await HttpManager.netFetch('${UrlConstant.getInfoById()}${setSk}',
+        requestParams, header, Options(method: 'post'));
     var resultData;
     if (res != null && res.result) {
       if (res.data['code'] == 200) {
@@ -451,10 +622,15 @@ class DataDao {
     }
   }
 
+/**
+ * 确定投料
+ */
+
   /**
    * 确定投料
    */
-  static getSaveData(id,order_id,recipe_id,eqp_id,material_bill_print_id,release_qty) async {
+  static getSaveData(id, order_id, recipe_id, eqp_id, material_bill_print_id,
+      release_qty) async {
     Map<String, String> header = {
       'Authorization': await LocalStorage.get(Config.UA)
     };
@@ -468,11 +644,8 @@ class DataDao {
       'material_bill_print_id': material_bill_print_id,
       'release_qty': release_qty,
     };
-    var res = await HttpManager.netFetch(
-        '${UrlConstant.getSaveData()}${setSk}',
-        requestParams,
-        header,
-        Options(method: 'post'));
+    var res = await HttpManager.netFetch('${UrlConstant.getSaveData()}${setSk}',
+        requestParams, header, Options(method: 'post'));
     var resultData;
     if (res != null && res.result) {
       if (res.data['code'] == 200) {
@@ -493,7 +666,7 @@ class DataDao {
   /**
    * 主页顶部扫码框 -> 扫订单二维码返回信息
    */
-  static getOrderInfoAndRecipeDataListByParas(id,order_id,recipe_id) async {
+  static getOrderInfoAndRecipeDataListByParas(id, order_id, recipe_id) async {
     Map<String, String> header = {
       'Authorization': await LocalStorage.get(Config.UA)
     };
@@ -537,9 +710,9 @@ class DataDao {
     };
     String setSk = '_SK_=${await LocalStorage.get(Config.SET_KEY)}';
     Map<String, dynamic> requestParams;
-      requestParams = {
-        'id': id,
-      };
+    requestParams = {
+      'id': id,
+    };
     var res = await HttpManager.netFetch(
         '${UrlConstant.getLoadIndexListData()}${setSk}',
         requestParams,

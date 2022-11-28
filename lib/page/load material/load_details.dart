@@ -55,6 +55,7 @@ class _MaterialLoadDetailsState extends State<MaterialLoadDetails> {
     ScanConfig.scanPage = ScanConfig.PAGE_LOAD_PART;
     stream = ScanEventUtils.eventBus.on<ScanEvent>().listen((event) {
       if (event.page == ScanConfig.PAGE_LOAD_PART) {
+        print(event.scanResult);
         _getInfoById(event.scanResult);
       }
     });
@@ -165,7 +166,7 @@ class _MaterialLoadDetailsState extends State<MaterialLoadDetails> {
                 SizedBox(
                   height: 35.0,
                   child: ElevatedButton(
-                      onPressed: () => {_getSaveData()}, child: Text('确定投料')),
+                      onPressed: () => {_getSaveData()}, child: Text(_id!=null?'修改投料':'确定投料')),
                 ),
               ],
             )
@@ -315,7 +316,7 @@ class _MaterialLoadDetailsState extends State<MaterialLoadDetails> {
             context: context,
             builder: (context) {
               return AlertDialog(
-                title: Text('是否继续投料?'),
+                title: Text('投料成功,是否继续投料?'),
                 actions: [
                   TextButton(
                       onPressed: () {

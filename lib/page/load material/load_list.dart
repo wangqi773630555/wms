@@ -104,9 +104,11 @@ class _MaterialLoadListState extends State<MaterialLoadList> {
     super.initState();
     ScanConfig.scanPage = ScanConfig.PAGE_LOAD;
     stream = ScanEventUtils.eventBus.on<ScanEvent>().listen((event) {
-      if (event.page == ScanConfig.scanPage) {
+      if (event.page ==  ScanConfig.PAGE_LOAD) {
         if(event.scanResult=='refresh') {
           print('refresh');
+          _allList.clear();
+          _modelList.clear();
           getInintData();
         }else {
           _getOrderInfoAndRecipeDataListByParas(event.scanResult);
@@ -162,8 +164,10 @@ class _MaterialLoadListState extends State<MaterialLoadList> {
       ),
       onChanged: (value) {
         print(value.toString()+"1111");
+        print('${_allList.length}');
         setState(() {
           _modelList.clear();
+          _allList.clear();
           for(int i=0;i<_allList.length;i++){
             if(_allList[i]['order_id'].toString().contains(value.toString())){
               _modelList.add(_allList[i]);
@@ -191,6 +195,8 @@ class _MaterialLoadListState extends State<MaterialLoadList> {
                 Colors.white, Colors.grey, Color.fromARGB(255, 244, 158, 54)),
             footer: CustomRefreshFooter(Colors.grey, Colors.grey),
             onRefresh: () async {
+              _modelList.clear();
+              _allList.clear();
               getInintData();
               setState(() {});
               _easyfreshController.resetLoadState();

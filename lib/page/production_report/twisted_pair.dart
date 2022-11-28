@@ -119,7 +119,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
 
             if (element['key'] == 'qty') {
               vc1.text = (element['value'] ?? '').toString();
-              extraField1 = element['extraField'];
+              extraField1 = element['extraField'] ?? '';
             }
             if (element['title'] == '班次') {
               radioList = element['list'];
@@ -371,7 +371,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
                         save();
                       },
                       child: Text(
-                        '确认申报',
+                        widget.idsList[3] == true ? '保存修改' : '确认申报',
                         style: TextStyle(fontSize: 16, color: Colors.white),
                       ))
                 ]),

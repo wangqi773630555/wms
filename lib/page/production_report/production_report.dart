@@ -31,10 +31,16 @@ class _ProductionReportState extends State<ProductionReport> {
   scanAction(txt) async {
     await _scan();
 
-    Future.delayed(const Duration(milliseconds: 500), () {
+    Future.delayed(const Duration(milliseconds: 500), () async {
       bool f = false;
       if (scanResult?.rawContent != "" && scanResult?.rawContent != null) {
-        NavigatorUtils.goSelectWork(context, scanResult?.rawContent);
+        await NavigatorUtils.goSelectWork(context, scanResult?.rawContent)
+            .then((res) {
+          // print('fanhui');
+          setState(() {
+            getData();
+          });
+        });
       }
       //延时执行的代码
 
@@ -243,7 +249,7 @@ class _ProductionReportState extends State<ProductionReport> {
                     //       _modelList[index]['status_text'] == '部分过账')
                     //   ? Container()
                     //   :
-                    _buttonStyle('查看详情', Colors.white, Colors.blue, 100, 30,
+                    _buttonStyle('查看详情', Colors.white, Colors.blue, 100, 0,
                         Colors.grey, 40, () async {
                   print(productionList[index]['recipe_title']);
                   switch (productionList[index]['recipe_title']) {
@@ -304,21 +310,21 @@ class _ProductionReportState extends State<ProductionReport> {
                       break;
                   }
                 })),
-                _buttonStyle(
-                    '打印流程卡',
-                    Color.fromARGB(255, 209, 232, 251),
-                    Color.fromARGB(255, 15, 86, 144),
-                    100,
-                    10,
-                    Colors.white,
-                    40, () async {
-                  // await NavigatorUtils.goMaterialDetail(
-                  //         context, _modelList[index]['deliver_no'])
-                  //     .then((result) {
-                  //   getInintData();
-                  //   print('111111111111111');
-                  // });
-                })
+                // _buttonStyle(
+                //     '打印流程卡',
+                //     Color.fromARGB(255, 209, 232, 251),
+                //     Color.fromARGB(255, 15, 86, 144),
+                //     100,
+                //     10,
+                //     Colors.white,
+                //     40, () async {
+                //   // await NavigatorUtils.goMaterialDetail(
+                //   //         context, _modelList[index]['deliver_no'])
+                //   //     .then((result) {
+                //   //   getInintData();
+                //   //   print('111111111111111');
+                //   // });
+                // })
               ],
             ),
           ),

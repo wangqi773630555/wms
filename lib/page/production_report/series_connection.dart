@@ -111,7 +111,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
 
             if (element['key'] == 'qty') {
               vc1.text = (element['value'] ?? '').toString();
-              extraField1 = element['extraField'];
+              extraField1 = element['extraField'] ?? "";
             }
             if (element['title'] == '班次') {
               radioList = element['list'];
@@ -121,11 +121,11 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
             }
             if (element['title'] == '导体线径') {
               vc2.text = (element['value'] ?? '').toString();
-              extraField2 = element['extraField'];
+              extraField2 = element['extraField'] ?? '';
             }
             if (element['title'] == '芯线线径') {
               vc3.text = (element['value'] ?? '').toString();
-              extraField3 = element['extraField'];
+              extraField3 = element['extraField'] ?? '';
             }
             if (element['title'] == '盘号') {
               vc4.text = (element['value'] ?? '').toString();
@@ -135,11 +135,11 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
             }
             if (element['title'] == '同心度') {
               vc6.text = (element['value'] ?? '').toString();
-              extraField4 = element['extraField'];
+              extraField4 = element['extraField'] ?? '';
             }
             if (element['title'] == '导体伸率') {
               vc7.text = (element['value'] ?? '').toString();
-              extraField5 = element['extraField'];
+              extraField5 = element['extraField'] ?? '';
             }
             if (element['title'] == '报工人') {
               // if (element['value'] != null) {
@@ -368,7 +368,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
                         save();
                       },
                       child: Text(
-                        '确认申报',
+                        widget.idsList[3] == true ? '保存修改' : '确认申报',
                         style: TextStyle(fontSize: 16, color: Colors.white),
                       ))
                 ]),

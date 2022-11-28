@@ -79,16 +79,25 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
   ScanResult? scanResult;
   List<DropdownMenuItem<String>> _eqpIdItems = [];
   List<DropdownMenuItem<String>> _colorItems = [];
+  FocusNode _focusNode1 = FocusNode();
+  FocusNode _focusNode2 = FocusNode();
+  FocusNode _focusNode3 = FocusNode();
+  FocusNode _focusNode4 = FocusNode();
+  FocusNode _focusNode5 = FocusNode();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+
     // print(widget.idsList[0]);
     // print(widget.idsList[1]);
     // if(_mechanicalMonitors != null && _mechanicalMonitors.length > 0) {
     //
     //       _monitorsValue = _mechanicalMonitors[0]['id'].toString();
     //     }
+    // _focusNode.addListener(() {
+
+    // });
     getData(widget.idsList[3], widget.idsList[2]);
   }
 
@@ -124,7 +133,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
                 vc1.text = '$_cd';
               }
 
-              extraField1 = element['extraField'];
+              extraField1 = element['extraField'] ?? '';
             }
             if (element['title'] == '班次') {
               radioList = element['list'];
@@ -146,7 +155,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
                 vc3.text = _dc.toString();
               }
 
-              extraField2 = element['extraField'];
+              extraField2 = element['extraField'] ?? '';
             }
             if (element['title'] == '箱/盘数') {
               // vc4.text = (element['value'] ?? '').toString();
@@ -156,7 +165,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
                 vc4.text = _xps.toString();
               }
 
-              extraField3 = element['extraField'];
+              extraField3 = element['extraField'] ?? '';
             }
             if (element['title'] == '箱号') {
               // vc4.text = (element['value'] ?? '').toString();
@@ -164,7 +173,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
                 vc6.text = element['value'].toString();
               }
 
-              extraField3 = element['extraField'];
+              extraField3 = element['extraField'] ?? '';
             }
 
             if (element['title'] == '装箱数量') {
@@ -172,7 +181,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
               _zxsl =
                   double.parse((element['value'] ?? '').toString()).truncate();
               vc5.text = _zxsl.toString();
-              extraField4 = element['extraField'];
+              extraField4 = element['extraField'] ?? '';
             }
 
             if (element['title'] == '报工人') {
@@ -297,16 +306,20 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
         } else {
           DataDao.getScanUrl(scanResult!.rawContent, _url).then((res) {
             print(res.data['data']);
-            setState(() {
-              // _cd = res.data['data']['qty'];
-              vc1.text = res.data['data']['qty'].toString();
-              vc2.text = res.data['data']['sheath_no'];
-              vc4.text = (double.parse(vc1.text) /
-                      double.parse(vc3.text) /
-                      double.parse(vc5.text))
-                  .truncate()
-                  .toString();
-            });
+            if (res.data['data'] != null && res.data['data'] != '') {
+              setState(() {
+                // _cd = res.data['data']['qty'];
+                vc1.text = res.data['data']['qty'].toString();
+                vc2.text = res.data['data']['sheath_no'];
+                vc4.text = (double.parse(vc1.text) /
+                        double.parse(vc3.text) /
+                        double.parse(vc5.text))
+                    .truncate()
+                    .toString();
+              });
+            } else {
+              Fluttertoast.showToast(msg: res.data['msg']);
+            }
           });
         }
 
@@ -387,8 +400,8 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
                   cellForRow('长度', vc1, false, extraField1, 'double'),
                   cellForRow('定长', vc3, false, extraField2, 'double'),
                   cellForRow('箱/盘数', vc4, false, extraField3, 'int'),
-                  cellForRow('箱号', vc6, false, '', 'int'),
-                  cellForRow('装箱数量', vc5, false, extraField4, 'char'),
+                  cellForRow('箱号', vc6, false, '', 'char'),
+                  cellForRow('装箱数量', vc5, false, extraField4, 'int'),
 
                   textRow('报工人', people),
                   textRow('报工时间', time),
@@ -404,7 +417,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
                         save();
                       },
                       child: Text(
-                        '确认申报',
+                        widget.idsList[3] == true ? '保存修改' : '确认申报',
                         style: TextStyle(fontSize: 16, color: Colors.white),
                       ))
                 ]),
@@ -491,7 +504,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
                 elevation: 24,
                 onChanged: (v) {
                   setState(() {
-                    FocusScope.of(context).requestFocus(FocusNode());
+                    // FocusScope.of(context).requestFocus(FocusNode());
                     if (txt == '生产机台') {
                       eqpIdValue = v!;
                     } else if (txt == '色谱') {
@@ -536,28 +549,39 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(RegExp("[0-9.]")),
                     ],
-                    onSubmitted: (value) {
+                    focusNode: txt == '长度' ? _focusNode1 : _focusNode2,
+                    onChanged: (value) {
                       if (txt == '长度' && value != '') {
-                        setState(() {
-                          vc1.text = value;
-                          vc4.text = (double.parse(value) /
-                                  double.parse(vc3.text) /
-                                  double.parse(vc5.text))
-                              .truncate()
-                              .toString();
+                        _focusNode1.addListener(() {
+                          if (!_focusNode1.hasFocus) {
+                            setState(() {
+                              vc1.text = value;
+                              vc4.text = (double.parse(value) /
+                                      double.parse(vc3.text) /
+                                      double.parse(vc5.text))
+                                  .truncate()
+                                  .toString();
+                            });
+                          }
                         });
+
                         // _cd = double.parse(value);
                       } else if (txt == '定长' && value != '') {
-                        setState(() {
-                          vc3.text = value;
-                          if (vc4.text != '') {
-                            vc1.text = (double.parse(value) *
-                                    double.parse(vc4.text) *
-                                    double.parse(vc5.text))
-                                .toString();
+                        _focusNode2.addListener(() {
+                          if (!_focusNode2.hasFocus) {
+                            setState(() {
+                              vc3.text = value;
+                              if (vc4.text != '') {
+                                vc1.text = (double.parse(value) *
+                                        double.parse(vc4.text) *
+                                        double.parse(vc5.text))
+                                    .toString();
+                              }
+                              // vc4.text =
+                            });
                           }
-                          // vc4.text =
                         });
+
                         // _dc = double.parse(value);
                       }
                     })
@@ -568,27 +592,41 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
                           // FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
                           FilteringTextInputFormatter.allow(RegExp("[0-9]")),
                         ],
-                        onSubmitted: (value) {
+                        focusNode: txt == '箱/盘数' ? _focusNode3 : _focusNode4,
+                        onChanged: (value) {
                           if (txt == '箱/盘数' && value != '') {
-                            _xps = int.parse(value);
-                            setState(() {
-                              vc4.text = value;
-                              if (vc4.text != '') {
-                                vc1.text = (double.parse(value) *
-                                        double.parse(vc3.text) *
-                                        double.parse(vc5.text))
-                                    .toString();
+                            // _xps = int.parse(value);
+                            _focusNode3.addListener(() {
+                              if (!_focusNode3.hasFocus) {
+                                setState(() {
+                                  vc4.text = value;
+                                  if (vc4.text != '') {
+                                    vc1.text = (double.parse(value) *
+                                            double.parse(vc3.text) *
+                                            double.parse(vc5.text))
+                                        .toString();
+                                  }
+                                  // vc4.text =
+                                });
                               }
-                              // vc4.text =
                             });
                           } else if (txt == '装箱数量' && value != '') {
-                            vc5.text = value;
-                            if (vc4.text != '') {
-                              vc1.text = (double.parse(value) *
-                                      double.parse(vc3.text) *
-                                      double.parse(vc4.text))
-                                  .toString();
-                            }
+                            // print('------222');
+                            _focusNode4.addListener(() {
+                              if (!_focusNode4.hasFocus) {
+                                if (vc4.text != '') {
+                                  vc5.text = value;
+                                  setState(() {
+                                    vc1.text = (double.parse(value) *
+                                            double.parse(vc3.text) *
+                                            double.parse(vc4.text))
+                                        .toString();
+                                    print(
+                                        '${double.parse(value)}ff${double.parse(vc3.text)}ff${double.parse(vc4.text)}');
+                                  });
+                                }
+                              }
+                            });
                           }
                         })
                     : TextField(
@@ -630,5 +668,16 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
             ],
           );
         });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+//释放
+    _focusNode1.dispose();
+    _focusNode2.dispose();
+    _focusNode3.dispose();
+    _focusNode4.dispose();
+    _focusNode5.dispose();
   }
 }

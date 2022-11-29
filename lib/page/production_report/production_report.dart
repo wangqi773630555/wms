@@ -42,7 +42,7 @@ class _ProductionReportState extends State<ProductionReport> {
     Future.delayed(const Duration(milliseconds: 500), () async {
       // bool f = false;
       stream = ScanEventUtils.eventBus.on<ScanEvent>().listen((event) async {
-        if (event.page == ScanConfig.PAGE_PRINT) {
+        if (event.page == ScanConfig.PRODUCTION_REPORT) {
           await NavigatorUtils.goSelectWork(context, scanResult?.rawContent)
               .then((res) {
             // print('fanhui');

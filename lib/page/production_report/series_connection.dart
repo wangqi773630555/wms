@@ -69,6 +69,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
   ScanResult? scanResult;
   List<DropdownMenuItem<String>> _eqpIdItems = [];
   List<DropdownMenuItem<String>> _colorItems = [];
+
   @override
   void initState() {
     // TODO: implement initState

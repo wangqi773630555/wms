@@ -43,7 +43,7 @@ class _ToPrintState extends State<ToPrint> {
     super.initState();
     _pageCountController.text = '1';
     stream = ScanEventUtils.eventBus.on<ScanEvent>().listen((event) {
-      if (event.page == ScanConfig.scanPage) {
+      if (event.page == ScanConfig.PAGE_PRINT) {
         _getMessageById(event.scanResult);
       }
     });

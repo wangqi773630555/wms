@@ -105,8 +105,10 @@ class _MaterialLoadProcessState extends State<MaterialLoadProcess> {
 
   List<Widget> _getButton() {
     List<Widget> list = [];
-    for (int i = 0; i < _recipes?.length; i++) {
-      list.add(_button(i, _recipes[i]['title'], _colors[i]));
+    if(_recipes!=null) {
+      for (int i = 0; i < _recipes?.length; i++) {
+        list.add(_button(i, _recipes[i]['title'], _colors[i]));
+      }
     }
     return list;
   }

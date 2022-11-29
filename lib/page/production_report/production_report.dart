@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wanma_print/common/dao/data_dao.dart';
+import 'package:wanma_print/common/utils/scanevent_utils.dart';
 
 import '../../common/config/config.dart';
+import '../../common/config/scanConfig.dart';
+import '../../common/event/scan_event.dart';
 import '../../common/utils/navigator_utils.dart';
 import 'package:barcode_scan2/barcode_scan2.dart';
+import 'dart:async';
 
 class ProductionReport extends StatefulWidget {
   static final String sName = Config.PRO_REPORT;
@@ -21,11 +25,39 @@ class _ProductionReportState extends State<ProductionReport> {
   List productionList = [];
   ScanResult? scanResult;
   bool circle = false;
+  StreamSubscription? stream;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    // stream = ScanEventUtils.eventBus.on<ScanEvent>().listen((event) {
+
+    scanAction2();
+
+    ScanConfig.scanPage = ScanConfig.PRODUCTION_REPORT;
     getData();
+  }
+
+  scanAction2() async {
+    Future.delayed(const Duration(milliseconds: 500), () async {
+      // bool f = false;
+      stream = ScanEventUtils.eventBus.on<ScanEvent>().listen((event) async {
+        if (event.page == ScanConfig.PAGE_PRINT) {
+          await NavigatorUtils.goSelectWork(context, scanResult?.rawContent)
+              .then((res) {
+            // print('fanhui');
+            setState(() {
+              getData();
+            });
+          });
+        }
+      });
+      //延时执行的代码
+
+      setState(() {
+        //延时更新状态
+      });
+    });
   }
 
   scanAction(txt) async {
@@ -86,6 +118,18 @@ class _ProductionReportState extends State<ProductionReport> {
       }
       setState(() {});
     });
+  }
+
+  void dispose() async {
+    super.dispose();
+
+    _searController.dispose();
+
+    ScanConfig.scanPage = "";
+    if (stream != null) {
+      stream?.cancel();
+      stream = null;
+    }
   }
 
   Widget build(BuildContext context) {

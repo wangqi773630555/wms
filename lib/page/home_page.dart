@@ -61,6 +61,10 @@ class _ItemMenuState extends State<ItemMenu>
             ScanEventUtils.send(
                 ScanConfig.PAGE_LOAD_PART, methodCall.arguments.toString());
             break;
+          case ScanConfig.PRODUCTION_REPORT:
+            ScanEventUtils.send(
+                ScanConfig.PRODUCTION_REPORT, methodCall.arguments.toString());
+            break;
           default:
             NavigatorUtils.goMaterialDetail(
                 context, methodCall.arguments.toString());

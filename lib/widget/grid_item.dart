@@ -60,16 +60,13 @@ class GridItemWidget extends StatelessWidget {
             NavigatorUtils.goProductionReport(context);
             break;
           case Config.MATERIAL_DETAIL:
-          //设备上料列表
-          case Config.Material_LoadList:
-            NavigatorUtils.goMaterialLoadList(context);
-            break;
+
             //拍照权限
-            // bool isCamera = await CommonUtils.checkPermissionCamera();
-            // if (!isCamera) {
-            //   Fluttertoast.showToast(msg: '没有拍照权限');
-            //   return;
-            // }
+             bool isCamera = await CommonUtils.checkPermissionCamera();
+             if (!isCamera) {
+               Fluttertoast.showToast(msg: '没有拍照权限');
+               return;
+             }
 
             var sk = await LocalStorage.get(Config.SET_KEY);
 
@@ -80,6 +77,11 @@ class GridItemWidget extends StatelessWidget {
             }
 
             break;
+        //设备上料列表
+          case Config.Material_LoadList:
+            NavigatorUtils.goMaterialLoadList(context);
+            break;
+
           // case Config.NEW_REPORT_ORDER:
           //   await LocalStorage.save(Config.FLAG_REPORT_MODIFY, '0');
           //   NavigatorUtils.goNewReportOrder(context);

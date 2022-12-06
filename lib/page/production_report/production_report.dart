@@ -287,14 +287,31 @@ class _ProductionReportState extends State<ProductionReport> {
             child: ButtonBar(
               children: <Widget>[
                 // _buttonStyle(, bgColore, textColor, ww, rightWW)
-                (
-                    // _modelList[index]['status_text'] == '已取消' ||
-                    //       _modelList[index]['status_text'] == '已过帐' ||
-                    //       _modelList[index]['status_text'] == '部分过账')
-                    //   ? Container()
-                    //   :
-                    _buttonStyle('查看详情', Colors.white, Colors.blue, 100, 0,
-                        Colors.grey, 40, () async {
+                // (
+                // _modelList[index]['status_text'] == '已取消' ||
+                //       _modelList[index]['status_text'] == '已过帐' ||
+                //       _modelList[index]['status_text'] == '部分过账')
+                //   ? Container()
+                //   :
+                //     _buttonStyle(
+                //         '删除',
+                //         Color.fromARGB(255, 209, 232, 251),
+                //         Color.fromARGB(255, 15, 86, 144),
+                //         60,
+                //         0,
+                //         Colors.white,
+                //         40, () async {
+                //   // await NavigatorUtils.goMaterialDetail(
+                //   //         context, _modelList[index]['deliver_no'])
+                //   //     .then((result) {
+                //   //   getInintData();
+                //   //   print('111111111111111');
+                //   // });
+                // })
+                // ),
+                _buttonStyle(
+                    '查看详情', Colors.white, Colors.blue, 100, 0, Colors.grey, 40,
+                    () async {
                   print(productionList[index]['recipe_title']);
                   switch (productionList[index]['recipe_title']) {
                     case '串联':
@@ -353,22 +370,7 @@ class _ProductionReportState extends State<ProductionReport> {
                     default:
                       break;
                   }
-                })),
-                // _buttonStyle(
-                //     '打印流程卡',
-                //     Color.fromARGB(255, 209, 232, 251),
-                //     Color.fromARGB(255, 15, 86, 144),
-                //     100,
-                //     10,
-                //     Colors.white,
-                //     40, () async {
-                //   // await NavigatorUtils.goMaterialDetail(
-                //   //         context, _modelList[index]['deliver_no'])
-                //   //     .then((result) {
-                //   //   getInintData();
-                //   //   print('111111111111111');
-                //   // });
-                // })
+                }),
               ],
             ),
           ),

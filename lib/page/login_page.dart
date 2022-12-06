@@ -22,7 +22,8 @@ class _LoginPageState extends State<LoginPage> {
 
   final TextEditingController userController = TextEditingController();
   final TextEditingController pwController = TextEditingController();
-
+  FocusNode userNameFocusNode = FocusNode();
+  FocusNode passwordFocusNode = FocusNode();
   _LoginPageState() : super();
 
   @override
@@ -44,8 +45,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    FocusNode userNameFocusNode = FocusNode();
-    FocusNode passwordFocusNode = FocusNode();
     final double w_width = MediaQuery.of(context).size.width;
     // ignore: non_constant_identifier_names
     final double h_height = MediaQuery.of(context).size.height;
@@ -188,7 +187,7 @@ class _LoginPageState extends State<LoginPage> {
                                               String data = res.data['data'];
                                               LocalStorage.save(
                                                   Config.SET_KEY, data);
-                                             /* Fluttertoast.showToast(
+                                              /* Fluttertoast.showToast(
                                                   msg: 'SK值设置成功');*/
                                               NavigatorUtils.goHome(context);
                                             }
@@ -211,5 +210,13 @@ class _LoginPageState extends State<LoginPage> {
         );
       },
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+//释放
+    userNameFocusNode.dispose();
+    passwordFocusNode.dispose();
   }
 }

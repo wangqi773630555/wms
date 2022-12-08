@@ -283,6 +283,10 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
             //   eqpIdValue = '';
             // });
           }
+        } else if (txt == '收线盘号') {
+          setState(() {
+            vc3.text = scanResult!.rawContent.toString();
+          });
         } else {
           setState(() {
             vc2.text = scanResult!.rawContent.toString();
@@ -365,7 +369,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
                   cellForRow('长度', vc1, false, extraField1, 'double'),
                   cellForRow('成缆编号', vc2, true, '', 'char'), //char???
                   // cellForRow('芯线线径', vc3, false, extraField3, 'double'),
-                  cellForRow('收线盘号', vc3, false, '', 'char'),
+                  cellForRow('收线盘号', vc3, true, '', 'char'),
                   cellForRow('护套外径', vc4, false, '', 'double'),
                   cellForRow('通断线', vc5, false, '', 'char'),
                   cellForRow('护套外观', vc6, false, '', 'char'),

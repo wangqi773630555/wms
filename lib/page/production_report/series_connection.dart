@@ -249,30 +249,36 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
     });
   }
 
-  scanAction() async {
+  scanAction(txt) async {
     await _scan();
 
     Future.delayed(const Duration(milliseconds: 500), () {
       bool f = false;
       if (scanResult?.rawContent != "" && scanResult?.rawContent != null) {
-        for (var element in eqpIdList) {
-          if (element['key'] == int.parse(scanResult!.rawContent)) {
-            print('+++++${element['key']}====${scanResult!.rawContent}');
-            f = true;
-            setState(() {
-              eqpIdValue = scanResult!.rawContent;
-            });
+        if (txt == '生产机台') {
+          for (var element in eqpIdList) {
+            if (element['key'] == int.parse(scanResult!.rawContent)) {
+              print('+++++${element['key']}====${scanResult!.rawContent}');
+              f = true;
+              setState(() {
+                eqpIdValue = scanResult!.rawContent;
+              });
+            }
           }
-        }
 
-        if (f == false) {
-          print('+++++2');
-          Fluttertoast.showToast(
-            msg: "${scanResult!.rawContent}不存在",
-          );
-          // setState(() {
-          //   eqpIdValue = '';
-          // });
+          if (f == false) {
+            print('+++++2');
+            Fluttertoast.showToast(
+              msg: "${scanResult!.rawContent}不存在",
+            );
+            // setState(() {
+            //   eqpIdValue = '';
+            // });
+          }
+        } else if (txt == '1') {
+          setState(() {
+            vc4.text = scanResult!.rawContent.toString();
+          });
         }
         // setState(() {});
       }
@@ -350,7 +356,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
                   cellForRow('长度', vc1, false, extraField1, 'double'),
                   cellForRow('导体线径', vc2, false, extraField2, 'double'),
                   cellForRow('芯线线径', vc3, false, extraField3, 'double'),
-                  cellForRow('盘号', vc4, false, '', 'char'),
+                  cellForRow('盘号', vc4, true, '1', 'char'),
                   cellForRow('火花点数', vc5, false, '', 'double'),
                   cellForRow('同心度', vc6, false, extraField4, 'double'),
                   cellForRow('导体伸率', vc7, false, extraField5, 'double'),
@@ -471,7 +477,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
           isScan == true
               ? IconButton(
                   onPressed: () {
-                    scanAction();
+                    scanAction('生产机台');
                   },
                   icon: Icon(Icons.fit_screen_outlined))
               : Container()
@@ -490,7 +496,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
             child: Text(txt),
           ),
           Container(
-            margin: EdgeInsets.only(right: 10),
+            margin: EdgeInsets.only(right: 5),
             width: _wwidth - 80 - 70,
             height: 35,
             // color: Colors.red,
@@ -516,7 +522,10 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
           ),
           isScan == true
               ? IconButton(
-                  onPressed: () {}, icon: Icon(Icons.fit_screen_outlined))
+                  onPressed: () {
+                    scanAction(txts);
+                  },
+                  icon: Icon(Icons.fit_screen_outlined))
               : Text(txts)
         ],
       ),

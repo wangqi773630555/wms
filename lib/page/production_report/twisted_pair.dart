@@ -273,6 +273,10 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
           setState(() {
             vc3.text = scanResult!.rawContent.toString();
           });
+        } else if (txt == '收线盘号') {
+          setState(() {
+            vc2.text = scanResult!.rawContent.toString();
+          });
         } else {
           setState(() {
             vc4.text = scanResult!.rawContent.toString();
@@ -353,7 +357,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
                   cellForRow('长度', vc1, false, extraField1, 'double'),
                   // cellForRow('收线盘号', vc2, false, extraField2, 'double'),
                   // cellForRow('芯线线径', vc3, false, extraField3, 'double'),
-                  cellForRow('收线盘号', vc2, false, '', 'char'),
+                  cellForRow('收线盘号', vc2, true, '', 'char'),
                   cellForRow('芯线盘号', vc3, true, '', 'char'),
                   cellForRow('', vc4, true, '', 'char'),
                   cellForRow('绞合节距', vc5, false, '', 'char'),

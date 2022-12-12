@@ -238,13 +238,14 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
       if (res.data['id'] != null && res.data['id'] != '') {
         Fluttertoast.showToast(msg: '提交成功');
         // getData(true, res.data['id']);
-        Navigator.popUntil(context, (route) {
-          print(route.settings.name);
-          if (route.settings.name == 'ProductionReport') {
-            return true;
-          }
-          return false;
-        });
+        // Navigator.popUntil(context, (route) {
+        //   print(route.settings.name);
+        //   if (route.settings.name == 'ProductionReport') {
+        //     return true;
+        //   }
+        //   return false;
+        // });
+        Navigator.pop(context);
       }
     });
   }

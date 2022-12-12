@@ -46,7 +46,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
   TextEditingController vc3 = TextEditingController();
   TextEditingController vc4 = TextEditingController();
   TextEditingController vc5 = TextEditingController();
-  // TextEditingController vc6 = TextEditingController();
+  TextEditingController vc6 = TextEditingController();
   // TextEditingController vc7 = TextEditingController();
   var extraField1 = ''; //danwei
   // var extraField2 = '';
@@ -121,6 +121,10 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
               vc1.text = (element['value'] ?? '').toString();
               extraField1 = element['extraField'] ?? '';
             }
+            if (element['title'] == '机台号') {
+              vc6.text = (element['value'] ?? '').toString();
+              // extraField1 = element['extraField'] ?? '';
+            }
             if (element['title'] == '班次') {
               radioList = element['list'];
               if (element['value'] != null) {
@@ -192,17 +196,17 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
       Fluttertoast.showToast(msg: '部分内容未填写');
       return;
     }
-    // if (vc6.text == '') {
-    //   Fluttertoast.showToast(msg: '部分内容未填写');
-    //   return;
-    // }
-    // circle = false;
+    if (vc6.text == '') {
+      Fluttertoast.showToast(msg: '部分内容未填写');
+      return;
+    }
+
     var paras = {
       "shift_type": (radioValue ?? '').toString(),
       "eqp_id": int.parse(eqpIdValue),
       "color": colorValue,
       "qty": double.parse(vc1.text),
-      // "conductor_radius": double.parse(vc2.text),
+      "eqp_no": int.parse(vc6.text),
       // "line_radius": double.parse(vc3.text),
       "carrier_id": vc2.text,
       'core_carrier_id': [vc3.text, vc4.text],
@@ -210,6 +214,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
       // "concentricity": double.parse(vc6.text),
       // "conductor_elongation": double.parse(vc7.text)
     };
+
     // print(paras.keys.length);
     // print(vc1.text);
     // print(vc2.text);
@@ -249,7 +254,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
     Future.delayed(const Duration(milliseconds: 500), () {
       bool f = false;
       if (scanResult?.rawContent != "" && scanResult?.rawContent != null) {
-        if (txt == '生产机台') {
+        if (txt == '机台组') {
           for (var element in eqpIdList) {
             if (element['key'] == int.parse(scanResult!.rawContent)) {
               print('+++++${element['key']}====${scanResult!.rawContent}');
@@ -351,7 +356,8 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
 
                   // productionList[0]['render']=='LABEL'?
                   textRow('流水编号', ''),
-                  selectRow('生产机台', true, _eqpIdItems),
+                  selectRow('机台组', true, _eqpIdItems),
+                  cellForRow('机台号', vc6, false, '', 'int'),
                   radioWidget(),
                   selectRow('色谱', false, _colorItems),
                   cellForRow('长度', vc1, false, extraField1, 'double'),
@@ -455,14 +461,14 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
             child: DropdownButtonHideUnderline(
               child: DropdownButton<String>(
                 items: items,
-                value: txt == '生产机台'
+                value: txt == '机台组'
                     ? eqpIdValue
                     : (txt == '色谱' ? colorValue : null),
                 elevation: 24,
                 onChanged: (v) {
                   setState(() {
                     FocusScope.of(context).requestFocus(FocusNode());
-                    if (txt == '生产机台') {
+                    if (txt == '机台组') {
                       eqpIdValue = v!;
                     } else if (txt == '色谱') {
                       colorValue = v!;
@@ -507,13 +513,21 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
                       FilteringTextInputFormatter.allow(RegExp("[0-9.]")),
                     ],
                   )
-                : TextField(
-                    controller: vc,
-                    inputFormatters: [
-                      // FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
-                      //  FilteringTextInputFormatter.allow(RegExp("[0-9]")),
-                    ],
-                  ),
+                : (type == 'int'
+                    ? TextField(
+                        controller: vc,
+                        inputFormatters: [
+                          // FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
+                          FilteringTextInputFormatter.allow(RegExp("[0-9]")),
+                        ],
+                      )
+                    : TextField(
+                        controller: vc,
+                        inputFormatters: [
+                          // FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
+                          //  FilteringTextInputFormatter.allow(RegExp("[0-9]")),
+                        ],
+                      )),
             decoration: BoxDecoration(
               // color: Colors.red,
               border: Border.all(width: 1),

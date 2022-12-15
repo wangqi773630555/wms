@@ -43,7 +43,7 @@ class _ProductionReportState extends State<ProductionReport> {
       // bool f = false;
       stream = ScanEventUtils.eventBus.on<ScanEvent>().listen((event) async {
         if (event.page == ScanConfig.PRODUCTION_REPORT) {
-          await NavigatorUtils.goSelectWork(context, scanResult?.rawContent)
+          await NavigatorUtils.goSelectWork(context, event.scanResult)
               .then((res) {
             // print('fanhui');
             setState(() {

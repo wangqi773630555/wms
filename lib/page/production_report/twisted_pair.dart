@@ -134,7 +134,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
             if (element['title'] == '收线盘号') {
               vc2.text = element['value'] ?? '';
             }
-            if (element['title'] == '芯线盘号') {
+            if (element['title'] == '芯线编号') {
               xinxianList = element['value'] ?? [];
               if (xinxianList.length == 2) {
                 vc3.text = (element['value'][0] ?? '').toString();
@@ -268,7 +268,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
             //   eqpIdValue = '';
             // });
           }
-        } else if (txt == '芯线盘号') {
+        } else if (txt == '芯线编号') {
           setState(() {
             vc3.text = scanResult!.rawContent.toString();
           });
@@ -358,7 +358,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
                   // cellForRow('收线盘号', vc2, false, extraField2, 'double'),
                   // cellForRow('芯线线径', vc3, false, extraField3, 'double'),
                   cellForRow('收线盘号', vc2, true, '', 'char'),
-                  cellForRow('芯线盘号', vc3, true, '', 'char'),
+                  cellForRow('芯线编号', vc3, true, '', 'char'),
                   cellForRow('', vc4, true, '', 'char'),
                   cellForRow('绞合节距', vc5, false, '', 'char'),
                   textRow('上料人', people),

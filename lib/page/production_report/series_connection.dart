@@ -45,6 +45,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
   TextEditingController vc5 = TextEditingController();
   TextEditingController vc6 = TextEditingController();
   TextEditingController vc7 = TextEditingController();
+  TextEditingController vc8 = TextEditingController();
 
   var extraField1 = ''; //danwei
   var extraField2 = '';
@@ -113,6 +114,10 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
             if (element['key'] == 'qty') {
               vc1.text = (element['value'] ?? '').toString();
               extraField1 = element['extraField'] ?? "";
+            }
+            if (element['title'] == '工艺文件编号') {
+              vc8.text = (element['value'] ?? '').toString();
+              // extraField1 = element['extraField'] ?? "";
             }
             if (element['title'] == '班次') {
               radioList = element['list'];
@@ -215,7 +220,8 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
       "carrier_id": vc4.text,
       "spark_num": double.parse(vc5.text),
       "concentricity": double.parse(vc6.text),
-      "conductor_elongation": double.parse(vc7.text)
+      "conductor_elongation": double.parse(vc7.text),
+      'file_no': vc8.text
     };
     // print(paras.keys.length);
     // print(vc1.text);
@@ -361,6 +367,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
                   cellForRow('火花点数', vc5, false, '', 'double'),
                   cellForRow('同心度', vc6, false, extraField4, 'double'),
                   cellForRow('导体伸率', vc7, false, extraField5, 'double'),
+                  cellForRow('工艺文件编号', vc8, false, '(选填)', 'char'),
                   textRow('报工人', people),
                   textRow('报工时间', time),
 
@@ -390,7 +397,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
         children: [
           Container(
             // padding: EdgeInsets.only(left: 15),
-            width: 80,
+            width: 90,
             child: Text(name),
           ),
           Container(
@@ -409,7 +416,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
       child: Row(
         children: [
           Container(
-            width: 65,
+            width: 80,
             child: Text('班组'),
           ),
           Radio(
@@ -441,11 +448,11 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
       child: Row(
         children: [
           Container(
-            width: 80,
+            width: 90,
             child: Text(txt),
           ),
           Container(
-            width: _wwidth - 80 - 70,
+            width: _wwidth - 90 - 70,
             height: 35,
             padding: EdgeInsets.only(left: 10),
             decoration: BoxDecoration(
@@ -493,12 +500,12 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
       child: Row(
         children: [
           Container(
-            width: 80,
+            width: 90,
             child: Text(txt),
           ),
           Container(
             margin: EdgeInsets.only(right: 5),
-            width: _wwidth - 80 - 70,
+            width: _wwidth - 90 - 70,
             height: 35,
             // color: Colors.red,
             child: type == 'double'

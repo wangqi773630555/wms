@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wanma_print/common/dao/data_dao.dart';
 import 'package:wanma_print/common/utils/scanevent_utils.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../common/config/config.dart';
 import '../../common/config/scanConfig.dart';
@@ -130,6 +131,21 @@ class _ProductionReportState extends State<ProductionReport> {
       stream?.cancel();
       stream = null;
     }
+  }
+
+  cancelData(id) {
+    circle = false;
+    DataDao.getProductCancelById(id).then((res) {
+      // if (res.data != null && res.data != '') {
+      //   productionList = res.data['data'];
+      // print('res${res.data}');
+      // }
+      Fluttertoast.showToast(msg: res.data['msg']);
+      setState(() {
+        circle = true;
+        getData();
+      });
+    });
   }
 
   Widget build(BuildContext context) {
@@ -286,29 +302,6 @@ class _ProductionReportState extends State<ProductionReport> {
             // make buttons use the appropriate styles for cards
             child: ButtonBar(
               children: <Widget>[
-                // _buttonStyle(, bgColore, textColor, ww, rightWW)
-                // (
-                // _modelList[index]['status_text'] == '已取消' ||
-                //       _modelList[index]['status_text'] == '已过帐' ||
-                //       _modelList[index]['status_text'] == '部分过账')
-                //   ? Container()
-                //   :
-                //     _buttonStyle(
-                //         '删除',
-                //         Color.fromARGB(255, 209, 232, 251),
-                //         Color.fromARGB(255, 15, 86, 144),
-                //         60,
-                //         0,
-                //         Colors.white,
-                //         40, () async {
-                //   // await NavigatorUtils.goMaterialDetail(
-                //   //         context, _modelList[index]['deliver_no'])
-                //   //     .then((result) {
-                //   //   getInintData();
-                //   //   print('111111111111111');
-                //   // });
-                // })
-                // ),
                 _buttonStyle(
                     '查看详情', Colors.white, Colors.blue, 100, 0, Colors.grey, 40,
                     () async {
@@ -370,6 +363,22 @@ class _ProductionReportState extends State<ProductionReport> {
                     default:
                       break;
                   }
+                }),
+                _buttonStyle(
+                    '取消报工',
+                    Color.fromARGB(255, 209, 232, 251),
+                    Color.fromARGB(255, 223, 49, 37),
+                    100,
+                    0,
+                    Colors.white,
+                    40, () {
+                  showAlertDialog(context, productionList[index]['id']);
+                  // await NavigatorUtils.goMaterialDetail(
+                  //         context, _modelList[index]['deliver_no'])
+                  //     .then((result) {
+                  //   getInintData();
+                  //   print('111111111111111');
+                  // });
                 }),
               ],
             ),
@@ -434,5 +443,46 @@ class _ProductionReportState extends State<ProductionReport> {
       //   ],
       // ),
     );
+  }
+
+  showAlertDialog(context, id) {
+    return showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('提示'),
+            // actionsAlignment: MainAxisAlignment.center,
+            content: Text(
+              '确认取消报工？',
+              style: TextStyle(),
+              textAlign: TextAlign.center,
+            ),
+            actions: <Widget>[
+              TextButton(
+                // style: ButtonStyle(backgroundColor: ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: new Text(
+                  '取消',
+                  // textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.grey, fontSize: 18),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  cancelData(id);
+                  Navigator.pop(context);
+                },
+                child: new Text(
+                  '确认',
+                  // textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.red, fontSize: 18),
+                ),
+              ),
+            ],
+          );
+        });
   }
 }

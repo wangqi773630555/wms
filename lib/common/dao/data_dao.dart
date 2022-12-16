@@ -734,4 +734,35 @@ class DataDao {
       return ResultDao(resultData, false);
     }
   }
+
+  static getProductCancelById(id) async {
+    Map<String, String> header = {
+      'Authorization': await LocalStorage.get(Config.UA)
+    };
+    String setSk = '_SK_=${await LocalStorage.get(Config.SET_KEY)}';
+    Map<String, dynamic> requestParams;
+    requestParams = {
+      'id': id,
+    };
+    var res = await HttpManager.netFetch(
+        '${UrlConstant.getcancelByIdData()}${setSk}',
+        requestParams,
+        header,
+        Options(method: 'post'));
+    var resultData;
+    if (res != null && res.result) {
+      if (res.data['code'] == 200) {
+        return ResultDao(res.data, res.result);
+      } else {
+        resultData = ResultDao(
+            Code.errorHandleFunction(res.data['code'], res.data['msg'], false),
+            false);
+        return ResultDao(resultData, false);
+      }
+    } else {
+      resultData =
+          ResultDao(Code.errorHandleFunction(res.code, '', false), false);
+      return ResultDao(resultData, false);
+    }
+  }
 }

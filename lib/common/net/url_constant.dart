@@ -113,4 +113,8 @@ class UrlConstant {
   static getLoadIndexListData() {
     return '${host2}sync/mesProxy/mesJsonReq?route=/lot/rtLotPickRelease/indexList&';
   }
+
+  static getcancelByIdData() {
+    return '${host2}sync/mesProxy/mesJsonReq?route=/lot/rtLotWorkPart/cancelById&';
+  }
 }

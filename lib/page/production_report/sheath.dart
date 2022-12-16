@@ -105,16 +105,16 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
               print('eqpIdList:$_eqpIdItems===$eqpIdList');
               // print('_eqpIdItems:$_eqpIdItems');
             }
-            // if (element['key'] == 'color') {
-            //   colorList = element['list'];
-            //   _colorItems = [];
-            //   CommonUtils.renderDropdownMenuItem(
-            //       colorList, _colorItems, "value", "key");
-            //   if (element['value'] != null && element['value'] != '') {
-            //     colorValue = element['value'].toString();
-            //   }
-            // }
 
+            if (element['key'] == 'color') {
+              colorList = element['list'];
+              _colorItems = [];
+              CommonUtils.renderDropdownMenuItem(
+                  colorList, _colorItems, "value", "key");
+              if (element['value'] != null && element['value'] != '') {
+                colorValue = element['value'].toString();
+              }
+            }
             if (element['key'] == 'qty') {
               vc1.text = (element['value'] ?? '').toString();
               extraField1 = element['extraField'] ?? '';
@@ -181,10 +181,10 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
       Fluttertoast.showToast(msg: '部分内容未填写');
       return;
     }
-    // if (colorValue == null || colorValue == '') {
-    //   Fluttertoast.showToast(msg: '部分内容未填写');
-    //   return;
-    // }
+    if (colorValue == null || colorValue == '') {
+      Fluttertoast.showToast(msg: '部分内容未填写');
+      return;
+    }
     if (vc1.text == '') {
       Fluttertoast.showToast(msg: '部分内容未填写');
       return;
@@ -220,6 +220,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
       "qty": double.parse(vc1.text),
       "cabling_no": vc2.text,
       "carrier_id": vc3.text,
+      "color": colorValue,
       "sheath_out_radius": double.parse(vc4.text),
       "break_no": vc5.text,
       "sheath_appearance": vc6.text,
@@ -359,7 +360,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
                   textRow('流水编号', ''),
                   selectRow('生产机台', true, _eqpIdItems),
                   radioWidget(),
-                  // selectRow('色谱', false, _colorItems),
+                  selectRow('色谱', false, _colorItems),
                   cellForRow('长度', vc1, false, extraField1, 'double'),
                   cellForRow('成缆编号', vc2, true, '', 'char'), //char???
                   // cellForRow('芯线线径', vc3, false, extraField3, 'double'),

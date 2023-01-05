@@ -13,6 +13,7 @@ import 'package:wanma_print/page/common_widgit/refresh/custom_refresh_footer.dar
 import 'package:wanma_print/page/common_widgit/refresh/custom_refresh_header.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:barcode_scan2/barcode_scan2.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class MaterialLoadList extends StatefulWidget {
   const MaterialLoadList({Key? key}) : super(key: key);
@@ -34,6 +35,7 @@ class _MaterialLoadListState extends State<MaterialLoadList> {
   List _modelList = [];
   List _allList = [];
   StreamSubscription? stream;
+
   getInintData() {
     DataDao.getLoadIndexList('').then((res) {
       setState(() {
@@ -88,11 +90,22 @@ class _MaterialLoadListState extends State<MaterialLoadList> {
   //通过标签id获取打印信息
   _getOrderInfoAndRecipeDataListByParas(var id) {
     print('标签id:$id');
-    DataDao.getOrderInfoAndRecipeDataListByParas(id,null,null).then((res) {
+    DataDao.getOrderInfoAndRecipeDataListByParas(id, null, null).then((res) {
       if (res != null && res.result) {
         setState(() {
           var data = res.data['data'];
-          NavigatorUtils.goMaterialLoadProcess(context,data);
+          NavigatorUtils.goMaterialLoadProcess(context, data);
+        });
+      }
+    });
+  }
+
+  _cancel(id, index) {
+    DataDao.getCancleById(id).then((res) {
+      if (res != null && res.result) {
+        setState(() {
+          Fluttertoast.showToast(msg: res.data['msg']);
+          _modelList.removeAt(index);
         });
       }
     });
@@ -104,13 +117,13 @@ class _MaterialLoadListState extends State<MaterialLoadList> {
     super.initState();
     ScanConfig.scanPage = ScanConfig.PAGE_LOAD;
     stream = ScanEventUtils.eventBus.on<ScanEvent>().listen((event) {
-      if (event.page ==  ScanConfig.PAGE_LOAD) {
-        if(event.scanResult=='refresh') {
+      if (event.page == ScanConfig.PAGE_LOAD) {
+        if (event.scanResult == 'refresh') {
           print('refresh');
           _allList.clear();
           _modelList.clear();
           getInintData();
-        }else {
+        } else {
           _getOrderInfoAndRecipeDataListByParas(event.scanResult);
         }
       }
@@ -121,12 +134,13 @@ class _MaterialLoadListState extends State<MaterialLoadList> {
     print('initState_load_list');
   }
 
-
   Widget _searchRow() {
     return Container(
-      margin: EdgeInsets.only(left: 10, right: 10, top: 10,bottom: 5),
-      child:  SizedBox(
-      height: 40.0,child: _searchWidget(),),
+      margin: EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 5),
+      child: SizedBox(
+        height: 40.0,
+        child: _searchWidget(),
+      ),
     );
   }
 
@@ -137,25 +151,25 @@ class _MaterialLoadListState extends State<MaterialLoadList> {
         fillColor: Colors.white,
         filled: true,
         contentPadding: EdgeInsets.all(5),
-          enabledBorder: OutlineInputBorder(
-            /*边角*/
-            borderRadius: BorderRadius.all(
-              Radius.circular(5), //边角为5
-            ),
-            borderSide: BorderSide(
-              color: Colors.white, //边线颜色为白色
-              width: 1, //边线宽度为2
-            ),
+        enabledBorder: OutlineInputBorder(
+          /*边角*/
+          borderRadius: BorderRadius.all(
+            Radius.circular(5), //边角为5
           ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: Colors.white, //边框颜色为白色
-              width: 1, //宽度为5
-            ),
-            borderRadius: BorderRadius.all(
-              Radius.circular(5), //边角为30
-            ),
+          borderSide: BorderSide(
+            color: Colors.white, //边线颜色为白色
+            width: 1, //边线宽度为2
           ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Colors.white, //边框颜色为白色
+            width: 1, //宽度为5
+          ),
+          borderRadius: BorderRadius.all(
+            Radius.circular(5), //边角为30
+          ),
+        ),
         hintText: '请输入订单号',
 
         // prefixIcon:
@@ -163,19 +177,18 @@ class _MaterialLoadListState extends State<MaterialLoadList> {
         prefixIcon: Icon(Icons.search),
       ),
       onChanged: (value) {
-        print(value.toString()+"1111");
+        print(value.toString() + "1111");
         print('${_allList.length}');
         setState(() {
           _modelList.clear();
           _allList.clear();
-          for(int i=0;i<_allList.length;i++){
-            if(_allList[i]['order_id'].toString().contains(value.toString())){
+          for (int i = 0; i < _allList.length; i++) {
+            if (_allList[i]['order_id'].toString().contains(value.toString())) {
               _modelList.add(_allList[i]);
             }
           }
         });
       },
-
     );
   }
 
@@ -207,7 +220,7 @@ class _MaterialLoadListState extends State<MaterialLoadList> {
               });
               Future.delayed(Duration(milliseconds: 200), () {
                 _easyfreshController.finishLoad(
-                   // noMore: (_pageNum >= _modelList.length));
+                    // noMore: (_pageNum >= _modelList.length));
                     noMore: (true));
               });
             },
@@ -227,59 +240,126 @@ class _MaterialLoadListState extends State<MaterialLoadList> {
 
   //cell
   Widget _cellForRow(conttext, index) {
-    return GestureDetector(child: Card(
-      elevation: 1,
-      color: Colors.white,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Expanded(flex: 1,child: Container(
-                padding: EdgeInsets.only(left: 15, top: 5),
-                child: Row(
-                  children: [
-                    Text(
-                      '订单号:${_modelList[index]['order_id']}',
-                      style:
-                      TextStyle(fontSize: 18),
-                      // showCursor: true,
-                    ),
-                  ],
-                ),
-              ),),
-
-              Text(_modelList[index]['recipe_title'], style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-              ),
-              Padding(padding: EdgeInsets.all(5))
-            ],
-          ),
-          Divider(),
-          Container(
-            child: Column(
+    return GestureDetector(
+      child: Card(
+        elevation: 1,
+        color: Colors.white,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                _getRowText('物料号:', _modelList[index]['part_id']),
-                _getRowText('物料名称:', _modelList[index]['part_name']),
-                _getRowText('机台:', _modelList[index]['eqp_description']),
-                _getRowText('上料数量:', _modelList[index]['release_qty']),
-                _getRowText('上料批次:', _modelList[index]['part_batch']),
-                _getRowText('上料时间:', _modelList[index]['add_time']),
+                Expanded(
+                  flex: 1,
+                  child: Container(
+                    padding: EdgeInsets.only(left: 15, top: 5),
+                    child: Row(
+                      children: [
+                        Text(
+                          '订单号:${_modelList[index]['order_id']}',
+                          style: TextStyle(fontSize: 18),
+                          // showCursor: true,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Text(
+                  _modelList[index]['recipe_title'],
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                ),
                 Padding(padding: EdgeInsets.all(5))
               ],
             ),
-          ),
-        ],
+            Divider(),
+            Container(
+              child: Column(
+                children: [
+                  _getRowText('物料号:', _modelList[index]['part_id']),
+                  _getRowText('物料名称:', _modelList[index]['part_name']),
+                  _getRowText('机台:', _modelList[index]['eqp_description']),
+                  _getRowText('上料数量:', _modelList[index]['release_qty']),
+                  _getRowText('上料批次:', _modelList[index]['part_batch']),
+                  _getRowText('上料时间:', _modelList[index]['add_time']),
+                ],
+              ),
+            ),
+            Row(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: Text(''),
+                ),
+                TextButton(
+                  child: Text(
+                    "取消上料",
+                    style: TextStyle(
+                        color: Color.fromARGB(255, 223, 49, 37), fontSize: 16),
+                    // textAlign: TextAlign.justify,
+                  ),
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: Text('确定删除本条数据吗?'),
+                            actions: [
+                              TextButton(
+                                  onPressed: () {
+                                    _cancel(_modelList[index]['id'], index);
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text('删除')),
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text('取消'))
+                            ],
+                          );
+                        });
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
-    ),
-    onTap: () {
-      var sendData = _modelList[index];
-      sendData['uid'] = sendData['id'];
-      sendData['id'] =sendData['recipe_id'];
-      sendData['title'] =sendData['recipe_title'];
-      sendData['code'] = sendData['material_bill_print_id'];
-      NavigatorUtils.goMaterialLoadDetails1(context,sendData);
-    },) ;
+      /*onLongPress: (){
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text('确定删除本条数据吗?'),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        _cancel(_modelList[index]['id'],index);
+                        Navigator.pop(context);
+                      },
+                      child: Text('删除')),
+                  TextButton(
+                      onPressed: () {
+                        */ /* ScanConfig.scanPage = ScanConfig.PAGE_LOAD;
+                        ScanEventUtils.send(ScanConfig.PAGE_LOAD, "refresh");*/ /*
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                      },
+                      child: Text('取消'))
+                ],
+              );
+            });
+      },*/
+      onTap: () {
+        var sendData = _modelList[index];
+        sendData['uid'] = sendData['id'];
+        sendData['id'] = sendData['recipe_id'];
+        sendData['title'] = sendData['recipe_title'];
+        sendData['code'] = sendData['material_bill_print_id'];
+        NavigatorUtils.goMaterialLoadDetails1(context, sendData);
+      },
+    );
   }
 
   Widget _getRowText(String label, dynamic value) {

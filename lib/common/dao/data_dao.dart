@@ -630,7 +630,7 @@ class DataDao {
    * 确定投料
    */
   static getSaveData(id, order_id, recipe_id, eqp_id, material_bill_print_id,
-      release_qty) async {
+      release_qty,part_id) async {
     Map<String, String> header = {
       'Authorization': await LocalStorage.get(Config.UA)
     };
@@ -643,6 +643,7 @@ class DataDao {
       'eqp_id': eqp_id,
       'material_bill_print_id': material_bill_print_id,
       'release_qty': release_qty,
+      'part_id':part_id,
     };
     var res = await HttpManager.netFetch('${UrlConstant.getSaveData()}${setSk}',
         requestParams, header, Options(method: 'post'));
@@ -746,6 +747,37 @@ class DataDao {
     };
     var res = await HttpManager.netFetch(
         '${UrlConstant.getcancelByIdData()}${setSk}',
+        requestParams,
+        header,
+        Options(method: 'post'));
+    var resultData;
+    if (res != null && res.result) {
+      if (res.data['code'] == 200) {
+        return ResultDao(res.data, res.result);
+      } else {
+        resultData = ResultDao(
+            Code.errorHandleFunction(res.data['code'], res.data['msg'], false),
+            false);
+        return ResultDao(resultData, false);
+      }
+    } else {
+      resultData =
+          ResultDao(Code.errorHandleFunction(res.code, '', false), false);
+      return ResultDao(resultData, false);
+    }
+  }
+
+  static getCancleById(id) async {
+    Map<String, String> header = {
+      'Authorization': await LocalStorage.get(Config.UA)
+    };
+    String setSk = '_SK_=${await LocalStorage.get(Config.SET_KEY)}';
+    Map<String, dynamic> requestParams;
+    requestParams = {
+      'id': id,
+    };
+    var res = await HttpManager.netFetch(
+        '${UrlConstant.getCancel()}${setSk}',
         requestParams,
         header,
         Options(method: 'post'));

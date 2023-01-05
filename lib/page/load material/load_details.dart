@@ -307,7 +307,7 @@ class _MaterialLoadDetailsState extends State<MaterialLoadDetails> {
   _getSaveData() {
 
     DataDao.getSaveData(
-            _id, _order_id, _recipe_id, _eqp_id, _code, _countController.text)
+            _id, _order_id, _recipe_id, _eqp_id, _code, _countController.text,_noController.text)
         .then((res) {
       if (res != null && res.result) {
         ScanConfig.scanPage = ScanConfig.PAGE_LOAD;

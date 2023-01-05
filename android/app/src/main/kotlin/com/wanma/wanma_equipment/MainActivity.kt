@@ -1,20 +1,39 @@
 package com.wanma.wanma_equipment
 
 import Printer.PrintHelper
+import android.annotation.SuppressLint
+import android.app.Dialog
+import android.app.Instrumentation
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageInfo
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.os.Environment
 import android.os.Handler
-import android.os.PersistableBundle
 import android.util.Log
+import android.view.KeyEvent
+import android.view.inputmethod.BaseInputConnection
+import android.view.inputmethod.InputConnection
+import android.widget.EditText
+import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
+import com.allenliu.versionchecklib.callback.OnCancelListener
+import com.allenliu.versionchecklib.v2.AllenVersionChecker
+import com.allenliu.versionchecklib.v2.builder.DownloadBuilder
+import com.allenliu.versionchecklib.v2.builder.UIData
+import com.allenliu.versionchecklib.v2.callback.CustomDownloadFailedListener
+import com.allenliu.versionchecklib.v2.callback.CustomDownloadingDialogListener
+import com.allenliu.versionchecklib.v2.callback.CustomVersionDialogListener
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.WriterException
+import com.wanma.wanma_equipment.dialog.UpdataVersionDialog
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
@@ -32,6 +51,8 @@ class MainActivity: FlutterActivity() {
 
     lateinit var printHelper: PrintHelper
     lateinit var methodChannel: MethodChannel
+    lateinit var builder: DownloadBuilder
+
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
 
@@ -67,6 +88,20 @@ class MainActivity: FlutterActivity() {
                 printHelper.GoToNextPage()
             }
 
+            if(call.method.equals("update")){
+                var updateContent:List<String>
+                try {
+                    updateContent= call.arguments.toString().split(";")
+                    var  count:Int = updateContent.get(0).toDouble().toInt()
+                    var  url:String = updateContent.get(1)
+                    if(count>getVersionCode()){
+                        sendRequest(System.currentTimeMillis().toString(),url,"有新的版本请更新！");
+                    }
+                }catch (e:Exception){
+                    Toast.makeText(context, "版本号异常", Toast.LENGTH_SHORT).show()
+                }
+
+            }
         }
     }
 
@@ -78,7 +113,6 @@ class MainActivity: FlutterActivity() {
                 )
             };
         scanSetting()
-
     }
 
 
@@ -103,14 +137,14 @@ class MainActivity: FlutterActivity() {
         super.onPause()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-    }
 
     private val myBroastcast: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             val str = intent.getStringExtra("BARCODE")
             if (str != null) {
+                /*val inputConnection: InputConnection = BaseInputConnection(EditText(
+                    applicationContext), false)
+                inputConnection.commitText(str, 0);*/
                 invokeFlutterMethod_toAllFlutter(str)
             }
         }
@@ -212,4 +246,141 @@ class MainActivity: FlutterActivity() {
             Toast.makeText(context, "null", Toast.LENGTH_SHORT).show()
         }
     }
+
+    @SuppressLint("LongLogTag")
+    private fun typeIn(KeyCode: Int) {
+        try {
+            val inst = Instrumentation()
+            inst.sendKeyDownUpSync(KeyCode)
+        } catch (e: java.lang.Exception) {
+            Log.e("Exception when sendKeyDownUpSync", e.toString())
+        }
+    }
+
+
+
+    //版本更新
+    /**
+     * 发送请求获取更新信息
+     */
+    private fun sendRequest(name: String, url: String, content: String) {
+        builder = AllenVersionChecker.getInstance().downloadOnly(crateUIData(url, content))
+        //更新提示框样式
+        builder.setCustomVersionDialogListener(createCustomDialogOne())
+        builder.setOnCancelListener(OnCancelListener {
+
+        })
+        //进度条样式
+        builder.setCustomDownloadingDialogListener(createCustomDownloadingDialog())
+        //下载失败样式
+        builder.setCustomDownloadFailedListener(createCustomDownloadFailedDialog())
+        //自定义下载路径
+        builder.setDownloadAPKPath(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+            .toString() + "/WANMA/Version/")
+        builder.setApkName(name)
+        builder.executeMission(this)
+    }
+
+    /**
+     * 自定义更新弹窗页面
+     * 务必用库传回来的context 实例化你的dialog
+     * 自定义的dialog UI参数展示，使用versionBundle
+     *
+     * @return
+     */
+    private fun createCustomDialogOne(): CustomVersionDialogListener? {
+        return CustomVersionDialogListener { context: Context?, versionBundle: UIData ->
+            val baseDialog =
+                UpdataVersionDialog(context, R.style.BaseDialog, R.layout.custom_dialog_one_layout)
+            val textView: TextView = baseDialog.findViewById(R.id.tv_msg)
+            textView.text = versionBundle.content
+            baseDialog
+        }
+    }
+
+
+    /**
+     * 自定义下载失败
+     * 务必用库传回来的context 实例化你的dialog
+     *
+     * @return
+     */
+    private fun createCustomDownloadFailedDialog(): CustomDownloadFailedListener? {
+        return CustomDownloadFailedListener { context: Context?, versionBundle: UIData? ->
+            val baseDialog =
+                UpdataVersionDialog(context,
+                    R.style.BaseDialog,
+                    R.layout.custom_download_failed_dialog)
+            baseDialog
+        }
+    }
+
+
+    /**
+     * 自定义下载中对话框，下载中会连续回调此方法 updateUI
+     * 务必用库传回来的context 实例化你的dialog
+     *
+     * @return
+     */
+    private fun createCustomDownloadingDialog(): CustomDownloadingDialogListener? {
+        return object : CustomDownloadingDialogListener {
+            override fun getCustomDownloadingDialog(
+                context: Context,
+                progress: Int,
+                versionBundle: UIData,
+            ): Dialog {
+                return UpdataVersionDialog(context,
+                    R.style.BaseDialog,
+                    R.layout.custom_download_layout)
+            }
+
+            override fun updateUI(dialog: Dialog, progress: Int, versionBundle: UIData) {
+                val tvProgress = dialog.findViewById<TextView>(R.id.tv_progress)
+                val progressBar = dialog.findViewById<ProgressBar>(R.id.pb)
+                progressBar.progress = progress
+                tvProgress.text = getString(R.string.versionchecklib_progress, progress)
+            }
+        }
+    }
+
+
+    /**
+     * @return
+     * @important 使用请求版本功能，可以在这里设置downloadUrl
+     * 这里可以构造UI需要显示的数据
+     * UIData 内部是一个Bundle
+     */
+    private fun crateUIData(url: String, content: String): UIData? {
+        val uiData = UIData.create()
+        uiData.title = "版本更新"
+        uiData.downloadUrl = url
+        uiData.content = content
+        return uiData
+    }
+
+    /**
+     * 获得版本code
+     * @return
+     */
+    @SuppressLint("WrongConstant")
+    fun getVersionCode(): Int {
+        // TODO Auto-generated method stub
+        val pi: PackageInfo
+        try {
+            pi = getPackageManager()
+                .getPackageInfo(getPackageName(),
+                    PackageManager.COMPONENT_ENABLED_STATE_DEFAULT)
+            return pi.versionCode
+        } catch (e: PackageManager.NameNotFoundException) {
+            // TODO Auto-generated catch block
+            e.printStackTrace()
+        }
+        return 1
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        AllenVersionChecker.getInstance().cancelAllMission(this)
+    }
+
 }

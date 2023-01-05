@@ -6,10 +6,24 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET"/>
-   <application
+
+   <application android:allowBackup="true"
+       android:requestLegacyExternalStorage="true"
+       android:supportsRtl="true"
+       android:networkSecurityConfig="@xml/network_security_config"
+       android:label="万马智造"
         android:name=".App"
-        android:label="万马智造"
         android:icon="@mipmap/icon">
+       <uses-library android:name="org.apache.http.legacy" android:required="false" />
+       <provider
+           android:name="androidx.core.content.FileProvider"
+           android:authorities="com.wanma.wanma_print.fileProvider"
+           android:exported="false"
+           android:grantUriPermissions="true">
+           <meta-data
+               android:name="android.support.FILE_PROVIDER_PATHS"
+               android:resource="@xml/file_paths" />
+       </provider>
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

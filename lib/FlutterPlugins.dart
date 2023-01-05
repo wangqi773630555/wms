@@ -16,5 +16,9 @@ class FlutterPlugins{
     await channel.invokeMethod('walk');
   }
 
+  static Future<void> update(String result) async{
+    await channel.invokeMethod('update',result);
+  }
+
 
 }

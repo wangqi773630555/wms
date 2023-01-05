@@ -92,5 +92,6 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.google.zxing:core:3.3.3'
     implementation files('libs\\print.jar')
+    implementation 'com.allenliu.versionchecklib:library:2.2.0'
 
 }

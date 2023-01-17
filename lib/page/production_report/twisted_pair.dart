@@ -47,7 +47,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
   TextEditingController vc4 = TextEditingController();
   TextEditingController vc5 = TextEditingController();
   TextEditingController vc6 = TextEditingController();
-  TextEditingController vc7 = TextEditingController();
+  // TextEditingController vc7 = TextEditingController();
   // TextEditingController vc7 = TextEditingController();
   var extraField1 = ''; //danwei
   // var extraField2 = '';
@@ -65,7 +65,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
   Map eqp_id_relation_Map = {};
   List productionList = [];
   List eqpIdList = [];
-  // var eqpIdValue;
+  var eqpIdValue;
   List colorList = [];
   List radioList = [];
   List xinxianList = [];
@@ -90,7 +90,6 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
   getData(flag, ids) {
     DataDao.getProductions(widget.idsList[1], widget.idsList[0], ids, flag)
         .then((res) {
-      print('1111111111111');
       circle = true;
       if (res.data != null && res.data != '') {
         modeMap = res.data['data'];
@@ -99,14 +98,17 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
           for (var element in productionList) {
             if (element['key'] == 'eqp_id') {
               eqpIdList = element['list'];
+              eqpIdList.insert(0, {'value': '', 'key': '0'});
               _eqpIdItems = [];
-              // CommonUtils.renderDropdownMenuItem(
-              //     eqpIdList, _eqpIdItems, "value", "key");
-              // if (element['value'] != null && element['value'] != '') {
-              //   eqpIdValue = element['value'].toString();
-              // }
 
-              print('eqpIdList:$eqpIdList');
+              CommonUtils.renderDropdownMenuItem(
+                  eqpIdList, _eqpIdItems, "value", "key");
+              // print('1111111111111$_eqpIdItems');
+              if (element['value'] != null && element['value'] != '') {
+                eqpIdValue = element['value'].toString();
+              }
+              //  eqpIdList[0]
+              // print('eqpIdList:$eqpIdList');
               // print('_eqpIdItems:$_eqpIdItems');
             }
             if (element['key'] == 'color') {
@@ -125,14 +127,16 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
             }
             if (element['title'] == '机台号') {
               vc6.text = (element['value'] ?? '').toString();
-              vc7.text = '';
+              // vc7.text = '';
               // vc6.text = '51';
+              eqpIdValue = '0';
               eqp_id_relation_Map = element['eqp_id_relation'];
               for (var i = 0; i < eqp_id_relation_Map.values.length; i++) {
                 List ls = eqp_id_relation_Map.values.elementAt(i);
                 for (var e in ls) {
                   if (e.toString() == vc6.text) {
-                    vc7.text = eqp_id_relation_Map.keys.elementAt(i).toString();
+                    eqpIdValue =
+                        eqp_id_relation_Map.keys.elementAt(i).toString();
                   }
                 }
               }
@@ -192,10 +196,10 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
       Fluttertoast.showToast(msg: '部分内容未填写');
       return;
     }
-    // if (eqpIdValue == null || eqpIdValue == '') {
-    //   Fluttertoast.showToast(msg: '部分内容未填写');
-    //   return;
-    // }
+    if (eqpIdValue == null || eqpIdValue == '0') {
+      Fluttertoast.showToast(msg: '部分内容未填写');
+      return;
+    }
     if (colorValue == null || colorValue == '') {
       Fluttertoast.showToast(msg: '部分内容未填写');
       return;
@@ -227,8 +231,8 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
 
     var paras = {
       "shift_type": (radioValue ?? '').toString(),
-      // "eqp_id": int.parse(eqpIdValue),
-      "eqp_id": int.parse(vc7.text),
+      "eqp_id": int.parse(eqpIdValue),
+      // "eqp_id": int.parse(vc7.text),
       "color": colorValue,
       "qty": double.parse(vc1.text),
       "eqp_no": int.parse(vc6.text),
@@ -376,8 +380,8 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
 
                   // productionList[0]['render']=='LABEL'?
                   textRow('流水编号', ''),
-                  // selectRow('机台组', true, _eqpIdItems),
-                  cellForRow('机台组', vc7, false, '', 'int'),
+                  selectRow('机台组', false, _eqpIdItems),
+                  // cellForRow('机台组', vc7, false, '', 'int'),
                   cellForRow('机台号', vc6, false, '', 'int'),
                   radioWidget(),
                   selectRow('色谱', false, _colorItems),
@@ -475,35 +479,54 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
             height: 35,
             padding: EdgeInsets.only(left: 5),
             decoration: BoxDecoration(
-              // color: Colors.red,
+              color: txt == '机台组'
+                  ? Color.fromARGB(236, 237, 234, 234)
+                  : Colors.white,
               border: Border.all(width: 1),
               borderRadius: BorderRadius.all(Radius.circular(0)),
             ),
             child: DropdownButtonHideUnderline(
-              child: DropdownButton<String>(
-                items: items,
-                value:
-                    // txt == '机台组'
-                    //     ? eqpIdValue
-                    //     : (
-                    txt == '色谱' ? colorValue : null
-                // ),
-                ,
-                elevation: 24,
-                onChanged: (v) {
-                  setState(() {
-                    FocusScope.of(context).requestFocus(FocusNode());
-                    // if (txt == '机台组') {
-                    //   eqpIdValue = v!;
-                    // } else
-                    if (txt == '色谱') {
-                      colorValue = v!;
-                    }
+              child: txt == '机台组'
+                  ? DropdownButton<String>(
+                      items: items,
+                      value: eqpIdValue,
+                      elevation: 24,
+                      onChanged: (v) {
+                        // setState(() {
+                        //   FocusScope.of(context).requestFocus(FocusNode());
+                        //   if (txt == '机台组') {
+                        //      = v!;
+                        //   }
+                        // if (items.hashCode != v) {
+                        //   print(items.hashCode);
+                        // }
 
-                    print(v);
-                  });
-                },
-              ),
+                        // });
+                      },
+                    )
+                  : DropdownButton<String>(
+                      items: items,
+                      value:
+                          // txt == '机台组'
+                          //     ? eqpIdValue
+                          //     : (
+                          txt == '色谱' ? colorValue : null
+                      // )
+                      ,
+                      elevation: 24,
+                      onChanged: (v) {
+                        setState(() {
+                          FocusScope.of(context).requestFocus(FocusNode());
+                          // if (txt == '机台组') {
+                          //   eqpIdValue = v!;
+                          // } else if (txt == '色谱') {
+                          colorValue = v!;
+                          // }
+
+                          print(v);
+                        });
+                      },
+                    ),
             ),
           ),
           isScan == true
@@ -541,7 +564,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
                   )
                 : (type == 'int'
                     ? TextField(
-                        readOnly: txt == '机台组' ? true : false,
+                        // readOnly: txt == '机台组' ? true : false,
                         controller: vc,
                         inputFormatters: [
                           // FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
@@ -549,16 +572,23 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
                         ],
                         onChanged: (value) {
                           if (txt == '机台号') {
-                            vc7.text = '';
+                            setState(() {
+                              eqpIdValue = '0';
+                            });
+
+                            // vc7.text = '';
+
                             for (var i = 0;
                                 i < eqp_id_relation_Map.values.length;
                                 i++) {
                               List ls = eqp_id_relation_Map.values.elementAt(i);
                               for (var e in ls) {
                                 if (e.toString() == vc6.text) {
-                                  vc7.text = eqp_id_relation_Map.keys
-                                      .elementAt(i)
-                                      .toString();
+                                  setState(() {
+                                    eqpIdValue = eqp_id_relation_Map.keys
+                                        .elementAt(i)
+                                        .toString();
+                                  });
                                 }
                               }
                             }
@@ -573,9 +603,9 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
                         ],
                       )),
             decoration: BoxDecoration(
-              color: txt == '机台组'
-                  ? Color.fromARGB(255, 242, 238, 238)
-                  : Colors.white,
+              // color: txt == '机台组'
+              //     ? Color.fromARGB(255, 242, 238, 238)
+              //     : Colors.white,
               border: Border.all(width: 1),
               borderRadius: BorderRadius.all(Radius.circular(0)),
             ),

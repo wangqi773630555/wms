@@ -10,9 +10,9 @@ class UrlConstant {
   static const String host =
       'https://gatewaydev.wanmaco.com/authority-system/'; //登录测试
   static const String host2 = 'http://itest.wanmagroup.com/'; //测试
-  // static const String host =
-  //     'https://gateway.wanmaco.com/authority-system/'; //登录正式
-  // static const String host2 = 'http://wms.wanmagroup.com/'; //正式
+ /*  static const String host =
+       'https://gateway.wanmaco.com/authority-system/'; //登录正式
+   static const String host2 = 'http://wms.wanmagroup.com/'; //正式*/
 
   ///登陆
   static getLogin() {

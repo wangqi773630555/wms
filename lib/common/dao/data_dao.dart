@@ -499,18 +499,18 @@ class DataDao {
     // print('+++++++${res.data}');
 
     if (res != null && res.result) {
-      // if (res.data['code'] == 200) {
-      return ResultDao(res.data, res.result);
-      //   } else {
-      //     resultData = ResultDao(
-      //         Code.errorHandleFunction(res.data['code'], res.data['msg'], false),
-      //         false);
-      //     return ResultDao(resultData, false);
-      //   }
-      // } else {
-      //   resultData =
-      //       ResultDao(Code.errorHandleFunction(res.code, '', false), false);
-      //   return ResultDao(resultData, false);
+      if (res.data['code'] == 200) {
+        return ResultDao(res.data, res.result);
+      } else {
+        resultData = ResultDao(
+            Code.errorHandleFunction(res.data['code'], res.data['msg'], false),
+            false);
+        return ResultDao(resultData, false);
+      }
+    } else {
+      resultData =
+          ResultDao(Code.errorHandleFunction(res.code, '', false), false);
+      return ResultDao(resultData, false);
     }
   }
 
@@ -538,18 +538,18 @@ class DataDao {
     // print('+++++++${res.data}');
 
     if (res != null && res.result) {
-      // if (res.data['code'] == 200) {
-      return ResultDao(res.data, res.result);
-      //   } else {
-      //     resultData = ResultDao(
-      //         Code.errorHandleFunction(res.data['code'], res.data['msg'], false),
-      //         false);
-      //     return ResultDao(resultData, false);
-      //   }
-      // } else {
-      //   resultData =
-      //       ResultDao(Code.errorHandleFunction(res.code, '', false), false);
-      //   return ResultDao(resultData, false);
+      if (res.data['code'] == 200) {
+        return ResultDao(res.data, res.result);
+      } else {
+        resultData = ResultDao(
+            Code.errorHandleFunction(res.data['code'], res.data['msg'], false),
+            false);
+        return ResultDao(resultData, false);
+      }
+    } else {
+      resultData =
+          ResultDao(Code.errorHandleFunction(res.code, '', false), false);
+      return ResultDao(resultData, false);
     }
   }
 
@@ -630,7 +630,7 @@ class DataDao {
    * 确定投料
    */
   static getSaveData(id, order_id, recipe_id, eqp_id, material_bill_print_id,
-      release_qty,part_id,part_batch) async {
+      release_qty, part_id, part_batch) async {
     Map<String, String> header = {
       'Authorization': await LocalStorage.get(Config.UA)
     };
@@ -643,8 +643,8 @@ class DataDao {
       'eqp_id': eqp_id,
       'material_bill_print_id': material_bill_print_id,
       'release_qty': release_qty,
-      'part_id':part_id,
-      'part_batch':part_batch,
+      'part_id': part_id,
+      'part_batch': part_batch,
     };
     var res = await HttpManager.netFetch('${UrlConstant.getSaveData()}${setSk}',
         requestParams, header, Options(method: 'post'));
@@ -777,11 +777,8 @@ class DataDao {
     requestParams = {
       'id': id,
     };
-    var res = await HttpManager.netFetch(
-        '${UrlConstant.getCancel()}${setSk}',
-        requestParams,
-        header,
-        Options(method: 'post'));
+    var res = await HttpManager.netFetch('${UrlConstant.getCancel()}${setSk}',
+        requestParams, header, Options(method: 'post'));
     var resultData;
     if (res != null && res.result) {
       if (res.data['code'] == 200) {

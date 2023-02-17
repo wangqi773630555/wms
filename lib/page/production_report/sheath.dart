@@ -9,6 +9,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../common/config/config.dart';
 import '../../common/utils/common_utils.dart';
+import '../../widget/loading.dart';
 import 'common_widget/production_header.dart';
 
 import '../../common/dao/data_dao.dart';
@@ -53,6 +54,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
   // var extraField4 = '';
   // var extraField5 = '';
   var radioValue;
+  var radioValue2 = 'Y';
   var people = '';
   var time = '';
   var lsbh = '';
@@ -65,11 +67,14 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
   var eqpIdValue;
   List colorList = [];
   List radioList = [];
+  List radioList2 = [];
   var colorValue;
   bool circle = false;
   ScanResult? scanResult;
   List<DropdownMenuItem<String>> _eqpIdItems = [];
   List<DropdownMenuItem<String>> _colorItems = [];
+  var _selectDate1 = DateTime.now();
+  String bgDate = DateTime.now().toString().substring(0, 10);
   @override
   void initState() {
     // TODO: implement initState
@@ -125,6 +130,13 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
                 radioValue = int.parse(element['value']);
               }
             }
+            if (flag == true && element['title'] == '是否完工') {
+              radioValue2 = '';
+              radioList2 = element['list'];
+              if (element['value'] != null) {
+                radioValue2 = element['value'];
+              }
+            }
             if (element['title'] == '成缆编号') {
               vc2.text = (element['value'] ?? '').toString();
               // extraField2 = element['extraField'];
@@ -146,6 +158,10 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
             if (element['title'] == '护套厚度') {
               vc7.text = (element['value'] ?? '').toString();
               // extraField5 = element['extraField'];
+            }
+            if (flag == true && element['title'] == '报工日期') {
+              bgDate = '';
+              bgDate = (element['value'] ?? '').toString();
             }
             if (element['title'] == '报工人') {
               // if (element['value'] != null) {
@@ -174,6 +190,10 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
 
   save() {
     if (radioValue == null || radioValue == '') {
+      Fluttertoast.showToast(msg: '部分内容未填写');
+      return;
+    }
+    if (radioValue2 == null || radioValue2 == '') {
       Fluttertoast.showToast(msg: '部分内容未填写');
       return;
     }
@@ -214,7 +234,12 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
       return;
     }
     // circle = false;
+    if (bgDate == '') {
+      Fluttertoast.showToast(msg: '部分内容未填写');
+      return;
+    }
     var paras = {
+      'is_finished': radioValue2,
       "shift_type": (radioValue ?? '').toString(),
       "eqp_id": int.parse(eqpIdValue),
       "qty": double.parse(vc1.text),
@@ -224,7 +249,8 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
       "sheath_out_radius": double.parse(vc4.text),
       "break_no": vc5.text,
       "sheath_appearance": vc6.text,
-      "sheath_thickness": vc7.text
+      "sheath_thickness": vc7.text,
+      'shift_date': bgDate,
     };
     // print(paras.keys.length);
     // print(vc1.text);
@@ -238,17 +264,17 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
     // print(eqpIdValue);
     // print(colorValue);
     // print(paras);
-
+    Loading.show(context);
     DataDao.getProductionSave(widget.idsList[1], widget.idsList[0],
             widget.idsList[2], widget.idsList[3], paras)
         .then((res) {
       // print(widget.idsList);
-
-      if (res.data['id'] != null && res.data['id'] != '') {
-        print('#####');
-        // getData(true, res.data['id']);
-        Fluttertoast.showToast(msg: '提交成功');
-        Navigator.pop(context);
+      Loading.hide(context);
+      if (res != null && res.result) {
+        Fluttertoast.showToast(msg: res.data['msg']);
+        if (res.data['code'] == 200) {
+          Navigator.pop(context);
+        }
       }
     });
   }
@@ -359,6 +385,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
                   // productionList[0]['render']=='LABEL'?
                   textRow('流水编号', ''),
                   selectRow('生产机台', true, _eqpIdItems),
+                  selectDate('报工日期'),
                   radioWidget(),
                   selectRow('色谱', false, _colorItems),
                   cellForRow('长度', vc1, false, extraField1, 'double'),
@@ -370,6 +397,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
                   cellForRow('护套外观', vc6, false, '', 'char'),
                   cellForRow('护套厚度', vc7, false, '', 'char'),
                   // cellForRow('导体伸率', vc7, false, extraField5, 'double'),
+                  radioWidgetTwo(), //是否完工
                   textRow('报工人', people),
                   textRow('报工时间', time),
                   TextButton(
@@ -405,6 +433,95 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
             padding: EdgeInsets.only(right: 20),
             child: Text(value),
           )
+        ],
+      ),
+    );
+  }
+
+  Widget selectDate(txt) {
+    return Container(
+      margin: EdgeInsets.only(top: 5, left: 15),
+      child: Row(
+        children: [
+          Container(
+            width: 80,
+            child: Text(txt),
+          ),
+          Container(
+              width: _wwidth - 80 - 70,
+              height: 35,
+              margin: EdgeInsets.only(right: 5),
+              // padding: EdgeInsets.only(left: 10),
+              decoration: BoxDecoration(
+                // color: Colors.red,
+                border: Border.all(width: 1),
+                borderRadius: BorderRadius.all(Radius.circular(0)),
+              ),
+              child: TextButton(
+                style: ButtonStyle(alignment: Alignment.centerLeft),
+                onPressed: () {
+                  _showDataPicker();
+                },
+                child: Text(
+                  bgDate,
+                  textAlign: TextAlign.left,
+                ),
+              )),
+        ],
+      ),
+    );
+  }
+
+  _showDataPicker() async {
+    debugPrint('选择时间方法');
+    final DateTime? date = await showDatePicker(
+        context: context,
+        initialDate: _selectDate1,
+        firstDate: DateTime(1998),
+        lastDate: DateTime(2030),
+        locale: Locale('zh'));
+
+    if (date == null) return;
+
+    if (mounted) {
+      setState(() {
+        _selectDate1 = date;
+        bgDate = _selectDate1.toString().substring(0, 10);
+        // _startTime = '${}';
+
+        // showDate();
+      });
+    }
+  }
+
+  Widget radioWidgetTwo() {
+    return Container(
+      height: 35,
+      margin: EdgeInsets.only(left: 15),
+      child: Row(
+        children: [
+          Container(
+            width: 65,
+            child: Text('是否完工'),
+          ),
+          Radio(
+              value: radioList2.length > 0 ? radioList2[0]['key'] : 'Y',
+              groupValue: radioValue2,
+              onChanged: (dynamic newValue) {
+                setState(() {
+                  radioValue2 = newValue;
+                });
+              }),
+          Text('是'),
+          Radio(
+              value: radioList2.length > 0 ? radioList2[1]['key'] : 'N',
+              groupValue: radioValue2,
+              onChanged: (dynamic newValue) {
+                setState(() {
+                  radioValue2 = newValue;
+                });
+              }),
+          Text('否'),
         ],
       ),
     );

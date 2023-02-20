@@ -54,7 +54,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
   var extraField4 = '';
   var extraField5 = '';
   var radioValue;
-  var radioValue2 = 'Y';
+  // var radioValue2 = 'Y';
   var people = '';
   var time = '';
   var lsbh = '';
@@ -67,7 +67,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
   var eqpIdValue;
   List colorList = [];
   List radioList = [];
-  List radioList2 = [];
+  // List radioList2 = [];
   var colorValue;
   bool circle = false;
   ScanResult? scanResult;
@@ -129,13 +129,13 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
                 radioValue = int.parse(element['value']);
               }
             }
-            if (flag == true && element['title'] == '是否完工') {
-              radioValue2 = '';
-              radioList2 = element['list'];
-              if (element['value'] != null) {
-                radioValue2 = element['value'];
-              }
-            }
+            // if (flag == true && element['title'] == '是否完工') {
+            //   radioValue2 = '';
+            //   radioList2 = element['list'];
+            //   if (element['value'] != null) {
+            //     radioValue2 = element['value'];
+            //   }
+            // }
             if (element['title'] == '导体线径') {
               vc2.text = (element['value'] ?? '').toString();
               extraField2 = element['extraField'] ?? '';
@@ -163,7 +163,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
               people = element['value'] ?? '';
               // }
             }
-            if (flag == true && element['title'] == '报工日期') {
+            if (flag == true && element['title'] == '生产日期') {
               bgDate = '';
               bgDate = (element['value'] ?? '').toString();
             }
@@ -184,10 +184,10 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
   }
 
   save() {
-    if (radioValue2 == null || radioValue2 == '') {
-      Fluttertoast.showToast(msg: '部分内容未填写');
-      return;
-    }
+    // if (radioValue2 == null || radioValue2 == '') {
+    //   Fluttertoast.showToast(msg: '部分内容未填写');
+    //   return;
+    // }
     if (radioValue == null || radioValue == '') {
       Fluttertoast.showToast(msg: '部分内容未填写');
       return;
@@ -234,7 +234,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
     }
     // circle = false;
     var paras = {
-      'is_finished': radioValue2,
+      // 'is_finished': radioValue2,
       "shift_type": (radioValue ?? '').toString(),
       "eqp_id": int.parse(eqpIdValue),
       "color": colorValue,
@@ -377,7 +377,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
                   // productionList[0]['render']=='LABEL'?
                   textRow('流水编号', lsbh),
                   selectRow('生产机台', true, _eqpIdItems),
-                  selectDate('报工日期'),
+                  selectDate('生产日期'),
                   radioWidget(),
                   selectRow('色谱', false, _colorItems),
                   cellForRow('长度', vc1, false, extraField1, 'double'),
@@ -388,7 +388,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
                   cellForRow('同心度', vc6, false, extraField4, 'double'),
                   cellForRow('导体伸率', vc7, false, extraField5, 'double'),
                   cellForRow('工艺文件编号', vc8, false, '(选填)', 'char'),
-                  radioWidgetTwo(), //是否完工
+                  // radioWidgetTwo(), //是否完工
                   textRow('报工人', people),
                   textRow('报工时间', time),
 
@@ -486,38 +486,38 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
     }
   }
 
-  Widget radioWidgetTwo() {
-    return Container(
-      height: 35,
-      margin: EdgeInsets.only(left: 15),
-      child: Row(
-        children: [
-          Container(
-            width: 65,
-            child: Text('是否完工'),
-          ),
-          Radio(
-              value: radioList2.length > 0 ? radioList2[0]['key'] : 'Y',
-              groupValue: radioValue2,
-              onChanged: (dynamic newValue) {
-                setState(() {
-                  radioValue2 = newValue;
-                });
-              }),
-          Text('是'),
-          Radio(
-              value: radioList2.length > 0 ? radioList2[1]['key'] : 'N',
-              groupValue: radioValue2,
-              onChanged: (dynamic newValue) {
-                setState(() {
-                  radioValue2 = newValue;
-                });
-              }),
-          Text('否'),
-        ],
-      ),
-    );
-  }
+  // Widget radioWidgetTwo() {
+  //   return Container(
+  //     height: 35,
+  //     margin: EdgeInsets.only(left: 15),
+  //     child: Row(
+  //       children: [
+  //         Container(
+  //           width: 65,
+  //           child: Text('是否完工'),
+  //         ),
+  //         Radio(
+  //             value: radioList2.length > 0 ? radioList2[0]['key'] : 'Y',
+  //             groupValue: radioValue2,
+  //             onChanged: (dynamic newValue) {
+  //               setState(() {
+  //                 radioValue2 = newValue;
+  //               });
+  //             }),
+  //         Text('是'),
+  //         Radio(
+  //             value: radioList2.length > 0 ? radioList2[1]['key'] : 'N',
+  //             groupValue: radioValue2,
+  //             onChanged: (dynamic newValue) {
+  //               setState(() {
+  //                 radioValue2 = newValue;
+  //               });
+  //             }),
+  //         Text('否'),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Widget radioWidget() {
     return Container(

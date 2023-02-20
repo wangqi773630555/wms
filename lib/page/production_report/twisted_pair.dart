@@ -125,7 +125,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
                 colorValue = element['value'].toString();
               }
             }
-            if (flag == true && element['title'] == '报工日期') {
+            if (flag == true && element['title'] == '生产日期') {
               bgDate = '';
               bgDate = (element['value'] ?? '').toString();
             }
@@ -408,7 +408,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
                   selectRow('机台组', false, _eqpIdItems),
                   // cellForRow('机台组', vc7, false, '', 'int'),
                   cellForRow('机台号', vc6, false, '', 'int'),
-                  selectDate('报工日期'),
+                  selectDate('生产日期'),
                   radioWidget(),
                   selectRow('色谱', false, _colorItems),
                   cellForRow('长度', vc1, false, extraField1, 'double'),

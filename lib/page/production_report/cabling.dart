@@ -168,7 +168,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
               // extraField5 = element['extraField'];
             }
 
-            if (flag == true && element['title'] == '报工日期') {
+            if (flag == true && element['title'] == '生产日期') {
               bgDate = '';
               bgDate = (element['value'] ?? '').toString();
             }
@@ -420,7 +420,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
 
                   textRow('流水编号', ''),
                   selectRow('生产机台', true, _eqpIdItems),
-                  selectDate('报工日期'),
+                  selectDate('生产日期'),
                   radioWidget(),
                   // selectRow('色谱', false, _colorItems),
                   cellForRow('长度', vc1, false, extraField1, 'double'),

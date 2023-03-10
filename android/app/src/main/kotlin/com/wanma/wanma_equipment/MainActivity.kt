@@ -11,14 +11,14 @@ import android.content.IntentFilter
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
 import android.util.Log
-import android.view.KeyEvent
-import android.view.inputmethod.BaseInputConnection
-import android.view.inputmethod.InputConnection
-import android.widget.EditText
+import android.view.View
+import android.view.WindowManager
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
@@ -102,11 +102,25 @@ class MainActivity: FlutterActivity() {
                 }
 
             }
+
+            if (call.method.equals("version")) {
+                var newCode:String= call.arguments.toString()
+                try {
+                    if(newCode.toDouble().toInt()>getVersionCode()){
+                       result.success("1")
+                    }else{
+                        result.success("0")
+                    }
+                }catch (e:Exception){
+                    Toast.makeText(context, "版本号异常"+newCode, Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        //applyKitKatTranslucency();
         methodChannel_toFlutter =
             getFlutterEngine()?.getDartExecutor()?.getBinaryMessenger()?.let {
                 MethodChannel(it,"toFlutterChannelName"
@@ -381,6 +395,15 @@ class MainActivity: FlutterActivity() {
     override fun onDestroy() {
         super.onDestroy()
         AllenVersionChecker.getInstance().cancelAllMission(this)
+    }
+
+    fun setStateColor(dark: Boolean) {
+        val decor: View = getWindow().getDecorView()
+        if (!dark) {
+            decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR)
+        } else {
+            decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE)
+        }
     }
 
 }

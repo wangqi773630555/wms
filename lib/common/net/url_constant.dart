@@ -8,25 +8,29 @@ class UrlConstant {
   // static const String host = 'http://172.18.2.254:8004/';//测试
   // static const String host = 'https://eqptest.wanmaco.com/api/'; //测试
   static const String host =
-      'https://gatewaydev.wanmaco.com/authority-system/'; //登录测试
+      'https://gatewaydev.wanmaco.com/'; //登录测试
   static const String host2 = 'http://itest.wanmagroup.com/'; //测试
- /*  static const String host =
-       'https://gateway.wanmaco.com/authority-system/'; //登录正式
-   static const String host2 = 'http://wms.wanmagroup.com/'; //正式*/
+  // static const String host =
+  //     'https://gateway.wanmaco.com/'; //登录正式
+  // static const String host2 = 'http://wms.wanmagroup.com/'; //正式
+
+
+   //本地测试地址
+  //static const String host3 = 'http://10.3.32.33:8080/ams/'; //登录测试
 
   ///登陆
   static getLogin() {
-    return '${host}auth/app/login';
+    return '${host}authority-system/auth/app/login';
   }
 
 //退出
   static getOutLogin() {
-    return '${host}admin/getLogout';
+    return '${host}authority-system/admin/getLogout';
   }
 
   ///修改密码
   static updatePwd() {
-    return '${host}admin/updateCurrUser';
+    return '${host}authority-system/admin/updateCurrUser';
   }
 
   //==========================================
@@ -60,7 +64,7 @@ class UrlConstant {
   }
 
   static getSk() {
-    return '${host}auth/sk/gfz';
+    return '${host}authority-system/auth/sk/gfz';
   }
 
   static getPartInfoById() {
@@ -122,4 +126,32 @@ class UrlConstant {
   static getCancel() {
     return '${host2}sync/mesProxy/mesJsonReq?route=/lot/rtLotPickRelease/cancel&';
   }
+
+  static getPreAuthorize() {
+    return '${host}authority-system/auth/preAuthorize';
+  }
+
+  static getAuthorizeResources() {
+    return '${host}authority-system/auth/authorizeResources';
+  }
+
+  static secretModify() {
+    return '${host}authority-system/user/secret/modify';
+  }
+
+  static getAppUserList() {
+    return '${host}ams/app-user-info/getAppUserList';
+  }
+
+  static saveApp() {
+    return '${host}ams/app-user-info/saveApp';
+  }
+
+  static removeApp() {
+    return '${host}ams/app-user-info/removeApp';
+  }
+  static appVerison() {
+    return '${host}ams/app-version/list';
+  }
+
 }

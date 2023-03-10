@@ -20,5 +20,11 @@ class FlutterPlugins{
     await channel.invokeMethod('update',result);
   }
 
+  static Future<String> getVersion(String result) async{
+    return await channel.invokeMethod('version',result);
+  }
+
+
+
 
 }

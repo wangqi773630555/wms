@@ -22,12 +22,36 @@ class _WelcomePageState extends State<WelcomePage> {
 
   @override
   void initState() {
-   // CommonUtils.checkPermissionStorage();
-
     //版本更新
-   /* var versionCode = 2;
+   /* var versionCode = 1;
     var url = 'http://appdownload.wanmagroup.com:8900/androidWeb/download/TST/wanma_equipment.apk';
     FlutterPlugins.update('$versionCode;$url').then((value) => {setState(() {})});*/
+    getAppVersion();
+  }
+
+  getAppVersion(){
+    var androidVersionCode;
+    var iosVersionCode;
+    var androidFile;
+    UserDao.getAppVersion().then((res) {
+      if (res != null && res.result) {
+        List data = res.data['data'];
+        for(int i=0;i<data.length;i++){
+          if(data[i]['type'].toString()=='1'){
+            //android
+            androidVersionCode = data[i]['version'];
+            androidFile = data[i]['file'];
+            FlutterPlugins.update('$androidVersionCode;$androidFile').then((value) => {setState(() {})});
+          }else if(data[i]['type'].toString()=='2'){
+            //ios
+            iosVersionCode = data[i]['version'];
+            //Todo 处理Ios版本更新逻辑
+
+          }
+        }
+
+      }
+    });
   }
 
 

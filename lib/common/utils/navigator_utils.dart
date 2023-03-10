@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:wanma_print/page/app.dart';
+import 'package:wanma_print/page/frame_widgit/main_page.dart';
+import 'package:wanma_print/page/frame_widgit/mine/account_security_page.dart';
+import 'package:wanma_print/page/frame_widgit/mine/change_password_page.dart';
+import 'package:wanma_print/page/frame_widgit/mine/change_work_page.dart';
 import 'package:wanma_print/page/print_page.dart';
 import 'package:wanma_print/page/production_report/cabling.dart';
 import 'package:wanma_print/page/production_report/form_circle.dart';
@@ -7,11 +11,13 @@ import 'package:wanma_print/page/production_report/select_work.dart';
 import 'package:wanma_print/page/production_report/series_connection.dart';
 import 'package:wanma_print/page/production_report/sheath.dart';
 import 'package:wanma_print/page/production_report/twisted_pair.dart';
+
 // import 'package:wanma_print/page/task/task_list.dart';
 import '../../page/load material/load_details.dart';
 import '../../page/load material/load_list.dart';
 import '../../page/load material/load_process.dart';
 import '../../page/login_page.dart';
+import '../../page/frame_widgit/menu_page.dart';
 import '../../page/param_setting.dart';
 import '../../page/production_report/production_report.dart';
 import '../../page/receipt_management/material_detail.dart';
@@ -36,6 +42,11 @@ class NavigatorUtils {
   static exitToLogin(BuildContext context) {
     Navigator.pushNamedAndRemoveUntil(
         context, LoginPage.sName, (route) => false);
+  }
+
+  //公用路由
+  static goPage(BuildContext context,String route) {
+    Navigator.pushNamed(context, route);
   }
 
   //新增end
@@ -134,4 +145,31 @@ class NavigatorUtils {
   static goMaterialLoadDetails1(BuildContext context, data) {
     Navigator.pushNamed(context, MaterialLoadDetails.sName, arguments: data);
   }
+
+  //新首页
+  ///主页
+  static goHomeNew(BuildContext context) {
+    Navigator.pushReplacementNamed(context, MainPage.sName);
+  }
+
+  //首页更多
+  static goMainTabMore(BuildContext context) {
+    Navigator.pushNamed(context, MenuPage.sName);
+  }
+
+  //我的->账户与安全
+  static goAccountSecurity(BuildContext context) {
+    Navigator.pushNamed(context, AccountSecurityPage.sName);
+  }
+
+  //我的->账户与安全->修改密码
+  static goChangePassword(BuildContext context) {
+    Navigator.pushNamed(context, ChangePasswordPage.sName);
+  }
+
+  //我的->切换工作
+  static goChangeWork(BuildContext context) {
+    Navigator.pushNamed(context, ChangeWorkPage.sName);
+  }
+
 }

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:redux/redux.dart';
@@ -11,6 +12,10 @@ import 'package:wanma_print/common/redux/wm_state.dart';
 import 'package:wanma_print/common/style/wm_style.dart';
 import 'package:wanma_print/common/utils/common_utils.dart';
 import 'package:wanma_print/common/utils/navigator_utils.dart';
+import 'package:wanma_print/page/frame_widgit/main_page.dart';
+import 'package:wanma_print/page/frame_widgit/mine/account_security_page.dart';
+import 'package:wanma_print/page/frame_widgit/mine/change_password_page.dart';
+import 'package:wanma_print/page/frame_widgit/mine/change_work_page.dart';
 import 'package:wanma_print/page/load%20material/load_details.dart';
 import 'package:wanma_print/page/load%20material/load_list.dart';
 import 'package:wanma_print/page/load%20material/load_process.dart';
@@ -34,6 +39,10 @@ import 'package:wanma_print/page/welcome_page.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/rendering.dart' show debugPaintSizeEnabled;
 
+import 'common/utils/barcolor_util.dart';
+import 'page/frame_widgit/menu_page.dart';
+
+final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 void main() async {
   //处理未捕获异常
   FlutterError.onError = (FlutterErrorDetails details) async {
@@ -54,6 +63,7 @@ void main() async {
   };
 
   runApp(MyApp());
+  SystemChrome.setSystemUIOverlayStyle(BarColor.dark);
 }
 
 class MyApp extends StatelessWidget {
@@ -76,6 +86,7 @@ class MyApp extends StatelessWidget {
       store: store,
       child: StoreBuilder<WMState>(builder: (context, store) {
         return MaterialApp(
+          navigatorObservers:[routeObserver],
           title: '万马线缆',
           theme: store.state.themeData,
           localizationsDelegates: [
@@ -108,9 +119,6 @@ class MyApp extends StatelessWidget {
             ToPrint.sName: (context) => CommonLayer(
                   child: ToPrint(),
                 ),
-            // TaskList.sName: (context) => CommonLayer(
-            //       child: TaskList(),
-            //     ),
             ProductionReport.sName: (context) => CommonLayer(
                   child: ProductionReport(),
                 ),
@@ -144,6 +152,22 @@ class MyApp extends StatelessWidget {
             MaterialLoadDetails.sName: (context) => CommonLayer(
                   child: MaterialLoadDetails(),
                 ),
+            //新首页
+            MainPage.sName: (context) => CommonLayer(
+                  child: MainPage(),
+                ),
+            MenuPage.sName: (context) => CommonLayer(
+              child: MenuPage(),
+            ),
+            AccountSecurityPage.sName: (context) => CommonLayer(
+              child: AccountSecurityPage(),
+            ),
+            ChangePasswordPage.sName:(context) => CommonLayer(
+              child: ChangePasswordPage(),
+            ),
+            ChangeWorkPage.sName:(context) => CommonLayer(
+              child: ChangeWorkPage(),
+            ),
           },
         );
       }),
@@ -197,9 +221,6 @@ class _CommonLayerState extends State<CommonLayer> {
       case Code.NETWORK_TIMEOUT:
         Fluttertoast.showToast(msg: '请求超时');
         break;
-//      case 200:
-//        Fluttertoast.showToast(msg: message);
-//        break;
       case 401:
         Fluttertoast.showToast(msg: '未授权 \\ 授权登录失败 \\ 登录过期');
         NavigatorUtils.exitToLogin(context);

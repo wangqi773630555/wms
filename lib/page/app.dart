@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:wanma_print/common/config/config.dart';
 import 'package:wanma_print/common/utils/common_utils.dart';
 import 'package:wanma_print/page/home_page.dart';
+import 'package:wanma_print/page/frame_widgit/main_page.dart';
 import 'package:wanma_print/widget/home_drawer.dart';
 import 'package:flutter_swiper_null_safety/flutter_swiper_null_safety.dart';
 
@@ -119,7 +120,7 @@ class _AppState extends State<App> with SingleTickerProviderStateMixin {
                             ),
                             width: Wwidth - 20,
                             height: Hheight - 150,
-                            child: HomePage(),
+                            child: MainPage(),
                           ),
                         ))
                   ])),

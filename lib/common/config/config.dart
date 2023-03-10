@@ -1,4 +1,3 @@
-import 'package:wanma_print/page/login_page.dart';
 
 class Config {
   static const DEBUG = true;
@@ -47,4 +46,29 @@ class Config {
   static const Material_LoadList = 'materialLoadList';
   static const Material_LoadProcess = 'materialLoadProcess';
   static const Material_LoadDetails = 'materialLoadDetails';
+
+
+  //new
+  static const My_Home_Page_New = 'myhomepagenew';
+  static const Main_tab_more = "maintabmore";
+  static const Account_security = "account_security";
+  static const Change_password = "change_password";
+  static const Change_work = "change_work";
+
+  //本地缓存字段
+  static const NICK_NAME = "nickname";
+  static const USER_NAME = "username";
+  static const MOBILE = "mobile";
+  static const EMAIL = "email";
+  static const USERID = "userid";
+  static const DEPT_NAME = "deptName";
+  static const ORG_NAME = "orgName";
+  static const POSITION_NAME = "positionName";
+  static const WORK_ID = "workid";
+  static const PRE_AUTHORIZE_DATA = "pre_authorize_data";
+
+
+
+
+
 }

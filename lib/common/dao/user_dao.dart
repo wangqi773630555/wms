@@ -7,6 +7,7 @@ import 'package:wanma_print/common/dao/result_dao.dart';
 import 'package:wanma_print/common/db/provider/user_info_db_provider.dart';
 import 'package:wanma_print/common/local/local_storage.dart';
 import 'package:wanma_print/common/model/User.dart';
+import 'package:wanma_print/common/net/LogUtil.dart';
 import 'package:wanma_print/common/net/code.dart';
 import 'package:wanma_print/common/net/http_manager.dart';
 import 'package:wanma_print/common/net/url_constant.dart';
@@ -156,4 +157,245 @@ class UserDao {
       return ResultDao(resultData, false);
     }
   }
+
+  /**
+   * 预授权
+   */
+  static getPreAuthorize() async {
+    Map<String, String> header = {
+      'Authorization': await LocalStorage.get(Config.UA)
+    };
+
+    var res = await HttpManager.netFetch(
+        '${UrlConstant.getPreAuthorize()}',
+        null,
+        header,
+        Options(method: 'get'));
+
+    var resultData;
+    if (res != null && res.result) {
+      if (res.data['code'] == 200) {
+        return ResultDao(res.data, res.result);
+      } else {
+        resultData = ResultDao(
+            Code.errorHandleFunction(res.data['code'], res.data['msg'], false),
+            false);
+        return ResultDao(resultData, false);
+      }
+    } else {
+      resultData =
+          ResultDao(Code.errorHandleFunction(res.code, '', false), false);
+      return ResultDao(resultData, false);
+    }
+  }
+
+  /**
+   * 资源授权
+   */
+  static getAuthorizeResources(workId) async {
+    Map<String, String> header = {
+      'Authorization': await LocalStorage.get(Config.UA)
+    };
+    String param = workId==''?'workId=${await LocalStorage.get(Config.WORK_ID)}&appname=app-platform':'workId=${workId}&appname=app-platform';
+    var res = await HttpManager.netFetch(
+        '${UrlConstant.getAuthorizeResources()}?${param}',
+        null,
+        header,
+        Options(method: 'get'));
+
+    var resultData;
+    if (res != null && res.result) {
+      if (res.data['code'] == 200) {
+        return ResultDao(res.data, res.result);
+      } else {
+        resultData = ResultDao(
+            Code.errorHandleFunction(res.data['code'], res.data['msg'], false),
+            false);
+        return ResultDao(resultData, false);
+      }
+    } else {
+      resultData =
+          ResultDao(Code.errorHandleFunction(res.code, '', false), false);
+      return ResultDao(resultData, false);
+    }
+  }
+
+  /**
+   * 首页应用菜单
+   */
+  static getAppUserList() async {
+    Map<String, String> header = {
+      'Authorization': await LocalStorage.get(Config.UA)
+    };
+    String param = 'workId=${await LocalStorage.get(Config.WORK_ID)}';
+    var res = await HttpManager.netFetch(
+        '${UrlConstant.getAppUserList()}?${param}',
+        null,
+        header,
+        Options(method: 'post'));
+
+    var resultData;
+    if (res != null && res.result) {
+      if (res.data['code'] == 200) {
+        return ResultDao(res.data, res.result);
+      } else {
+        resultData = ResultDao(
+            Code.errorHandleFunction(res.data['code'], res.data['msg'], false),
+            false);
+        return ResultDao(resultData, false);
+      }
+    } else {
+      resultData =
+          ResultDao(Code.errorHandleFunction(res.code, '', false), false);
+      return ResultDao(resultData, false);
+    }
+  }
+
+  /**
+   * 添加App
+   */
+  static saveApp(resId,sort,resName,resType,icon) async {
+    Map<String, String> header = {
+      'Authorization': await LocalStorage.get(Config.UA)
+    };
+    String workId = await LocalStorage.get(Config.WORK_ID);
+    Map<String, dynamic> requestParams;
+    requestParams = {
+      'workId':workId,
+      'resId': resId,
+      'sort': sort,
+      'resName': resName,
+      'resType': resType,
+      'icon': icon,
+    };
+    var res = await HttpManager.netFetch(
+        '${UrlConstant.saveApp()}',
+        requestParams,
+        header,
+        Options(method: 'post'));
+
+    var resultData;
+    if (res != null && res.result) {
+      if (res.data['code'] == 200) {
+        return ResultDao(res.data, res.result);
+      } else {
+        resultData = ResultDao(
+            Code.errorHandleFunction(res.data['code'], res.data['msg'], false),
+            false);
+        return ResultDao(resultData, false);
+      }
+    } else {
+      resultData =
+          ResultDao(Code.errorHandleFunction(res.code, '', false), false);
+      return ResultDao(resultData, false);
+    }
+  }
+
+
+  /**
+   * 移除App
+   */
+  static removeApp(resId) async {
+    Map<String, String> header = {
+      'Authorization': await LocalStorage.get(Config.UA)
+    };
+    String param = 'resId=${resId}';
+    var res = await HttpManager.netFetch(
+        '${UrlConstant.removeApp()}?${param}',
+        null,
+        header,
+        Options(method: 'post'));
+
+    var resultData;
+    if (res != null && res.result) {
+      if (res.data['code'] == 200) {
+        return ResultDao(res.data, res.result);
+      } else {
+        resultData = ResultDao(
+            Code.errorHandleFunction(res.data['code'], res.data['msg'], false),
+            false);
+        return ResultDao(resultData, false);
+      }
+    } else {
+      resultData =
+          ResultDao(Code.errorHandleFunction(res.code, '', false), false);
+      return ResultDao(resultData, false);
+    }
+  }
+
+  /**
+   * 修改密码
+   */
+  static secretModify(oldSecret,newSecret) async {
+    Map<String, String> header = {
+      'Authorization': await LocalStorage.get(Config.UA)
+    };
+
+    Map<String, dynamic> requestParams;
+    requestParams = {
+      'oldSecret': oldSecret,
+      'newSecret': newSecret,
+    };
+    var res = await HttpManager.netFetch(
+        '${UrlConstant.secretModify()}',
+        requestParams,
+        header,
+        Options(method: 'post'));
+
+    var resultData;
+    if (res != null && res.result) {
+      if (res.data['code'] == 200) {
+        return ResultDao(res.data, res.result);
+      } else {
+        resultData = ResultDao(
+            Code.errorHandleFunction(res.data['code'], res.data['msg'], false),
+            false);
+        return ResultDao(resultData, false);
+      }
+    } else {
+      resultData =
+          ResultDao(Code.errorHandleFunction(res.code, '', false), false);
+      return ResultDao(resultData, false);
+    }
+  }
+
+  /**
+   * 版本更新
+   */
+  static getAppVersion() async {
+    Map<String, String> header = {
+      'Authorization': await LocalStorage.get(Config.UA)
+    };
+
+    Map<String, dynamic> requestParams;
+    requestParams = {
+      'name': 'WMApp',
+      'flag': 1,
+    };
+    var res = await HttpManager.netFetch(
+        '${UrlConstant.appVerison()}',
+        requestParams,
+        header,
+        Options(method: 'post'));
+
+    var resultData;
+    if (res != null && res.result) {
+      if (res.data['code'] == 200) {
+        return ResultDao(res.data, res.result);
+      } else {
+        resultData = ResultDao(
+            Code.errorHandleFunction(res.data['code'], res.data['msg'], false),
+            false);
+        return ResultDao(resultData, false);
+      }
+    } else {
+      resultData =
+          ResultDao(Code.errorHandleFunction(res.code, '', false), false);
+      return ResultDao(resultData, false);
+    }
+  }
+
+
+
+
 }

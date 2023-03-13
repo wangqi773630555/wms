@@ -18,11 +18,22 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage>  with RouteAware{
   int _currentIndex = 0;
-  List _pageList = [FragmentHomePage(),FragmentTagPage(),FragmentMyPage()];
+  late Widget homePage;
+  late Widget tagPage ;
+  late Widget myPage;
+  List _pageList = [];
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    homePage = FragmentHomePage();
+    tagPage =FragmentTagPage();
+    myPage = FragmentMyPage();
+    _pageList = [homePage,tagPage,myPage];
+    LogUtil.d('首页重载');
+    setState(() {
+
+    });
   }
   @override
   void dispose() {

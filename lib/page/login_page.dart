@@ -6,6 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:wanma_print/common/config/config.dart';
 import 'package:wanma_print/common/dao/user_dao.dart';
 import 'package:wanma_print/common/local/local_storage.dart';
+import 'package:wanma_print/common/net/LogUtil.dart';
 import 'package:wanma_print/common/redux/wm_state.dart';
 import 'package:wanma_print/common/utils/common_utils.dart';
 import 'package:wanma_print/common/utils/navigator_utils.dart';
@@ -259,7 +260,7 @@ class _LoginPageState extends State<LoginPage> {
           //无缓存默认取 isMain
           LocalStorage.save(Config.PRE_AUTHORIZE_DATA, jsonEncode(works));
           String workId = await LocalStorage.get(Config.WORK_ID);
-          if (workId == '') {
+          if (workId == null) {
             //有缓存取缓存的工作
             for (int i = 0; i < works.length; i++) {
               if (works[i]['isMain'].toString() == '1') {
@@ -268,10 +269,15 @@ class _LoginPageState extends State<LoginPage> {
                 LocalStorage.save(Config.POSITION_NAME, works[i]['positionName']);
                 LocalStorage.save(Config.WORK_ID, works[i]['id']);
                 authorizeResources();
+                LogUtil.d('workid空');
               }
             }
+          }else{
+            authorizeResources();
+            LogUtil.d('workid'+workId);
           }
-          authorizeResources();
+
+
 
         }
       }

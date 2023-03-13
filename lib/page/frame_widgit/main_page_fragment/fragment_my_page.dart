@@ -93,7 +93,7 @@ class _FragmentMyPageState extends State<FragmentMyPage> with RouteAware{
           ),
           Divider(
             height: 1,
-            color: Colors.black,
+            color: Colors.grey,
           ),
           Expanded(
             child: MediaQuery.removePadding(
@@ -105,56 +105,56 @@ class _FragmentMyPageState extends State<FragmentMyPage> with RouteAware{
                   initHead(),
                   Divider(
                     height: 1,
-                    color: Colors.black38,
+                    color: Color.fromARGB(50, 0, 0, 0),
                   ),
                   Padding(padding: EdgeInsets.all(5)),
                   Divider(
-                    color: Colors.black38,
+                    color: Color.fromARGB(50, 0, 0, 0),
                     height: 1,
                   ),
                   initItem('images/home/gengduo.png', '我的应用'),
                   Divider(
-                    color: Colors.black38,
+                    color: Color.fromARGB(50, 0, 0, 0),
                     height: 1,
                   ),
                   initItem('images/home/gengduo.png', '我的卡片'),
                   Divider(
-                    color: Colors.black38,
+                    color: Color.fromARGB(50, 0, 0, 0),
                     height: 1,
                   ),
                   Padding(padding: EdgeInsets.all(5)),
                   Divider(
-                    color: Colors.black38,
+                    color: Color.fromARGB(50, 0, 0, 0),
                     height: 1,
                   ),
                   initPointItem('images/home/gengduo.png', '通知消息', 10),
                   Divider(
-                    color: Colors.black38,
+                    color: Color.fromARGB(50, 0, 0, 0),
                     height: 1,
                   ),
                   Padding(padding: EdgeInsets.all(5)),
                   Divider(
-                    color: Colors.black38,
+                    color: Color.fromARGB(50, 0, 0, 0),
                     height: 1,
                   ),
                   initItem('images/home/gengduo.png', '账户与安全'),
                   Divider(
-                    color: Colors.black38,
+                    color: Color.fromARGB(50, 0, 0, 0),
                     height: 1,
                   ),
                   initItem('images/home/gengduo.png', '帮助与反馈'),
                   Divider(
-                    color: Colors.black38,
+                    color: Color.fromARGB(50, 0, 0, 0),
                     height: 1,
                   ),
                   Padding(padding: EdgeInsets.all(5)),
                   Divider(
-                    color: Colors.black38,
+                    color: Color.fromARGB(50, 0, 0, 0),
                     height: 1,
                   ),
                   initAboutItem('images/home/gengduo.png', '关于', '版本号'+version),
                   Divider(
-                    color: Colors.black38,
+                    color: Color.fromARGB(50, 0, 0, 0),
                     height: 1,
                   ),
                   loginOut(),
@@ -319,7 +319,7 @@ class _FragmentMyPageState extends State<FragmentMyPage> with RouteAware{
                   fontSize: 15,
                   fontWeight: FontWeight.normal),
             )),
-            Container(
+            Visibility(child: Container(
               width: 20,
               height: 20,
               alignment: Alignment.center,
@@ -334,7 +334,7 @@ class _FragmentMyPageState extends State<FragmentMyPage> with RouteAware{
                     fontSize: 12,
                     fontWeight: FontWeight.bold),
               ),
-            ),
+            ),visible: false,),
             Icon(
               Icons.chevron_right,
               color: Colors.grey,
@@ -430,7 +430,7 @@ class _FragmentMyPageState extends State<FragmentMyPage> with RouteAware{
         },
         child: Text(
           '退出登录',
-          style: TextStyle(color: Colors.black, fontSize: 16,fontWeight: FontWeight.bold),
+          style: TextStyle(color: Colors.black, fontSize: 16,fontWeight: FontWeight.normal),
         ),
       ),
     );

@@ -11,6 +11,7 @@ import '../../../common/utils/navigator_utils.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../../common/utils/scanevent_utils.dart';
+import '../../../main.dart';
 import '../../common_widgit/line/divider_dotted.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
@@ -27,7 +28,7 @@ class FragmentHomePage extends StatefulWidget {
   _FragmentHomePageState createState() => _FragmentHomePageState();
 }
 
-class _FragmentHomePageState extends State<FragmentHomePage> {
+class _FragmentHomePageState extends State<FragmentHomePage> with RouteAware{
 
   StreamSubscription? stream;
   @override
@@ -60,16 +61,9 @@ class _FragmentHomePageState extends State<FragmentHomePage> {
     secondList.clear();
     secondList.add("第1条数据\n");
     secondList.add("第2条数据\n");
-    secondList.add("第3条数据\n");
-    secondList.add("第4条数据\n");
-    secondList.add("第5条数据\n");
-    secondList.add("第6条数据\n");
-    secondList.add("第7条数据\n");
 
     firstList.clear();
     firstList.add("任务列表1");
-    firstList.add("任务列表2");
-    firstList.add("任务列表3");
 
 
     return getRootView();
@@ -191,6 +185,9 @@ class _FragmentHomePageState extends State<FragmentHomePage> {
         onTap: () {
           if (i == gridList.length - 1) {
             NavigatorUtils.goMainTabMore(mYcontext);
+          }else if(gridList[i]['route']=='materialDetail'){
+            //扫码收货
+            NavigatorUtils.goMaterialDetail(context, '');
           }else{
             NavigatorUtils.goPage(context, gridList[i]['route'],);
           }
@@ -428,13 +425,33 @@ class _FragmentHomePageState extends State<FragmentHomePage> {
         map['route'] = 'maintabmore';
         gridList.add(map);
         setState(() {
+          isFirst = false;
         });
 
       }
     });
   }
 
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context) as PageRoute);
+  }
 
+  @override
+  void didPopNext() {
+    LogUtil.d('onResumeMy');
+   if(isFirst){
+     getAppUserList();
+   }
+    super.didPopNext();
+  }
 
 
 }

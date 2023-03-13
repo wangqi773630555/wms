@@ -259,9 +259,12 @@ class _MenuPageState extends State<MenuPage> {
       _list.add(GestureDetector(
         child: item,
         onTap: () {
-          // NavigatorUtils.goMainTabMore(mYcontext);
-          Fluttertoast.showToast(msg: '进入功能页面');
-          NavigatorUtils.goPage(context, childrenList[i]['route'],);
+          if(childrenList[i]['route']=='materialDetail'){
+            //扫码收货
+            NavigatorUtils.goMaterialDetail(context, '');
+          }else {
+            NavigatorUtils.goPage(context, childrenList[i]['route'],);
+          }
         },
       ));
     }

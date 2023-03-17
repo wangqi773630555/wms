@@ -151,7 +151,11 @@ class UrlConstant {
     return '${host}ams/app-user-info/removeApp';
   }
   static appVerison() {
-    return '${host}ams/app-version/list';
+    return '${host}ams/app-version/getVersion';
+  }
+
+  static feedingOfCheckRecipe() {
+    return '${host2}sync/mesProxy/mesJsonReq?route=/lot/rtLotOrder/feedingOfCheckRecipe&';
   }
 
 }

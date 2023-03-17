@@ -140,7 +140,7 @@ class _ProductionReportState extends State<ProductionReport> {
       //   productionList = res.data['data'];
       // print('res${res.data}');
       // }
-      Fluttertoast.showToast(msg: res.data['msg']);
+      Fluttertoast.showToast(msg: res.data['msg'].toString());
       setState(() {
         circle = true;
         getData();

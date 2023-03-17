@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../common/config/config.dart';
@@ -97,6 +98,12 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
       print('1111111111111');
       circle = true;
       if (res.data != null && res.data != '') {
+        if (res.data['code'] == 351) {
+          Fluttertoast.showToast(
+              msg: res.data['msg'].toString(), timeInSecForIosWeb: 5);
+
+          Navigator.pop(context);
+        }
         modeMap = res.data['data'];
         productionList = modeMap['render_list'];
         if (productionList.length > 0) {
@@ -294,7 +301,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
       // print(widget.idsList);
       Loading.hide(context);
       if (res != null && res.result) {
-        Fluttertoast.showToast(msg: res.data['msg']);
+        Fluttertoast.showToast(msg: res.data['msg'].toString());
         if (res.data['code'] == 200) {
           Navigator.pop(context);
         }

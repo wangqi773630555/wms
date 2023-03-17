@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
 import 'package:wanma_print/widget/middle_text_right.dart';
 import '../../common/config/config.dart';
+import '../../common/dao/data_dao.dart';
 import '../../common/utils/navigator_utils.dart';
 import '../../widget/middle_text.dart';
 
@@ -105,7 +106,7 @@ class _MaterialLoadProcessState extends State<MaterialLoadProcess> {
 
   List<Widget> _getButton() {
     List<Widget> list = [];
-    if(_recipes!=null) {
+    if (_recipes != null) {
       for (int i = 0; i < _recipes?.length; i++) {
         list.add(_button(i, _recipes[i]['title'], _colors[i]));
       }
@@ -131,11 +132,17 @@ class _MaterialLoadProcessState extends State<MaterialLoadProcess> {
               //文字颜色
               foregroundColor: MaterialStateProperty.all(Color(0xffffffff)),
             ),
-
             onPressed: () => {
-              sendData = _recipes[i],
-              sendData['order_id'] = _id,
-              NavigatorUtils.goMaterialLoadDetails(context,sendData)
+              DataDao.check(_id, _recipes[i]['id']).then((res) {
+                if (res != null && res.result) {
+                  setState(() {
+                    sendData = _recipes[i];
+                    sendData['order_id'] = _id;
+                    NavigatorUtils.goMaterialLoadDetails(context, sendData);
+                  });
+                }
+              }),
+
             },
           ),
         )

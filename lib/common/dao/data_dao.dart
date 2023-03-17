@@ -380,7 +380,7 @@ class DataDao {
         Options(method: 'post'));
     var resultData;
     if (res != null && res.result) {
-      if (res.data['code'] == 200) {
+      if (res.data['code'] == 200 || res.data['code'] == 351) {
         return ResultDao(res.data, res.result);
       } else {
         resultData = ResultDao(
@@ -779,6 +779,41 @@ class DataDao {
     };
     var res = await HttpManager.netFetch('${UrlConstant.getCancel()}${setSk}',
         requestParams, header, Options(method: 'post'));
+    var resultData;
+    if (res != null && res.result) {
+      if (res.data['code'] == 200) {
+        return ResultDao(res.data, res.result);
+      } else {
+        resultData = ResultDao(
+            Code.errorHandleFunction(res.data['code'], res.data['msg'], false),
+            false);
+        return ResultDao(resultData, false);
+      }
+    } else {
+      resultData =
+          ResultDao(Code.errorHandleFunction(res.code, '', false), false);
+      return ResultDao(resultData, false);
+    }
+  }
+
+  /**
+   * 判断上料工序是否可用
+   */
+  static check(order_id, recipe_id) async {
+    Map<String, String> header = {
+      'Authorization': await LocalStorage.get(Config.UA)
+    };
+    String setSk = '_SK_=${await LocalStorage.get(Config.SET_KEY)}';
+    Map<String, dynamic> requestParams;
+    requestParams = {
+      'id': order_id,
+      'recipe_id': recipe_id,
+    };
+    var res = await HttpManager.netFetch(
+        '${UrlConstant.feedingOfCheckRecipe()}${setSk}',
+        requestParams,
+        header,
+        Options(method: 'post'));
     var resultData;
     if (res != null && res.result) {
       if (res.data['code'] == 200) {

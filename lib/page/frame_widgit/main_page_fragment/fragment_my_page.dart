@@ -152,6 +152,11 @@ class _FragmentMyPageState extends State<FragmentMyPage> with RouteAware{
                     color: Color.fromARGB(50, 0, 0, 0),
                     height: 1,
                   ),
+                  initItem('images/home/gengduo.png', '纸张校验'),
+                  Divider(
+                    color: Color.fromARGB(50, 0, 0, 0),
+                    height: 1,
+                  ),
                   initAboutItem('images/home/gengduo.png', '关于', '版本号'+version),
                   Divider(
                     color: Color.fromARGB(50, 0, 0, 0),
@@ -283,6 +288,8 @@ class _FragmentMyPageState extends State<FragmentMyPage> with RouteAware{
           NavigatorUtils.goAccountSecurity(mYcontext);
         }else if(title=='帮助与反馈'){
           Fluttertoast.showToast(msg: '暂未开通');
+        }else if(title=='纸张校正'){
+          FlutterPlugins.walk().then((value) => {});
         }
       },
     );

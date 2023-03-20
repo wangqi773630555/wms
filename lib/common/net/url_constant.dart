@@ -15,6 +15,7 @@ class UrlConstant {
   // static const String host2 = 'http://wms.wanmagroup.com/'; //正式
 
 
+
    //本地测试地址
   //static const String host3 = 'http://10.3.32.33:8080/ams/'; //登录测试
 

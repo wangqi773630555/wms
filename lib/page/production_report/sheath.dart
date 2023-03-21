@@ -269,7 +269,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
     // print(radioValue);
     // print(eqpIdValue);
     // print(colorValue);
-    // print(paras);
+
     Loading.show(context);
     DataDao.getProductionSave(widget.idsList[1], widget.idsList[0],
             widget.idsList[2], widget.idsList[3], paras)
@@ -277,7 +277,8 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
       // print(widget.idsList);
       Loading.hide(context);
       if (res != null && res.result) {
-        Fluttertoast.showToast(msg: res.data['msg'].toString());
+        Fluttertoast.showToast(
+            msg: res.data['msg'].toString(), timeInSecForIosWeb: 5);
         if (res.data['code'] == 200) {
           Navigator.pop(context);
         }

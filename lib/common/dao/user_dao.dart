@@ -35,7 +35,7 @@ class UserDao {
     var resultData;
     if (res != null && res.result) {
       var resultData;
-      if (res.data['code'] == 200) {
+        if (res.data['code'] == 200 || res.data['code'] == 10000) {
         await LocalStorage.save(Config.PW_KEY, password);
 
         User user = User(userName: userName, password: password);

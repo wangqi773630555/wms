@@ -59,11 +59,11 @@ class _FragmentHomePageState extends State<FragmentHomePage> with RouteAware{
     // TODO: implement build
     mYcontext = context;
     secondList.clear();
-    secondList.add("第1条数据\n");
-    secondList.add("第2条数据\n");
+    /*secondList.add("第1条数据\n");
+    secondList.add("第2条数据\n");*/
 
     firstList.clear();
-    firstList.add("任务列表1");
+    /*firstList.add("任务列表1");*/
 
 
     return getRootView();

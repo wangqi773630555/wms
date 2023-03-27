@@ -106,6 +106,13 @@ flutter:
     - images/home/icon_banner.png
     - images/home/gengduo.png
     # - images/home/img4.png
+    - images/mine/about.png
+    - images/mine/app.png
+    - images/mine/help.png
+    - images/mine/message.png
+    - images/mine/print.png
+    - images/mine/safe.png
+    - images/mine/card.png
     
     - assets/data/
     - assets/images/
@@ -119,6 +126,7 @@ flutter:
     - assets/images/shop/
     - assets/images/account/
     - assets/images/statistic/
+    - - assets/images/mine/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

@@ -112,22 +112,12 @@ class _FragmentMyPageState extends State<FragmentMyPage> with RouteAware{
                     color: Color.fromARGB(50, 0, 0, 0),
                     height: 1,
                   ),
-                  initItem('images/home/gengduo.png', '我的应用'),
+                  initItem('images/mine/app.png', '我的应用'),
                   Divider(
                     color: Color.fromARGB(50, 0, 0, 0),
                     height: 1,
                   ),
-                  initItem('images/home/gengduo.png', '我的卡片'),
-                  Divider(
-                    color: Color.fromARGB(50, 0, 0, 0),
-                    height: 1,
-                  ),
-                  Padding(padding: EdgeInsets.all(5)),
-                  Divider(
-                    color: Color.fromARGB(50, 0, 0, 0),
-                    height: 1,
-                  ),
-                  initPointItem('images/home/gengduo.png', '通知消息', 10),
+                  initItem('images/mine/card.png', '我的卡片'),
                   Divider(
                     color: Color.fromARGB(50, 0, 0, 0),
                     height: 1,
@@ -137,12 +127,7 @@ class _FragmentMyPageState extends State<FragmentMyPage> with RouteAware{
                     color: Color.fromARGB(50, 0, 0, 0),
                     height: 1,
                   ),
-                  initItem('images/home/gengduo.png', '账户与安全'),
-                  Divider(
-                    color: Color.fromARGB(50, 0, 0, 0),
-                    height: 1,
-                  ),
-                  initItem('images/home/gengduo.png', '帮助与反馈'),
+                  initPointItem('images/mine/message.png', '通知消息', 10),
                   Divider(
                     color: Color.fromARGB(50, 0, 0, 0),
                     height: 1,
@@ -152,12 +137,27 @@ class _FragmentMyPageState extends State<FragmentMyPage> with RouteAware{
                     color: Color.fromARGB(50, 0, 0, 0),
                     height: 1,
                   ),
-                  initItem('images/home/gengduo.png', '纸张校验'),
+                  initItem('images/mine/safe.png', '账户与安全'),
                   Divider(
                     color: Color.fromARGB(50, 0, 0, 0),
                     height: 1,
                   ),
-                  initAboutItem('images/home/gengduo.png', '关于', '版本号'+version),
+                  initItem('images/mine/help.png', '帮助与反馈'),
+                  Divider(
+                    color: Color.fromARGB(50, 0, 0, 0),
+                    height: 1,
+                  ),
+                  Padding(padding: EdgeInsets.all(5)),
+                  Divider(
+                    color: Color.fromARGB(50, 0, 0, 0),
+                    height: 1,
+                  ),
+                  initItem('images/mine/print.png', '纸张校验'),
+                  Divider(
+                    color: Color.fromARGB(50, 0, 0, 0),
+                    height: 1,
+                  ),
+                  initAboutItem('images/mine/about.png', '关于', '版本号'+version),
                   Divider(
                     color: Color.fromARGB(50, 0, 0, 0),
                     height: 1,

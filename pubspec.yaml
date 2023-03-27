@@ -77,7 +77,7 @@ dev_dependencies:
   #jishu
   bruno: ^3.0.0
   flutter_switch: ^0.3.1
-  package_info: ^0.4.3+2
+  package_info: ^2.0.2
   #图片缓存
   cached_network_image: ^3.0.0
   #多语言

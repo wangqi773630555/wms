@@ -419,7 +419,7 @@ class DataDao {
         Options(method: 'post'));
     var resultData;
     if (res != null && res.result) {
-      if (res.data['code'] == 200) {
+      if (res.data['code'] == 200 || res.data['code'] == 351) {
         return ResultDao(res.data, res.result);
       } else {
         resultData = ResultDao(
@@ -830,5 +830,4 @@ class DataDao {
       return ResultDao(resultData, false);
     }
   }
-
 }

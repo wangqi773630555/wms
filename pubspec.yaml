@@ -105,6 +105,7 @@ flutter:
     - images/home/pg1.png
     - images/home/icon_banner.png
     - images/home/gengduo.png
+    - images/home/banner.png
     # - images/home/img4.png
     - images/mine/about.png
     - images/mine/app.png

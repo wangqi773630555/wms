@@ -59,11 +59,11 @@ class _FragmentHomePageState extends State<FragmentHomePage> with RouteAware{
     // TODO: implement build
     mYcontext = context;
     secondList.clear();
-    /*secondList.add("第1条数据\n");
-    secondList.add("第2条数据\n");*/
+    secondList.add("第1条数据\n");
+    secondList.add("第2条数据\n");
 
     firstList.clear();
-    /*firstList.add("任务列表1");*/
+    firstList.add("任务列表1");
 
 
     return getRootView();
@@ -147,11 +147,22 @@ class _FragmentHomePageState extends State<FragmentHomePage> with RouteAware{
 //创建banner
   Widget _createBanner() {
     return Container(
+
       width: double.infinity,
-      child: Image.asset(
-        'images/home/icon_banner.png',
-        fit: BoxFit.cover,
+      margin: const EdgeInsets.fromLTRB(5, 5, 5, 5),
+      child: Card(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadiusDirectional.circular(5)),
+        clipBehavior: Clip.antiAlias,
+        child: Image.asset(
+          "images/home/banner.png",
+          width: double.maxFinite,
+        ),
       ),
+      /*child: Image.asset(
+        'images/home/banner.png',
+        fit: BoxFit.cover,
+      ),*/
       /* color: Colors.teal,
       margin: const EdgeInsets.fromLTRB(10, 5, 10, 0),
       height: 120,*/

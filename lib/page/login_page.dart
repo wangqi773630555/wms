@@ -93,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
                         Container(
                           alignment: Alignment.centerLeft,
                           child: Text(
-                            '天 屹 数 据 缆 数 字 工 厂',
+                            '万 马 智 造 数 字 工 厂',
                             style: TextStyle(
                                 fontSize: 22,
                                 fontWeight: FontWeight.w600,

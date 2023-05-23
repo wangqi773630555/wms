@@ -3,21 +3,22 @@ import '../local/local_storage.dart';
 
 ///接口地址
 class UrlConstant {
-  // static const String host = 'http://app.wanmagroup.com:8988/';//正式
-  // static const String host2 = 'http://wms.wanmagroup.com/';//正式
-  // static const String host = 'http://172.18.2.254:8004/';//测试
-  // static const String host = 'https://eqptest.wanmaco.com/api/'; //测试
-  static const String host =
-      'https://gatewaydev.wanmaco.com/'; //登录测试
-  static const String host2 = 'http://itest.wanmagroup.com/'; //测试
-  // static const String host =
-  //     'https://gateway.wanmaco.com/'; //登录正式
-  // static const String host2 = 'http://wms.wanmagroup.com/'; //正式
+  //测试环境
+  //static const String host = 'https://gatewaydev.wanmaco.com/'; //登录测试（新框架）
+  //static const String host2 = 'http://itest.wanmagroup.com/'; //测试（天屹数据缆）
+  //static const String host3 = 'http://dlmestest.wanmagroup.com/api/'; //测试（电缆低压三厂）
+
+  //本地环境
+  //static const String host2 = 'http://10.3.32.33:94/';//裴明明本地
+  //static const String host3 = 'http://10.2.5.245:8002/'; //测试 志航本地（电缆低压三厂）
 
 
+  //正式环境
+   static const String host ='https://gateway.wanmaco.com/'; //登录正式（新框架）
+   static const String host2 = 'http://wms.wanmagroup.com/'; //正式（天屹数据缆）
+   static const String host3 = 'http://dlmes.wanmagroup.com/api/'; //正式（电缆低压三厂）
 
-   //本地测试地址
-  //static const String host3 = 'http://10.3.32.33:8080/ams/'; //登录测试
+
 
   ///登陆
   static getLogin() {
@@ -68,6 +69,10 @@ class UrlConstant {
     return '${host}authority-system/auth/sk/gfz';
   }
 
+  static getDlSk() {
+    return '${host}authority-system/auth/sk/dl';
+  }
+
   static getPartInfoById() {
     return '${host2}process/ctProcessPart/partInfoById?';
   }
@@ -106,6 +111,10 @@ class UrlConstant {
 
   static getInfoById() {
     return '${host2}wm/rtWmMaterialBillPrint/infoById?';
+  }
+
+  static getQtyByPartId() {
+    return '${host2}sync/mesProxy/mesJsonReq?route=/lot/rtLotOrder/getQtyByPartId&';
   }
 
   static getSaveData() {
@@ -158,5 +167,56 @@ class UrlConstant {
   static feedingOfCheckRecipe() {
     return '${host2}sync/mesProxy/mesJsonReq?route=/lot/rtLotOrder/feedingOfCheckRecipe&';
   }
+
+  //--------------电缆低压三厂------------------------
+  static getProdPickParts() {
+    return '${host3}agv/rtAgvCommon/getProdPickParts?';
+  }
+
+  static getWmWare2() {
+    return '${host3}agv/rtAgvCommon/getWmWare2?';
+  }
+
+  static createAgvEqpTask() {
+    return '${host3}agv/rtAgvCommon/createAgvEqpTask?';
+  }
+
+  static getWmsStockParts() {
+    return '${host3}agv/rtAgvCommon/getWmsStockParts?';
+  }
+
+  static getAgvEqpTasks() {
+    return '${host3}agv/rtAgvCommon/getAgvEqpTasks?';
+  }
+
+  static confirmTask5() {
+    return '${host3}agv/rtAgvCommon/confirmTask5?';
+  }
+
+  static confirmTask() {
+    return '${host3}agv/rtAgvCommon/confirmTask?';
+  }
+
+  static syncAGVTaskEnd() {
+    return '${host3}agv/rtAgvCommon/syncAGVTaskEnd?';
+  }
+
+  static getWarnMsgByID() {
+    return '${host3}agv/rtAgvCommon/getWarnMsgByID?';
+  }
+
+  static getSelectLoad() {
+    return '${host2}sync/mesProxy/mesJsonReq?route=/eqp/ctEqpModule/getSelectLoad&';
+  }
+
+  static saveUpModule() {
+    return '${host2}sync/mesProxy/mesJsonReq?route=/eqp/ctEqpModule/saveUpModule&';
+  }
+
+  static getCtEqpModule() {
+    return '${host2}sync/mesProxy/mesJsonReq?route=/eqp/ctEqpModule/getCtEqpModule&';
+  }
+
+
 
 }

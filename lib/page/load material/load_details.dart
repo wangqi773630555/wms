@@ -42,11 +42,14 @@ class _MaterialLoadDetailsState extends State<MaterialLoadDetails> {
   var _data;
   var _eqps;
   var _time;
+  var _num;
+
 
   ScanResult? scanResult;
   List<DropdownMenuItem<Object>> items = [];
 
   StreamSubscription? stream;
+  FocusNode focusNode = FocusNode();
 
   @override
   void initState() {
@@ -60,6 +63,13 @@ class _MaterialLoadDetailsState extends State<MaterialLoadDetails> {
       }
     });
     print('initState_load_details');
+    focusNode.addListener((){
+
+      if (!focusNode.hasFocus) {
+        _getQtyByPartId(_order_id, _noController.text);
+      }
+
+    });
     Future.delayed(Duration.zero, () async {
       _data = ModalRoute.of(context)!.settings.arguments;
       setState(() {
@@ -149,6 +159,8 @@ class _MaterialLoadDetailsState extends State<MaterialLoadDetails> {
             //_getRowText('上料人:', '张三'),
             //Padding(padding: EdgeInsets.all(3)),
             _getRowText('上料时间:', _time??""),
+            Padding(padding: EdgeInsets.all(3)),
+            _getRowText('理论耗量:', _num??""),
             Divider(),
             Padding(
               padding: EdgeInsets.all(6),
@@ -258,7 +270,7 @@ class _MaterialLoadDetailsState extends State<MaterialLoadDetails> {
             flex: 3,
             child: SizedBox(
               height: 30.0,
-              child: _searchWidget(hint, _controller),
+              child: _searchWidgetForPart(hint, _controller),
             ),
           ),
           Container(
@@ -298,10 +310,25 @@ class _MaterialLoadDetailsState extends State<MaterialLoadDetails> {
           _noController.text = _part_id;
           _countController.text = _part_per_qty;
           _lotController.text = _part_batch;
+
+          _getQtyByPartId(_order_id,_part_id);
         });
       }
     });
   }
+
+  //通过标签id获取打印信息
+  _getQtyByPartId(var order_id,part_id) {
+    DataDao.getQtyByPartId(int.parse(order_id),int.parse(part_id)).then((res) {
+      if (res != null && res.result) {
+        setState(() {
+          _num = res.data['data'];
+        });
+      }
+    });
+  }
+
+
 
   //确定投料
   _getSaveData() {
@@ -439,6 +466,39 @@ class _MaterialLoadDetailsState extends State<MaterialLoadDetails> {
 
   Widget _searchWidget(String hint, TextEditingController _controller) {
     return TextField(
+      controller: _controller,
+      style: TextStyle(fontSize: 15),
+      decoration: InputDecoration(
+        fillColor: Colors.white,
+        filled: true,
+        contentPadding: EdgeInsets.all(5),
+        enabledBorder: OutlineInputBorder(
+          /*边角*/
+          borderRadius: BorderRadius.all(
+            Radius.circular(2), //边角为5
+          ),
+          borderSide: BorderSide(
+            color: Colors.grey, //边线颜色为白色
+            width: 1, //边线宽度为2
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Colors.grey, //边框颜色为白色
+            width: 1, //宽度为5
+          ),
+          borderRadius: BorderRadius.all(
+            Radius.circular(2), //边角为30
+          ),
+        ),
+        hintText: hint,
+      ),
+    );
+  }
+
+  Widget _searchWidgetForPart(String hint, TextEditingController _controller) {
+    return TextField(
+      focusNode: focusNode,
       controller: _controller,
       style: TextStyle(fontSize: 15),
       decoration: InputDecoration(

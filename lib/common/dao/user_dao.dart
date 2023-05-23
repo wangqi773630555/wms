@@ -130,6 +130,10 @@ class UserDao {
     }
   }
 
+  /**
+   *获取高分子 数据缆 sk
+   */
+
   static getSk() async {
     Map<String, String> header = {
       'Authorization': await LocalStorage.get(Config.UA)
@@ -137,6 +141,39 @@ class UserDao {
 
     var res = await HttpManager.netFetch(
         '${UrlConstant.getSk()}',
+        null,
+        header,
+        Options(method: 'get'));
+
+    var resultData;
+    if (res != null && res.result) {
+      if (res.data['code'] == 200) {
+        return ResultDao(res.data, res.result);
+      } else {
+        resultData = ResultDao(
+            Code.errorHandleFunction(res.data['code'], res.data['msg'], false),
+            false);
+        return ResultDao(resultData, false);
+      }
+    } else {
+      resultData =
+          ResultDao(Code.errorHandleFunction(res.code, '', false), false);
+      return ResultDao(resultData, false);
+    }
+  }
+
+
+  /**
+   *获取电缆 sk
+   */
+
+  static getDlSk() async {
+    Map<String, String> header = {
+      'Authorization': await LocalStorage.get(Config.UA)
+    };
+
+    var res = await HttpManager.netFetch(
+        '${UrlConstant.getDlSk()}',
         null,
         header,
         Options(method: 'get'));
@@ -254,7 +291,7 @@ class UserDao {
   /**
    * 添加App
    */
-  static saveApp(resId,sort,resName,resType,icon) async {
+  static saveApp(resId,sort,resName,resType,icon,disabled,route,attributes) async {
     Map<String, String> header = {
       'Authorization': await LocalStorage.get(Config.UA)
     };
@@ -267,6 +304,9 @@ class UserDao {
       'resName': resName,
       'resType': resType,
       'icon': icon,
+      'disabled':disabled,
+      'route':route,
+      'attributes':attributes,
     };
     var res = await HttpManager.netFetch(
         '${UrlConstant.saveApp()}',

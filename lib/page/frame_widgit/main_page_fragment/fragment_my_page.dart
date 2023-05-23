@@ -32,7 +32,6 @@ class _FragmentMyPageState extends State<FragmentMyPage> with RouteAware{
     // TODO: implement initState
     super.initState();
     initParams();
-    LogUtil.d('myPage');
 
     PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
       if(Theme.of(context).platform == TargetPlatform.android){
@@ -65,7 +64,6 @@ class _FragmentMyPageState extends State<FragmentMyPage> with RouteAware{
     setState(() {
 
     });
-    LogUtil.d('initParams');
   }
 
   Widget getRootView() {

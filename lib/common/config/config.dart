@@ -15,6 +15,7 @@ class Config {
   static const BACKGROUND_MY = "my_background";
   static const PHONE_NUM = "15888812474";
   static const SET_KEY = "seting_key";
+  static const SET_DL_KEY = "seting_dlkey";
   static const SERVER_VERSION = "server_version";
   static const APK_ADDRESS =
       "https://appdownload.wanmagroup.com:8443/androidWeb/download/TST/appdownload.jsp";
@@ -66,6 +67,38 @@ class Config {
   static const POSITION_NAME = "positionName";
   static const WORK_ID = "workid";
   static const PRE_AUTHORIZE_DATA = "pre_authorize_data";
+  static const HISTORY = "history";
+
+  //电缆 低压三场
+
+  //上架
+  static const SHELVES_UP = "shelves_up";
+  //搜索物料
+  static const SEARCH_MATERIAL = "search_material";
+  //下架
+  static const SHELVES_DOWN = "shelves_down";
+  //搜索物料(用于筛选库位)
+  static const SEARCH_MATERIAL_FILTRATE = "search_material_filtrate";
+  //移库
+  static const WAREHOUSE_MOVE = "warehouse_move";
+  //调库
+  static const WAREHOUSE_ADJUST = "warehouse_adjust";
+  //当前任务
+  static const CURRENT_TASK = "current_task";
+  //回库确认
+  static const TASK_RETURN_NOTARIZE = "task_return_notarize";
+  //任务确认
+  static const TASK_WAIT_NOTARIZE = "task_wait_notarize";
+  //任务结束
+  static const TASK_FINISH_NOTARIZE = "task_finish_notarize";
+  //任务查看
+  static const TASK_EXAMINE_NOTARIZE = "task_examine_notarize";
+
+
+  //天屹
+  //上模管理
+  static const UPPER_MOULD = "upper_mould";
+
 
 
 

@@ -203,10 +203,16 @@ class _LoginPageState extends State<LoginPage> {
                                             UserDao.getSk().then((res) async {
                                               if (res != null && res.result) {
                                                 String data = res.data['data'];
-                                                LocalStorage.save(
-                                                    Config.SET_KEY, data);
-                                                preAuthorize();
-                                                //预授权-授权都成功后在进入首页
+                                                LocalStorage.save(Config.SET_KEY, data);
+
+                                                UserDao.getDlSk().then((res) async {
+                                                  if (res != null && res.result) {
+                                                    String data = res.data['data'];
+                                                    LocalStorage.save(Config.SET_DL_KEY, data);
+                                                    preAuthorize();
+                                                    //预授权-授权都成功后在进入首页
+                                                  }
+                                                });
                                               }
                                             });
                                           }
@@ -241,24 +247,25 @@ class _LoginPageState extends State<LoginPage> {
         if (works.length != 0) {
           //无缓存默认取 isMain
           LocalStorage.save(Config.PRE_AUTHORIZE_DATA, jsonEncode(works));
-          String workId = await LocalStorage.get(Config.WORK_ID);
-          if (workId == null) {
-            //有缓存取缓存的工作
-            for (int i = 0; i < works.length; i++) {
-              if (works[i]['isMain'].toString() == '1') {
-                LocalStorage.save(Config.DEPT_NAME, works[i]['deptName']);
-                LocalStorage.save(Config.ORG_NAME, works[i]['orgName']);
-                LocalStorage.save(
-                    Config.POSITION_NAME, works[i]['positionName']);
-                LocalStorage.save(Config.WORK_ID, works[i]['id']);
-                authorizeResources();
-                LogUtil.d('workid空');
-              }
+          //有缓存取缓存的工作
+          for (int i = 0; i < works.length; i++) {
+            if (works[i]['isMain'].toString() == '1') {
+              LocalStorage.save(Config.DEPT_NAME, works[i]['deptName']);
+              LocalStorage.save(Config.ORG_NAME, works[i]['orgName']);
+              LocalStorage.save(
+                  Config.POSITION_NAME, works[i]['positionName']);
+              LocalStorage.save(Config.WORK_ID, works[i]['id']);
+              authorizeResources();
+              //LogUtil.d('workid空');
             }
+          }
+         /* String workId = await LocalStorage.get(Config.WORK_ID);
+          if (workId == null) {
+
           } else {
             authorizeResources();
             LogUtil.d('workid' + workId);
-          }
+          }*/
         }
       }
     });

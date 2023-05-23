@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
@@ -80,7 +82,8 @@ class HttpManager {
       }
       if (Config.DEBUG) {
         print('请求头: ' + option.headers.toString());
-        print('请求参数: ' + params.toString());
+       // print('请求参数: ' + params.toString());
+        LogUtil.d('请求参数: ' + jsonEncode(params));
         print('请求异常：' + e.toString());
         print('请求异常url：' + url);
       }
@@ -95,10 +98,11 @@ class HttpManager {
       print('请求url: ' + url);
       print('请求头: ' + option.headers.toString());
       if (params != null) {
-        print('请求参数: ' + params.toString());
+        //print('请求参数: ' + params.toString());
+        LogUtil.d('请求参数: ' + jsonEncode(params));
       }
       if (response != null) {
-        LogUtil.d(': ' + response.toString());
+        LogUtil.d(response.toString());
       }
     }
 

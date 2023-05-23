@@ -246,7 +246,10 @@ class _MenuPageState extends State<MenuPage> {
                           childrenList[i]['sort'],
                           childrenList[i]['resName'],
                           childrenList[i]['resType'],
-                          childrenList[i]['icon']);
+                          childrenList[i]['icon'],
+                          childrenList[i]['disabled'],
+                          childrenList[i]['route'],
+                          childrenList[i]['attributes'].toString());
                     }
                   },
                   icon: index == 0
@@ -256,9 +259,14 @@ class _MenuPageState extends State<MenuPage> {
           ),
         ]),
       );
-      _list.add(GestureDetector(
+      _list.add(TextButton(
+        style: ButtonStyle(
+          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          minimumSize: MaterialStateProperty.all(Size(0, 0)),
+          padding: MaterialStateProperty.all(EdgeInsets.zero),
+        ),
         child: item,
-        onTap: () {
+        onPressed: () {
           if(childrenList[i]['route']=='materialDetail'){
             //扫码收货
             NavigatorUtils.goMaterialDetail(context, '');
@@ -323,8 +331,8 @@ class _MenuPageState extends State<MenuPage> {
   }
 
   //添加应用
-  saveApp(resId, sort, resName, resType, icon) {
-    UserDao.saveApp(resId, sort, resName, resType, icon).then((res) {
+  saveApp(resId, sort, resName, resType, icon,disabled,route,attributes) {
+    UserDao.saveApp(resId, sort, resName, resType, icon,disabled,route,attributes).then((res) {
       if (res != null && res.result) {
         var data = res.data['data'];
         getAppUserList();

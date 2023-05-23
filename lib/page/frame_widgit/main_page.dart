@@ -75,8 +75,16 @@ class _MainPageState extends State<MainPage>  with RouteAware{
 
   @override
   void didPopNext() {
-    LogUtil.d('onResume');
-    SystemChrome.setSystemUIOverlayStyle(BarColor.dark);
+    LogUtil.d('onResumeMainPage');
+    Future.delayed(
+        const Duration(milliseconds: 100),
+            () async {
+              setState(() {
+                SystemChrome.setSystemUIOverlayStyle(BarColor.dark);
+              });
+          return true;
+        });
+
     super.didPopNext();
   }
 }

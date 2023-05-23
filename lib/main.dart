@@ -12,6 +12,17 @@ import 'package:wanma_print/common/redux/wm_state.dart';
 import 'package:wanma_print/common/style/wm_style.dart';
 import 'package:wanma_print/common/utils/common_utils.dart';
 import 'package:wanma_print/common/utils/navigator_utils.dart';
+import 'package:wanma_print/page/dianlan_widgit/current_task.dart';
+import 'package:wanma_print/page/dianlan_widgit/search_material.dart';
+import 'package:wanma_print/page/dianlan_widgit/search_material_filtrate.dart';
+import 'package:wanma_print/page/dianlan_widgit/shelves_down.dart';
+import 'package:wanma_print/page/dianlan_widgit/shelves_up.dart';
+import 'package:wanma_print/page/dianlan_widgit/task_examine_notarize.dart';
+import 'package:wanma_print/page/dianlan_widgit/task_finish_notarize.dart';
+import 'package:wanma_print/page/dianlan_widgit/task_return_notarize.dart';
+import 'package:wanma_print/page/dianlan_widgit/task_wait_notarize.dart';
+import 'package:wanma_print/page/dianlan_widgit/warehouse_adjust.dart';
+import 'package:wanma_print/page/dianlan_widgit/warehouse_move.dart';
 import 'package:wanma_print/page/frame_widgit/main_page.dart';
 import 'package:wanma_print/page/frame_widgit/mine/account_security_page.dart';
 import 'package:wanma_print/page/frame_widgit/mine/change_password_page.dart';
@@ -33,6 +44,7 @@ import 'package:wanma_print/page/app.dart';
 
 import 'package:wanma_print/page/login_page.dart';
 import 'package:wanma_print/page/receipt_management/material_receipt_detail.dart';
+import 'package:wanma_print/page/tianyi_widgit/upper%20mould.dart';
 // import 'package:wanma_print/page/task/task_list.dart';
 
 import 'package:wanma_print/page/welcome_page.dart';
@@ -87,7 +99,7 @@ class MyApp extends StatelessWidget {
       child: StoreBuilder<WMState>(builder: (context, store) {
         return MaterialApp(
           navigatorObservers:[routeObserver],
-          title: '万马线缆',
+          title: '万马智造',
           theme: store.state.themeData,
           localizationsDelegates: [
             GlobalMaterialLocalizations.delegate,
@@ -168,6 +180,56 @@ class MyApp extends StatelessWidget {
             ChangeWorkPage.sName:(context) => CommonLayer(
               child: ChangeWorkPage(),
             ),
+            //上架
+            ShelvesUp.sName:(context) => CommonLayer(
+              child: ShelvesUp(),
+            ),
+            //物料搜索
+            SearchMaterial.sName:(context) => CommonLayer(
+              child: SearchMaterial(),
+            ),
+            //下架
+            ShelvesDown.sName:(context) => CommonLayer(
+              child: ShelvesDown(),
+            ),
+            //物料选择（用于筛选目的库位）
+            SearchMaterialFiltrate.sName:(context)=>CommonLayer(
+              child: SearchMaterialFiltrate(),
+            ),
+            //移库
+            WarehouseMove.sName:(context)=>CommonLayer(
+              child: WarehouseMove(),
+            ),
+            //调库
+            WarehouseAdjust.sName:(context)=>CommonLayer(
+              child: WarehouseAdjust(),
+            ),
+            //当前任务
+            CurrentTask.sName:(context)=>CommonLayer(
+              child: CurrentTask(),
+            ),
+            //回库确认
+            TaskReturnNotarize.sName:(context)=>CommonLayer(
+              child: TaskReturnNotarize(),
+            ),
+            //任务确认
+            TaskWaitNotarize.sName:(context)=>CommonLayer(
+              child: TaskWaitNotarize(),
+            ),
+            //任务结束
+            TaskFinishNotarize.sName:(context)=>CommonLayer(
+              child: TaskFinishNotarize(),
+            ),
+            //任务查看
+            TaskExamineNotarize.sName:(context)=>CommonLayer(
+              child: TaskExamineNotarize(),
+            ),
+            //上模管理
+            UpperMould.sName:(context)=>CommonLayer(
+              child: UpperMould(),
+            ),
+
+
           },
         );
       }),

@@ -41,7 +41,7 @@ class _FragmentHomePageState extends State<FragmentHomePage> with RouteAware{
     map['icon'] = 'images/home/gengduo.png';
     map['route'] = 'maintabmore';
     gridList.add(map);*/
-    if(isFirst) {
+    if(isFirst||gridList.isEmpty) {
       getAppUserList();
       stream = ScanEventUtils.eventBus.on<ScanEvent>().listen((event) {
         if (event.page == ScanConfig.MAIN_REFRESH) {
@@ -191,11 +191,26 @@ class _FragmentHomePageState extends State<FragmentHomePage> with RouteAware{
           ],
         ),
       );
-      _list.add(GestureDetector(
+      _list.add(TextButton(
+        style: ButtonStyle(
+          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          minimumSize: MaterialStateProperty.all(Size(0, 0)),
+          padding: MaterialStateProperty.all(EdgeInsets.zero),
+        ),
         child: item,
-        onTap: () {
+        onPressed: () {
           if (i == gridList.length - 1) {
             NavigatorUtils.goMainTabMore(mYcontext);
+            //上架
+            //NavigatorUtils.goPage(context, "shelves_up");
+            //下架
+            //NavigatorUtils.goPage(context, "shelves_down");
+            //移库
+            //NavigatorUtils.goPage(context, "warehouse_move");
+            //调库
+            //NavigatorUtils.goPage(context, "warehouse_adjust");
+            //当前任务
+            //NavigatorUtils.goPage(context, "current_task");
           }else if(gridList[i]['route']=='materialDetail'){
             //扫码收货
             NavigatorUtils.goMaterialDetail(context, '');
@@ -407,16 +422,24 @@ class _FragmentHomePageState extends State<FragmentHomePage> with RouteAware{
   }
 
   Widget _imageWrapper(String imageUrl) {
-    return SizedBox(
-      width: 30,
-      height: 30,
-      child: CachedNetworkImage(
-        imageUrl: imageUrl,
-        placeholder: (context, url) => Image.asset('images/home/gengduo.png'),
-        errorWidget: (context, url, error) =>
-            Image.asset('images/home/gengduo.png'),
-      ),
-    );
+    if(imageUrl!='') {
+      return SizedBox(
+        width: 30,
+        height: 30,
+        child: CachedNetworkImage(
+          imageUrl: imageUrl,
+        //  placeholder: (context, url) => Image.asset('images/home/gengduo.png'),
+          errorWidget: (context, url, error) =>
+              Image.asset('images/home/gengduo.png'),
+        ),
+      );
+    }else{
+      return SizedBox(
+        width: 30,
+        height: 30,
+        child: Image.asset('images/home/gengduo.png'),
+      );
+    }
   }
 
   /**
@@ -432,7 +455,7 @@ class _FragmentHomePageState extends State<FragmentHomePage> with RouteAware{
         }
         Map map = Map();
         map['resName'] = '更多';
-        map['icon'] = 'images/home/gengduo.png';
+        map['icon'] = '';
         map['route'] = 'maintabmore';
         gridList.add(map);
         setState(() {
@@ -457,7 +480,6 @@ class _FragmentHomePageState extends State<FragmentHomePage> with RouteAware{
 
   @override
   void didPopNext() {
-    LogUtil.d('onResumeMy');
    if(isFirst){
      getAppUserList();
    }

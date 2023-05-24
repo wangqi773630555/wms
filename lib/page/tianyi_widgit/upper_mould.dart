@@ -241,12 +241,9 @@ class _UpperMouldState extends State<UpperMould> {
                                 SizedBox(
                                   height: 30,
                                   child: TextButton(
-                                    style: ButtonStyle(
-                                      backgroundColor:
-                                          MaterialStateProperty.resolveWith(
-                                              (states) {
-                                        return Colors.grey[300];
-                                      }),
+                                    style:  TextButton.styleFrom(
+                                      backgroundColor: Colors.grey[300],
+                                      padding: EdgeInsets.zero,
                                       tapTargetSize: MaterialTapTargetSize
                                           .shrinkWrap, //外边距
                                     ),
@@ -270,8 +267,7 @@ class _UpperMouldState extends State<UpperMould> {
                           Container(
                               // color: Color.fromARGB(111, 236, 243, 100),
                               height: _hheight - 170,
-                              child: Expanded(
-                                child: EasyRefresh.custom(
+                              child: EasyRefresh.custom(
                                   controller: _easyfreshController,
                                   enableControlFinishRefresh: false,
                                   enableControlFinishLoad: true,
@@ -311,7 +307,7 @@ class _UpperMouldState extends State<UpperMould> {
                                     ),
                                   ],
                                 ),
-                              )),
+                              ),
                         ],
                       ),
                     ),

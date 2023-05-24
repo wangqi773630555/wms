@@ -44,7 +44,7 @@ import 'package:wanma_print/page/app.dart';
 
 import 'package:wanma_print/page/login_page.dart';
 import 'package:wanma_print/page/receipt_management/material_receipt_detail.dart';
-import 'package:wanma_print/page/tianyi_widgit/upper%20mould.dart';
+import 'package:wanma_print/page/tianyi_widgit/upper_mould.dart';
 // import 'package:wanma_print/page/task/task_list.dart';
 
 import 'package:wanma_print/page/welcome_page.dart';

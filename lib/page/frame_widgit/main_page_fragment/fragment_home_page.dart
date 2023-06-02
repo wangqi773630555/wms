@@ -480,7 +480,9 @@ class _FragmentHomePageState extends State<FragmentHomePage> with RouteAware{
 
   @override
   void didPopNext() {
-   if(isFirst){
+    LogUtil.d("resume${Config.REFRESH}");
+   if(Config.REFRESH==1){
+     Config.REFRESH = 0;
      getAppUserList();
    }
     super.didPopNext();

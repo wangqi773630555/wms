@@ -142,12 +142,12 @@ class _ChangeWorkPageState extends State<ChangeWorkPage> {
                 ),
               ],),
 
-              Padding(padding: EdgeInsets.fromLTRB(0, 5, 0, 0)),
+             /* Padding(padding: EdgeInsets.fromLTRB(0, 5, 0, 0)),
               Text(
                 workList[i]['deptName'],
                 style:
                 TextStyle(color: Colors.grey, fontWeight: FontWeight.bold,fontSize: 14),
-              ),
+              ),*/
             ],
           ),
           Expanded(child: Text('')),
@@ -220,7 +220,7 @@ class _ChangeWorkPageState extends State<ChangeWorkPage> {
   authorizeResources(deptName,positionName,id,orgName) {
     UserDao.getAuthorizeResources(id).then((res) {
       if (res != null && res.result) {
-        LocalStorage.save(Config.DEPT_NAME, deptName);
+        //LocalStorage.save(Config.DEPT_NAME, deptName);
         LocalStorage.save(Config.POSITION_NAME, positionName);
         LocalStorage.save(Config.WORK_ID, id);
         LocalStorage.save(Config.ORG_NAME, orgName);

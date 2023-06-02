@@ -337,6 +337,7 @@ class _MenuPageState extends State<MenuPage> {
         var data = res.data['data'];
         getAppUserList();
         ScanEventUtils.send(ScanConfig.MAIN_REFRESH, '');
+        Config.REFRESH=1;
       }
     });
   }
@@ -348,6 +349,7 @@ class _MenuPageState extends State<MenuPage> {
         var data = res.data['data'];
         getAppUserList();
         ScanEventUtils.send(ScanConfig.MAIN_REFRESH, '');
+        Config.REFRESH=1;
       }
     });
   }

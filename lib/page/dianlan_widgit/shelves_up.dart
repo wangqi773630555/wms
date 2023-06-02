@@ -57,8 +57,8 @@ class _ShelvesUpState extends State<ShelvesUp> {
     selectEndResult = null;
     pickerStartData.clear();
     pickerEndData.clear();
-    getWmWare2("0");
-    getWmWare2("1");
+    getWmWare2("0",2);
+    getWmWare2("1",3);
 
   }
 
@@ -243,7 +243,7 @@ class _ShelvesUpState extends State<ShelvesUp> {
         Expanded(child: TextField(
           inputFormatters: [
             LengthLimitingTextInputFormatter(15), //限制长度
-            FilteringTextInputFormatter.allow(RegExp("[0-9]")),//数字包括小数
+            FilteringTextInputFormatter.allow(RegExp("[0-9.]")),//数字包括小数
           ],
           controller: _controller,
           style: TextStyle(fontSize: 15),
@@ -395,18 +395,29 @@ class _ShelvesUpState extends State<ShelvesUp> {
     }
   }
 
-  getWmWare2(var liku_tag) {
-    DataDao.getWmWare2(liku_tag).then((res) {
+  getWmWare2(var liku_tag,var page) {
+    DataDao.getWmWare2(liku_tag,page).then((res) {
       if(res!=null&&res.result) {
         setState(() {
           var datas = res.data['data']['wares'];
           for (int i = 0; i < datas.length; i++) {
-            if (liku_tag == "0") {
+            if (page == 2) {
               pickerStartData.add(PickerModel.fromMap(datas[i]));
-            } else if (liku_tag == "1") {
+            } else if (page == 3) {
               pickerEndData.add(PickerModel.fromMap(datas[i]));
             }
           }
+        });
+      }
+    });
+  }
+
+
+  test() {
+    DataDao.testAgv().then((res) {
+      if(res!=null&&res.result) {
+        setState(() {
+         Fluttertoast.showToast(msg: res.data['msg']);
         });
       }
     });

@@ -68,8 +68,8 @@ class _ShelvesDownState extends State<ShelvesDown> {
     switchValueQz =false;
     pickerStartData.clear();
     pickerEndData.clear();
-    getWmWare2("");
-    getWmWare2("0");
+    getWmWare2("",0);
+    getWmWare2("0",1);
   }
 
   @override
@@ -334,9 +334,7 @@ class _ShelvesDownState extends State<ShelvesDown> {
                         Map<String, dynamic> map = Map();
                         map['part_name'] = listDefault[i]['part_name'];
                         map['part_id'] = listDefault[i]['part_id'];
-                        map['qty'] = int.parse(listDefault[i]['qty']
-                            .toString()
-                            .replaceAll('.0', ''));
+                        map['qty'] = double.parse(listDefault[i]['qty'].toString());
                         details.add(map);
                       }
                       map['qzrk'] =  switchValueQz?'1':'0';
@@ -355,7 +353,7 @@ class _ShelvesDownState extends State<ShelvesDown> {
                           Fluttertoast.showToast(msg: '请输入数量');
                           return;
                         }
-                        map['qty'] = int.parse(list[i]['controller'].text);
+                        map['qty'] = double.parse(list[i]['controller'].text);
                         details.add(map);
                       }
                       map['qzrk'] =  switchValueQz?'1':'0';
@@ -385,7 +383,7 @@ class _ShelvesDownState extends State<ShelvesDown> {
           child: TextField(
             inputFormatters: [
               LengthLimitingTextInputFormatter(15), //限制长度
-              FilteringTextInputFormatter.allow(RegExp("[0-9]")),//数字包括小数
+              FilteringTextInputFormatter.allow(RegExp("[0-9.]")),//数字包括小数
             ],
             controller: _controller,
             style: TextStyle(fontSize: 15),
@@ -542,8 +540,7 @@ class _ShelvesDownState extends State<ShelvesDown> {
                       hint,
                       TextEditingController(),
                       listDefault[index]['qty']
-                          .toString()
-                          .replaceAll('.0', '')),
+                          .toString()),
                 ),
               ],
             ),
@@ -675,15 +672,15 @@ class _ShelvesDownState extends State<ShelvesDown> {
     }
   }
 
-  getWmWare2(var liku_tag) {
-    DataDao.getWmWare2(liku_tag).then((res) {
+  getWmWare2(var liku_tag,var page) {
+    DataDao.getWmWare2(liku_tag,page).then((res) {
       if(res!=null&&res.result) {
         setState(() {
           var datas = res.data['data']['wares'];
           for (int i = 0; i < datas.length; i++) {
-            if (liku_tag == "") {
+            if (page == 0) {
               pickerStartData.add(PickerModel.fromMap(datas[i]));
-            } else if (liku_tag == "0") {
+            } else if (page == 1) {
               pickerEndData.add(PickerModel.fromMap(datas[i]));
             }
           }

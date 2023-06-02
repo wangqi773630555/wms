@@ -1020,15 +1020,19 @@ class DataDao {
   /**
    * 2.2获取库位清单接口(库区+库位)
    * liku_tag 0 不包含立库 /1仅立库/ 不传是所有
+   * page 0 1 2 3 4 5 6 7 8 9下架 上架 移库 调库 待确认任务（开始/结束）
    */
-  static getWmWare2(var liku_tag) async {
+  static getWmWare2(var liku_tag,var page) async {
     Map<String, String> header = {
       'Authorization': await LocalStorage.get(Config.UA)
     };
     String setSk = '_SK_=${await LocalStorage.get(Config.SET_DL_KEY)}';
     Map<String, dynamic> requestParams;
     if (liku_tag != null) {
-      requestParams = {"liku_tag": liku_tag};
+      requestParams = {
+        "liku_tag": liku_tag,
+        "page":page
+      };
     } else {
       requestParams = {};
     }
@@ -1227,6 +1231,41 @@ class DataDao {
     // print('======-----##$requestParams');
     var res = await HttpManager.netFetch('${UrlConstant.syncAGVTaskEnd()}${setSk}',
         requestParams, header, Options(method: 'post'));
+    var resultData;
+    if (res != null && res.result) {
+      if (res.data['code'] == 200) {
+        return ResultDao(res.data, res.result);
+      } else {
+        resultData = ResultDao(
+            Code.errorHandleFunction(res.data['code'], res.data['msg'], false),
+            false);
+        return ResultDao(resultData, false);
+      }
+    } else {
+      resultData =
+          ResultDao(Code.errorHandleFunction(res.code, '', false), false);
+      return ResultDao(resultData, false);
+    }
+  }
+
+  /**
+   * 测试接口
+   */
+  static testAgv() async {
+    Map<String, String> header = {
+      'Authorization': await LocalStorage.get(Config.UA)
+    };
+    String setSk = '_SK_=${await LocalStorage.get(Config.SET_DL_KEY)}';
+    Map<String, dynamic> requestParams = {
+      //   "orderId": 306018, "recipeId": '100001'
+      //   // 'id': ids
+    };
+    // print('======-----##$requestParams');
+    var res = await HttpManager.netFetch(
+        '${UrlConstant.testAgv()}${setSk}',
+        requestParams,
+        header,
+        Options(method: 'post'));
     var resultData;
     if (res != null && res.result) {
       if (res.data['code'] == 200) {

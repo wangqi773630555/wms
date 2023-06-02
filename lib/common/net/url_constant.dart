@@ -10,7 +10,7 @@ class UrlConstant {
 
   //本地环境
   //static const String host2 = 'http://10.3.32.33:94/';//裴明明本地
-  //static const String host3 = 'http://10.2.5.245:8002/'; //测试 志航本地（电缆低压三厂）
+   // static const String host3 = 'http://10.3.32.37:8002/'; //测试 志航本地（电缆低压三厂）
 
 
   //正式环境
@@ -20,17 +20,17 @@ class UrlConstant {
 
 
 
-  ///登陆
+  //登陆
   static getLogin() {
     return '${host}authority-system/auth/app/login';
   }
 
-//退出
+  //退出
   static getOutLogin() {
     return '${host}authority-system/admin/getLogout';
   }
 
-  ///修改密码
+  //修改密码
   static updatePwd() {
     return '${host}authority-system/admin/updateCurrUser';
   }
@@ -205,6 +205,11 @@ class UrlConstant {
     return '${host3}agv/rtAgvCommon/getWarnMsgByID?';
   }
 
+  static testAgv() {
+    return '${host3}agv/rtAgvCommon/testAgv?';
+  }
+
+
   static getSelectLoad() {
     return '${host2}sync/mesProxy/mesJsonReq?route=/eqp/ctEqpModule/getSelectLoad&';
   }
@@ -216,6 +221,8 @@ class UrlConstant {
   static getCtEqpModule() {
     return '${host2}sync/mesProxy/mesJsonReq?route=/eqp/ctEqpModule/getCtEqpModule&';
   }
+
+
 
 
 

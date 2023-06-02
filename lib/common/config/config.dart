@@ -26,6 +26,8 @@ class Config {
   static const UA = "_UA_";
   static const APP_HOME = "首页";
   static const STATUS_NEW = "新建";
+  //1刷新
+  static int REFRESH = 0;
 
   static const LOGIN = "login";
   static const HOME = "home";

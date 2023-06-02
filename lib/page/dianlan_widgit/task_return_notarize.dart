@@ -156,7 +156,7 @@ class _TaskReturnNotarizeState extends State<TaskReturnNotarize> {
                             Fluttertoast.showToast(msg: '请输入数量');
                             return;
                           }
-                          map['qty'] = int.parse(list[i]['controller'].text);
+                          map['qty'] = double.parse(list[i]['controller'].text);
                           details.add(map);
                         }
                         map['details'] = details;

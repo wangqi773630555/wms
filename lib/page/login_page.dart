@@ -250,7 +250,7 @@ class _LoginPageState extends State<LoginPage> {
           //有缓存取缓存的工作
           for (int i = 0; i < works.length; i++) {
             if (works[i]['isMain'].toString() == '1') {
-              LocalStorage.save(Config.DEPT_NAME, works[i]['deptName']);
+              //LocalStorage.save(Config.DEPT_NAME, works[i]['deptName']);
               LocalStorage.save(Config.ORG_NAME, works[i]['orgName']);
               LocalStorage.save(
                   Config.POSITION_NAME, works[i]['positionName']);
@@ -277,6 +277,7 @@ class _LoginPageState extends State<LoginPage> {
   authorizeResources() {
     UserDao.getAuthorizeResources('').then((res) {
       if (res != null && res.result) {
+        Config.REFRESH=1;
         NavigatorUtils.goHomeNew(context);
       }
     });

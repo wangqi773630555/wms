@@ -419,11 +419,34 @@ class _FragmentMyPageState extends State<FragmentMyPage> with RouteAware{
       ),
       onPressed: () {
         if(title=='关于'){
-          Fluttertoast.showToast(msg: '暂未开通');
+          getAppVersionForUpdate();
         }
       },
     );
     return item;
+  }
+
+  getAppVersion(){
+    var androidVersionCode;
+    var androidFile;
+    UserDao.getAppVersion().then((res) {
+      if (res != null && res.result) {
+        List data = res.data['data'];
+        for(int i=0;i<data.length;i++){
+          if(data[i]['type'].toString()=='1'){
+            //android
+            androidVersionCode = data[i]['version'];
+            androidFile = data[i]['file'];
+            FlutterPlugins.update('$androidVersionCode;$androidFile').then((value) => {setState(() {})});
+          }else if(data[i]['type'].toString()=='2'){
+            //ios
+            //Todo 处理Ios版本更新逻辑
+
+          }
+        }
+
+      }
+    });
   }
 
   Widget loginOut() {
@@ -460,7 +483,7 @@ class _FragmentMyPageState extends State<FragmentMyPage> with RouteAware{
     super.didPopNext();
   }
 
-  getAppVersion(){
+  getAppVersionForUpdate(){
     var androidVersionCode='';
     var iosVersionCode='';
     UserDao.getAppVersion().then((res) {

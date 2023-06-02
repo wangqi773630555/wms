@@ -51,7 +51,7 @@ class _TaskWaitNotarizeState extends State<TaskWaitNotarize> {
     });
     selectStartResult = null;
     pickerData.clear();
-    getWmWare2("");
+    getWmWare2("",8);
   }
 
   @override
@@ -181,9 +181,8 @@ class _TaskWaitNotarizeState extends State<TaskWaitNotarize> {
                             Map<String, dynamic> map = Map();
                             map['part_name'] = listDefault[i]['part_name'];
                             map['part_id'] = listDefault[i]['part_id'];
-                            map['qty'] = int.parse(listDefault[i]['qty']
-                                .toString()
-                                .replaceAll('.0', ''));
+                            map['qty'] = double.parse(listDefault[i]['qty']
+                                .toString());
                             details.add(map);
                           }
                           map['details'] = details;
@@ -305,8 +304,7 @@ class _TaskWaitNotarizeState extends State<TaskWaitNotarize> {
                       hint,
                       TextEditingController(),
                       listDefault[index]['qty']
-                          .toString()
-                          .replaceAll('.0', '')),
+                          .toString()),
                 ),
               ],
             ),
@@ -372,8 +370,8 @@ class _TaskWaitNotarizeState extends State<TaskWaitNotarize> {
     });
   }
 
-  getWmWare2(var liku_tag) {
-    DataDao.getWmWare2(liku_tag).then((res) {
+  getWmWare2(var liku_tag,var page) {
+    DataDao.getWmWare2(liku_tag,page).then((res) {
       if(res!=null&&res.result) {
         setState(() {
           var datas = res.data['data']['wares'];

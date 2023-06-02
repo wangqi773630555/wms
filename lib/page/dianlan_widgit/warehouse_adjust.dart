@@ -59,9 +59,8 @@ class _WarehouseAdjustState extends State<WarehouseAdjust> {
     list.clear();
     pickerData.clear();
     pickerEndData.clear();
-    getWmWare2("");
-    getWmWare2("1");
-
+    getWmWare2("",7);
+    getWmWare2("1",6);
 
   }
 
@@ -229,7 +228,7 @@ class _WarehouseAdjustState extends State<WarehouseAdjust> {
                       Fluttertoast.showToast(msg: '请输入数量');
                       return;
                     }
-                    map['qty'] = int.parse(list[i]['controller'].text);
+                    map['qty'] = double.parse(list[i]['controller'].text);
                     details.add(map);
                   }
                   map['details'] = details;
@@ -254,7 +253,7 @@ class _WarehouseAdjustState extends State<WarehouseAdjust> {
         Expanded(child: TextField(
           inputFormatters: [
             LengthLimitingTextInputFormatter(15), //限制长度
-            FilteringTextInputFormatter.allow(RegExp("[0-9]")),//数字包括小数
+            FilteringTextInputFormatter.allow(RegExp("[0-9.]")),//数字包括小数
           ],
           controller: _controller,
           style: TextStyle(fontSize: 15),
@@ -406,13 +405,13 @@ class _WarehouseAdjustState extends State<WarehouseAdjust> {
     }
   }
 
-  getWmWare2(var liku_tag) {
-    DataDao.getWmWare2(liku_tag).then((res) {
+  getWmWare2(var liku_tag,var page) {
+    DataDao.getWmWare2(liku_tag,page).then((res) {
       if(res!=null&&res.result) {
         setState(() {
           var datas = res.data['data']['wares'];
           for (int i = 0; i < datas.length; i++) {
-            if (liku_tag == '1') {
+            if (page == 6) {
               pickerData.add(PickerModel.fromMap(datas[i]));
             } else {
               pickerEndData.add(PickerModel.fromMap(datas[i]));
@@ -491,7 +490,7 @@ class BottomSheetState extends State <BottomSheetStart>{
           Map map = Map();
           //map['name'] = '';
           TextEditingController controller = TextEditingController();
-          controller.text = datas[i]['qty'].toString().replaceAll('.0', '');
+          controller.text = datas[i]['qty'].toString();
           map['controller'] = controller;
           map['name'] = datas[i]['part_name'];
           map['id'] = datas[i]['part_id'];

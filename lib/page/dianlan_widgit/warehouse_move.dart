@@ -29,6 +29,7 @@ import '../common_widgit/picker/picker_model.dart';
 var selectStartResult;
 var selectEndResult;
 List<PickerModel> pickerData = [];
+List<PickerModel> pickerEndData = [];
 
 class WarehouseMove extends StatefulWidget {
   static final String sName = Config.WAREHOUSE_MOVE;
@@ -54,7 +55,9 @@ class _WarehouseMoveState extends State<WarehouseMove> {
     selectStartResult  = null;
     selectEndResult = null;
     pickerData.clear();
-    getWmWare2("1");
+    pickerEndData.clear();
+    getWmWare2("1",4);
+    getWmWare2("1",5);
 
   }
 
@@ -249,13 +252,17 @@ class _WarehouseMoveState extends State<WarehouseMove> {
     }
   }
 
-  getWmWare2(var liku_tag) {
-    DataDao.getWmWare2(liku_tag).then((res) {
+  getWmWare2(var liku_tag,page) {
+    DataDao.getWmWare2(liku_tag,page).then((res) {
       if(res!=null&&res.result) {
         setState(() {
           var datas = res.data['data']['wares'];
           for (int i = 0; i < datas.length; i++) {
-            pickerData.add(PickerModel.fromMap(datas[i]));
+            if (page == 4) {
+              pickerData.add(PickerModel.fromMap(datas[i]));
+            } else if (page == 5) {
+              pickerEndData.add(PickerModel.fromMap(datas[i]));
+            }
           }
         });
       }
@@ -343,7 +350,7 @@ class BottomSheetEndState extends State <BottomSheetEnd> {
                   selectEndResult == null ? 0 : selectEndResult['proviceIndex'],
                   selectEndResult == null ? 0 : selectEndResult['cityIndex'],
                   selectEndResult == null ? 0 : selectEndResult['countyIndex'],
-                  pickerData,
+                  pickerEndData,
                 ),
               ));
       },

@@ -21,6 +21,7 @@ import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import '../common_widgit/picker/picker_model.dart';
+import 'current_task.dart';
 
 /**
  * 移库
@@ -273,6 +274,8 @@ class _WarehouseMoveState extends State<WarehouseMove> {
     DataDao.createAgvEqpTask(body).then((res) {
       if(res!=null&&res.result) {
         Fluttertoast.showToast(msg: '提交成功');
+        Navigator.pop(context);
+        NavigatorUtils.goPage(context, CurrentTask.sName);
       }
     });
   }

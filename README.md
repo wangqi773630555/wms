@@ -1,16 +1,15 @@
 # wanma_print
+万马新框架项目
 
-A new Flutter project.
+#页面路径
+lib/page/frame_widgit （权限系统 框架模块）
+lib/page/dianlan_widgit （电缆 低压三场模块）
+lib/page/tianyi_widgit （天屹 天屹数据缆模块）
+lib/page/common_widgit （公共组件封装模块）
 
-## Getting Started
+#框架菜单 动态配置
+https://app-test.wanmaco.com/#/appList （测试环境）
+https://app.wanmaco.com/#/appList （测试环境）
+操作：应用管理->应用列表->添加模块/应用
+添加应用的“归属权限”对应我们本地的路由地址 （比如低压三厂的调库:warehouse_adjust）
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
 import 'package:wanma_print/widget/middle_text_right.dart';
-import '../../common/config/config.dart';
-import '../../common/dao/data_dao.dart';
-import '../../common/utils/navigator_utils.dart';
-import '../../widget/middle_text.dart';
+import '../../../common/config/config.dart';
+import '../../../common/dao/data_dao.dart';
+import '../../../common/utils/navigator_utils.dart';
+import '../../../widget/middle_text.dart';
 
 class MaterialLoadProcess extends StatefulWidget {
   static final String sName = Config.Material_LoadProcess;

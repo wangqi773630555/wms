@@ -4,10 +4,10 @@ import 'package:wanma_print/common/dao/data_dao.dart';
 import 'package:wanma_print/common/utils/scanevent_utils.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-import '../../common/config/config.dart';
-import '../../common/config/scanConfig.dart';
-import '../../common/event/scan_event.dart';
-import '../../common/utils/navigator_utils.dart';
+import '../../../common/config/config.dart';
+import '../../../common/config/scanConfig.dart';
+import '../../../common/event/scan_event.dart';
+import '../../../common/utils/navigator_utils.dart';
 import 'package:barcode_scan2/barcode_scan2.dart';
 import 'dart:async';
 

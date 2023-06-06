@@ -5,14 +5,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:wanma_print/widget/middle_text_right.dart';
-import '../../common/config/config.dart';
-import '../../common/config/scanConfig.dart';
-import '../../common/dao/data_dao.dart';
-import '../../common/event/scan_event.dart';
-import '../../common/utils/scanevent_utils.dart';
-import '../../widget/middle_text.dart';
 import 'package:barcode_scan2/barcode_scan2.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+
+import '../../../common/config/config.dart';
+import '../../../common/config/scanConfig.dart';
+import '../../../common/dao/data_dao.dart';
+import '../../../common/event/scan_event.dart';
+import '../../../common/utils/scanevent_utils.dart';
+import '../../../widget/middle_text.dart';
 
 class MaterialLoadDetails extends StatefulWidget {
   static final String sName = Config.Material_LoadDetails;

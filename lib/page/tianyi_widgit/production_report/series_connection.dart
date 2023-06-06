@@ -1,32 +1,24 @@
 import 'package:flutter/material.dart';
-
-import '../../common/config/config.dart';
-
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wanma_print/common/dao/data_dao.dart';
-import 'package:wanma_print/page/production_report/select_work.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-import '../../common/config/config.dart';
-import '../../common/utils/common_utils.dart';
-import '../../widget/loading.dart';
+import '../../../common/config/config.dart';
+import '../../../common/utils/common_utils.dart';
+import '../../../widget/loading.dart';
 import 'common_widget/production_header.dart';
-
-import '../../common/dao/data_dao.dart';
-
 import 'package:barcode_scan2/barcode_scan2.dart';
 
-class TwistedPair extends StatelessWidget {
-  static final String sName = Config.TWISTED_PAIR;
-  const TwistedPair({Key? key}) : super(key: key);
+class SeriesConnection extends StatelessWidget {
+  static final String sName = Config.SERIES_CONNECTION;
+  const SeriesConnection({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     var args = ModalRoute.of(context)!.settings.arguments;
     return Scaffold(
         appBar: AppBar(
-          title: Text('对绞报工'),
+          title: Text('串联报工'),
           centerTitle: true,
         ),
         body: SeriesConnections(args));
@@ -48,17 +40,16 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
   TextEditingController vc4 = TextEditingController();
   TextEditingController vc5 = TextEditingController();
   TextEditingController vc6 = TextEditingController();
-  // TextEditingController vc7 = TextEditingController();
-  // TextEditingController vc7 = TextEditingController();
+  TextEditingController vc7 = TextEditingController();
+  TextEditingController vc8 = TextEditingController();
+
   var extraField1 = ''; //danwei
-  // var extraField2 = '';
-  // var extraField3 = '';
-  // var extraField4 = '';
-  // var extraField5 = '';
-  var _selectDate1 = DateTime.now();
-  String bgDate = DateTime.now().toString().substring(0, 10);
+  var extraField2 = '';
+  var extraField3 = '';
+  var extraField4 = '';
+  var extraField5 = '';
   var radioValue;
-  var radioValue2 = 'Y';
+  // var radioValue2 = 'Y';
   var people = '';
   var time = '';
   var lsbh = '';
@@ -66,35 +57,31 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
   late double _wwidth;
   late double _hheight;
   Map modeMap = {};
-  Map eqp_id_relation_Map = {};
   List productionList = [];
   List eqpIdList = [];
   var eqpIdValue;
   List colorList = [];
   List radioList = [];
-  List radioList2 = [];
-  List xinxianList = [];
+  // List radioList2 = [];
   var colorValue;
   bool circle = false;
   ScanResult? scanResult;
   List<DropdownMenuItem<String>> _eqpIdItems = [];
   List<DropdownMenuItem<String>> _colorItems = [];
+  var _selectDate1 = DateTime.now();
+  String bgDate = DateTime.now().toString().substring(0, 10);
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    // print(widget.idsList[0]);
-    // print(widget.idsList[1]);
-    // if(_mechanicalMonitors != null && _mechanicalMonitors.length > 0) {
-    //
-    //       _monitorsValue = _mechanicalMonitors[0]['id'].toString();
-    //     }
+
     getData(widget.idsList[3], widget.idsList[2]);
   }
 
   getData(flag, ids) {
     DataDao.getProductions(widget.idsList[1], widget.idsList[0], ids, flag)
         .then((res) {
+      print('1111111111111');
       circle = true;
       if (res.data != null && res.data != '') {
         if (res.data['code'] == 351) {
@@ -109,17 +96,14 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
           for (var element in productionList) {
             if (element['key'] == 'eqp_id') {
               eqpIdList = element['list'];
-              eqpIdList.insert(0, {'value': '', 'key': '0'});
               _eqpIdItems = [];
-
               CommonUtils.renderDropdownMenuItem(
                   eqpIdList, _eqpIdItems, "value", "key");
-              // print('1111111111111$_eqpIdItems');
               if (element['value'] != null && element['value'] != '') {
                 eqpIdValue = element['value'].toString();
               }
-              //  eqpIdList[0]
-              // print('eqpIdList:$eqpIdList');
+
+              print('eqpIdList:$eqpIdList');
               // print('_eqpIdItems:$_eqpIdItems');
             }
             if (element['key'] == 'color') {
@@ -131,41 +115,14 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
                 colorValue = element['value'].toString();
               }
             }
-            if (flag == true && element['title'] == '生产日期') {
-              bgDate = '';
-              bgDate = (element['value'] ?? '').toString();
-            }
+
             if (element['key'] == 'qty') {
               vc1.text = (element['value'] ?? '').toString();
-              extraField1 = element['extraField'] ?? '';
+              extraField1 = element['extraField'] ?? "";
             }
-            if (element['title'] == '机台号') {
-              vc6.text = (element['value'] ?? '').toString();
-              // vc7.text = '';
-              // vc6.text = '51';
-              eqpIdValue = '0';
-              eqp_id_relation_Map = element['eqp_id_relation'];
-              for (var i = 0; i < eqp_id_relation_Map.values.length; i++) {
-                List ls = eqp_id_relation_Map.values.elementAt(i);
-                for (var e in ls) {
-                  if (e.toString() == vc6.text) {
-                    eqpIdValue =
-                        eqp_id_relation_Map.keys.elementAt(i).toString();
-                  }
-                }
-              }
-              // for (var ls in eqp_id_relation_Map.values) {
-
-              // }
-              // for (var i = 0; i < eqp_id_relation_Map.length; i++) {
-              //   Map el
-              // }
-              // for (Map el in eqp_id_relation_Map) {
-              //   var ls = el.keys;
-              //   print('------------');
-              //   print(ls);
-              // }
-              // extraField1 = element['extraField'] ?? '';
+            if (element['title'] == '工艺文件编号') {
+              vc8.text = (element['value'] ?? '').toString();
+              // extraField1 = element['extraField'] ?? "";
             }
             if (element['title'] == '班次') {
               radioList = element['list'];
@@ -173,56 +130,70 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
                 radioValue = int.parse(element['value']);
               }
             }
-
-            if (flag == true && element['title'] == '是否完工') {
-              radioValue2 = '';
-              radioList2 = element['list'];
-              if (element['value'] != null) {
-                radioValue2 = element['value'];
-              }
+            // if (flag == true && element['title'] == '是否完工') {
+            //   radioValue2 = '';
+            //   radioList2 = element['list'];
+            //   if (element['value'] != null) {
+            //     radioValue2 = element['value'];
+            //   }
+            // }
+            if (element['title'] == '导体线径') {
+              vc2.text = (element['value'] ?? '').toString();
+              extraField2 = element['extraField'] ?? '';
             }
-            if (element['title'] == '收线盘号') {
-              vc2.text = element['value'] ?? '';
+            if (element['title'] == '芯线线径') {
+              vc3.text = (element['value'] ?? '').toString();
+              extraField3 = element['extraField'] ?? '';
             }
-            if (element['title'] == '芯线编号') {
-              xinxianList = element['value'] ?? [];
-              if (xinxianList.length == 2) {
-                vc3.text = (element['value'][0] ?? '').toString();
-                vc4.text = (element['value'][1] ?? "").toString();
-              }
+            if (element['title'] == '盘号') {
+              vc4.text = (element['value'] ?? '').toString();
             }
-
-            if (element['title'] == '绞合节距') {
-              vc5.text = element['value'] ?? '';
-              // extraField5 = element['extraField'];
+            if (element['title'] == '火花点数') {
+              vc5.text = (element['value'] ?? '').toString();
+            }
+            if (element['title'] == '同心度') {
+              vc6.text = (element['value'] ?? '').toString();
+              extraField4 = element['extraField'] ?? '';
+            }
+            if (element['title'] == '导体伸率') {
+              vc7.text = (element['value'] ?? '').toString();
+              extraField5 = element['extraField'] ?? '';
             }
             if (element['title'] == '报工人') {
+              // if (element['value'] != null) {
               people = element['value'] ?? '';
+              // }
+            }
+            if (flag == true && element['title'] == '生产日期') {
+              bgDate = '';
+              bgDate = (element['value'] ?? '').toString();
+            }
+            if (element['title'] == '流水编号') {
+              // if (element['value'] != null) {
+              lsbh = element['value'] ?? '';
+              // }
             }
             if (element['title'] == '报工时间') {
+              // if (element['value'] != null) {
               time = element['value'] ?? '';
             }
           }
-          print(colorList);
-          // for (var element in productionList) {
-          //   print(element['key']);
-          // }
         }
-        setState(() {});
       }
+      setState(() {});
     });
   }
 
   save() {
+    // if (radioValue2 == null || radioValue2 == '') {
+    //   Fluttertoast.showToast(msg: '部分内容未填写');
+    //   return;
+    // }
     if (radioValue == null || radioValue == '') {
       Fluttertoast.showToast(msg: '部分内容未填写');
       return;
     }
-    if (radioValue2 == null || radioValue2 == '') {
-      Fluttertoast.showToast(msg: '部分内容未填写');
-      return;
-    }
-    if (eqpIdValue == null || eqpIdValue == '0') {
+    if (eqpIdValue == null || eqpIdValue == '') {
       Fluttertoast.showToast(msg: '部分内容未填写');
       return;
     }
@@ -254,27 +225,30 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
       Fluttertoast.showToast(msg: '部分内容未填写');
       return;
     }
+    if (vc7.text == '') {
+      Fluttertoast.showToast(msg: '部分内容未填写');
+      return;
+    }
     if (bgDate == '') {
       Fluttertoast.showToast(msg: '部分内容未填写');
       return;
     }
+    // circle = false;
     var paras = {
-      'is_finished': radioValue2,
+      // 'is_finished': radioValue2,
       "shift_type": (radioValue ?? '').toString(),
       "eqp_id": int.parse(eqpIdValue),
-      // "eqp_id": int.parse(vc7.text),
       "color": colorValue,
       "qty": double.parse(vc1.text),
-      "eqp_no": int.parse(vc6.text),
-      // "line_radius": double.parse(vc3.text),
-      "carrier_id": vc2.text,
-      'core_carrier_id': [vc3.text, vc4.text],
-      "comprehensive_pitch": vc5.text,
-      // "concentricity": double.parse(vc6.text),
-      // "conductor_elongation": double.parse(vc7.text)
+      "conductor_radius": double.parse(vc2.text),
+      "line_radius": double.parse(vc3.text),
+      "carrier_id": vc4.text,
+      "spark_num": double.parse(vc5.text),
+      "concentricity": double.parse(vc6.text),
+      "conductor_elongation": double.parse(vc7.text),
+      'file_no': vc8.text,
       'shift_date': bgDate
     };
-
     // print(paras.keys.length);
     // print(vc1.text);
     // print(vc2.text);
@@ -309,40 +283,32 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
     Future.delayed(const Duration(milliseconds: 500), () {
       bool f = false;
       if (scanResult?.rawContent != "" && scanResult?.rawContent != null) {
-        // if (txt == '机台组') {
-        //   for (var element in eqpIdList) {
-        //     if (element['key'] == int.parse(scanResult!.rawContent)) {
-        //       print('+++++${element['key']}====${scanResult!.rawContent}');
-        //       f = true;
-        //       setState(() {
-        //         eqpIdValue = scanResult!.rawContent;
-        //       });
-        //     }
-        //   }
+        if (txt == '生产机台') {
+          for (var element in eqpIdList) {
+            if (element['key'] == int.parse(scanResult!.rawContent)) {
+              print('+++++${element['key']}====${scanResult!.rawContent}');
+              f = true;
+              setState(() {
+                eqpIdValue = scanResult!.rawContent;
+              });
+            }
+          }
 
-        //   if (f == false) {
-        //     print('+++++2');
-        //     Fluttertoast.showToast(
-        //       msg: "${scanResult!.rawContent}不存在",
-        //     );
-        //     // setState(() {
-        //     //   eqpIdValue = '';
-        //     // });
-        //   }
-        // } else
-        if (txt == '芯线编号') {
-          setState(() {
-            vc3.text = scanResult!.rawContent.toString();
-          });
-        } else if (txt == '收线盘号') {
-          setState(() {
-            vc2.text = scanResult!.rawContent.toString();
-          });
-        } else {
+          if (f == false) {
+            print('+++++2');
+            Fluttertoast.showToast(
+              msg: "${scanResult!.rawContent}不存在",
+            );
+            // setState(() {
+            //   eqpIdValue = '';
+            // });
+          }
+        } else if (txt == '1') {
           setState(() {
             vc4.text = scanResult!.rawContent.toString();
           });
         }
+        // setState(() {});
       }
       //延时执行的代码
 
@@ -411,25 +377,23 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
                       modeMap['recipe_title'] ?? ''),
 
                   // productionList[0]['render']=='LABEL'?
-                  textRow('流水编号', ''),
-                  selectRow('机台组', false, _eqpIdItems),
-                  // cellForRow('机台组', vc7, false, '', 'int'),
-                  cellForRow('机台号', vc6, false, '', 'int'),
+                  textRow('流水编号', lsbh),
+                  selectRow('生产机台', true, _eqpIdItems),
                   selectDate('生产日期'),
                   radioWidget(),
                   selectRow('色谱', false, _colorItems),
                   cellForRow('长度', vc1, false, extraField1, 'double'),
-                  // cellForRow('收线盘号', vc2, false, extraField2, 'double'),
-                  // cellForRow('芯线线径', vc3, false, extraField3, 'double'),
-                  cellForRow('收线盘号', vc2, true, '', 'char'),
-                  cellForRow('芯线编号', vc3, true, '', 'char'),
-                  cellForRow('', vc4, true, '', 'char'),
-                  cellForRow('绞合节距', vc5, false, '', 'char'),
-                  radioWidgetTwo(), //是否完工
+                  cellForRow('导体线径', vc2, false, extraField2, 'double'),
+                  cellForRow('芯线线径', vc3, false, extraField3, 'double'),
+                  cellForRow('盘号', vc4, true, '1', 'char'),
+                  cellForRow('火花点数', vc5, false, '', 'double'),
+                  cellForRow('同心度', vc6, false, extraField4, 'double'),
+                  cellForRow('导体伸率', vc7, false, extraField5, 'double'),
+                  cellForRow('工艺文件编号', vc8, false, '(选填)', 'char'),
+                  // radioWidgetTwo(), //是否完工
                   textRow('报工人', people),
                   textRow('报工时间', time),
-                  // textRow('上料人', people),
-                  // textRow('上料时间', time),
+
                   TextButton(
                       style: ButtonStyle(
                         minimumSize: MaterialStateProperty.all(Size(240, 35)),
@@ -456,7 +420,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
         children: [
           Container(
             // padding: EdgeInsets.only(left: 15),
-            width: 80,
+            width: 90,
             child: Text(name),
           ),
           Container(
@@ -478,9 +442,9 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
             child: Text(txt),
           ),
           Container(
-              width: _wwidth - 80 - 70,
+              width: _wwidth - 80 - 80,
               height: 35,
-              margin: EdgeInsets.only(right: 5),
+              margin: EdgeInsets.only(right: 5, left: 10),
               // padding: EdgeInsets.only(left: 10),
               decoration: BoxDecoration(
                 // color: Colors.red,
@@ -524,6 +488,39 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
     }
   }
 
+  // Widget radioWidgetTwo() {
+  //   return Container(
+  //     height: 35,
+  //     margin: EdgeInsets.only(left: 15),
+  //     child: Row(
+  //       children: [
+  //         Container(
+  //           width: 65,
+  //           child: Text('是否完工'),
+  //         ),
+  //         Radio(
+  //             value: radioList2.length > 0 ? radioList2[0]['key'] : 'Y',
+  //             groupValue: radioValue2,
+  //             onChanged: (dynamic newValue) {
+  //               setState(() {
+  //                 radioValue2 = newValue;
+  //               });
+  //             }),
+  //         Text('是'),
+  //         Radio(
+  //             value: radioList2.length > 0 ? radioList2[1]['key'] : 'N',
+  //             groupValue: radioValue2,
+  //             onChanged: (dynamic newValue) {
+  //               setState(() {
+  //                 radioValue2 = newValue;
+  //               });
+  //             }),
+  //         Text('否'),
+  //       ],
+  //     ),
+  //   );
+  // }
+
   Widget radioWidget() {
     return Container(
       height: 35,
@@ -531,7 +528,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
       child: Row(
         children: [
           Container(
-            width: 65,
+            width: 80,
             child: Text('班组'),
           ),
           Radio(
@@ -557,107 +554,50 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
     );
   }
 
-  Widget radioWidgetTwo() {
-    return Container(
-      height: 35,
-      margin: EdgeInsets.only(left: 15),
-      child: Row(
-        children: [
-          Container(
-            width: 65,
-            child: Text('是否完工'),
-          ),
-          Radio(
-              value: radioList2.length > 0 ? radioList2[0]['key'] : 'Y',
-              groupValue: radioValue2,
-              onChanged: (dynamic newValue) {
-                setState(() {
-                  radioValue2 = newValue;
-                });
-              }),
-          Text('是'),
-          Radio(
-              value: radioList2.length > 0 ? radioList2[1]['key'] : 'N',
-              groupValue: radioValue2,
-              onChanged: (dynamic newValue) {
-                setState(() {
-                  radioValue2 = newValue;
-                });
-              }),
-          Text('否'),
-        ],
-      ),
-    );
-  }
-
   Widget selectRow(txt, isScan, items) {
     return Container(
       margin: EdgeInsets.only(top: 5, left: 15),
       child: Row(
         children: [
           Container(
-            width: 80,
+            width: 90,
             child: Text(txt),
           ),
           Container(
-            width: _wwidth - 80 - 70,
+            width: _wwidth - 90 - 70,
             height: 35,
-            padding: EdgeInsets.only(left: 5),
+            padding: EdgeInsets.only(left: 10),
             decoration: BoxDecoration(
-              color: txt == '机台组'
-                  ? Color.fromARGB(236, 237, 234, 234)
-                  : Colors.white,
+              // color: Colors.red,
               border: Border.all(width: 1),
               borderRadius: BorderRadius.all(Radius.circular(0)),
             ),
             child: DropdownButtonHideUnderline(
-              child: txt == '机台组'
-                  ? DropdownButton<String>(
-                      items: items,
-                      value: eqpIdValue,
-                      elevation: 24,
-                      onChanged: (v) {
-                        // setState(() {
-                        //   FocusScope.of(context).requestFocus(FocusNode());
-                        //   if (txt == '机台组') {
-                        //      = v!;
-                        //   }
-                        // if (items.hashCode != v) {
-                        //   print(items.hashCode);
-                        // }
+              child: DropdownButton<String>(
+                items: items,
+                value: txt == '生产机台'
+                    ? eqpIdValue
+                    : (txt == '色谱' ? colorValue : null),
+                elevation: 24,
+                onChanged: (v) {
+                  setState(() {
+                    FocusScope.of(context).requestFocus(FocusNode());
+                    if (txt == '生产机台') {
+                      eqpIdValue = v!;
+                    } else if (txt == '色谱') {
+                      colorValue = v!;
+                    }
 
-                        // });
-                      },
-                    )
-                  : DropdownButton<String>(
-                      items: items,
-                      value:
-                          // txt == '机台组'
-                          //     ? eqpIdValue
-                          //     : (
-                          txt == '色谱' ? colorValue : null
-                      // )
-                      ,
-                      elevation: 24,
-                      onChanged: (v) {
-                        setState(() {
-                          FocusScope.of(context).requestFocus(FocusNode());
-                          // if (txt == '机台组') {
-                          //   eqpIdValue = v!;
-                          // } else if (txt == '色谱') {
-                          colorValue = v!;
-                          // }
-
-                          print(v);
-                        });
-                      },
-                    ),
+                    print(v);
+                  });
+                },
+              ),
             ),
           ),
           isScan == true
               ? IconButton(
                   onPressed: () {
-                    scanAction(txt);
+                    scanAction('生产机台');
                   },
                   icon: Icon(Icons.fit_screen_outlined))
               : Container()
@@ -672,12 +612,12 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
       child: Row(
         children: [
           Container(
-            width: 80,
+            width: 90,
             child: Text(txt),
           ),
           Container(
             margin: EdgeInsets.only(right: 5),
-            width: _wwidth - 80 - 70,
+            width: _wwidth - 90 - 70,
             height: 35,
             // color: Colors.red,
             child: type == 'double'
@@ -687,50 +627,15 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
                       FilteringTextInputFormatter.allow(RegExp("[0-9.]")),
                     ],
                   )
-                : (type == 'int'
-                    ? TextField(
-                        // readOnly: txt == '机台组' ? true : false,
-                        controller: vc,
-                        inputFormatters: [
-                          // FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
-                          FilteringTextInputFormatter.allow(RegExp("[0-9]")),
-                        ],
-                        onChanged: (value) {
-                          if (txt == '机台号') {
-                            setState(() {
-                              eqpIdValue = '0';
-                            });
-
-                            // vc7.text = '';
-
-                            for (var i = 0;
-                                i < eqp_id_relation_Map.values.length;
-                                i++) {
-                              List ls = eqp_id_relation_Map.values.elementAt(i);
-                              for (var e in ls) {
-                                if (e.toString() == vc6.text) {
-                                  setState(() {
-                                    eqpIdValue = eqp_id_relation_Map.keys
-                                        .elementAt(i)
-                                        .toString();
-                                  });
-                                }
-                              }
-                            }
-                          }
-                        },
-                      )
-                    : TextField(
-                        controller: vc,
-                        inputFormatters: [
-                          // FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
-                          //  FilteringTextInputFormatter.allow(RegExp("[0-9]")),
-                        ],
-                      )),
+                : TextField(
+                    controller: vc,
+                    inputFormatters: [
+                      // FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
+                      //  FilteringTextInputFormatter.allow(RegExp("[0-9]")),
+                    ],
+                  ),
             decoration: BoxDecoration(
-              // color: txt == '机台组'
-              //     ? Color.fromARGB(255, 242, 238, 238)
-              //     : Colors.white,
+              // color: Colors.red,
               border: Border.all(width: 1),
               borderRadius: BorderRadius.all(Radius.circular(0)),
             ),
@@ -738,7 +643,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
           isScan == true
               ? IconButton(
                   onPressed: () {
-                    scanAction(txt);
+                    scanAction(txts);
                   },
                   icon: Icon(Icons.fit_screen_outlined))
               : Text(txts)

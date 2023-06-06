@@ -5,24 +5,23 @@ import 'package:wanma_print/page/frame_widgit/mine/account_security_page.dart';
 import 'package:wanma_print/page/frame_widgit/mine/change_password_page.dart';
 import 'package:wanma_print/page/frame_widgit/mine/change_work_page.dart';
 import 'package:wanma_print/page/print_page.dart';
-import 'package:wanma_print/page/production_report/cabling.dart';
-import 'package:wanma_print/page/production_report/form_circle.dart';
-import 'package:wanma_print/page/production_report/select_work.dart';
-import 'package:wanma_print/page/production_report/series_connection.dart';
-import 'package:wanma_print/page/production_report/sheath.dart';
-import 'package:wanma_print/page/production_report/twisted_pair.dart';
 
-// import 'package:wanma_print/page/task/task_list.dart';
-import '../../page/load material/load_details.dart';
-import '../../page/load material/load_list.dart';
-import '../../page/load material/load_process.dart';
 import '../../page/login_page.dart';
 import '../../page/frame_widgit/menu_page.dart';
 import '../../page/param_setting.dart';
-import '../../page/production_report/production_report.dart';
-import '../../page/receipt_management/material_detail.dart';
-import '../../page/receipt_management/material_receipt.dart';
-import '../../page/receipt_management/material_receipt_detail.dart';
+import '../../page/tianyi_widgit/load material/load_details.dart';
+import '../../page/tianyi_widgit/load material/load_list.dart';
+import '../../page/tianyi_widgit/load material/load_process.dart';
+import '../../page/tianyi_widgit/production_report/cabling.dart';
+import '../../page/tianyi_widgit/production_report/form_circle.dart';
+import '../../page/tianyi_widgit/production_report/production_report.dart';
+import '../../page/tianyi_widgit/production_report/select_work.dart';
+import '../../page/tianyi_widgit/production_report/series_connection.dart';
+import '../../page/tianyi_widgit/production_report/sheath.dart';
+import '../../page/tianyi_widgit/production_report/twisted_pair.dart';
+import '../../page/tianyi_widgit/receipt_management/material_detail.dart';
+import '../../page/tianyi_widgit/receipt_management/material_receipt.dart';
+import '../../page/tianyi_widgit/receipt_management/material_receipt_detail.dart';
 import '../../page/update_pwd.dart';
 //========
 

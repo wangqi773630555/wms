@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../widget/middle_text.dart';
+import '../../../widget/middle_text.dart';
 
 class PostList extends StatefulWidget {
   final List modelList;

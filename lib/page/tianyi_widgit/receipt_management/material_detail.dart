@@ -1,21 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:wanma_print/page/receipt_management/dialogs/print_dialog.dart';
-import 'package:wanma_print/page/receipt_management/post_list.dart';
-import '../../FlutterPlugins.dart';
-import '../../common/config/config.dart';
+import 'package:wanma_print/page/tianyi_widgit/receipt_management/post_list.dart';
+import '../../../FlutterPlugins.dart';
+import '../../../common/config/config.dart';
 import 'package:wanma_print/common/utils/navigator_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../common/dao/data_dao.dart';
-import '../../widget/middle_text.dart';
-import 'package:wanma_print/page/common_widgit/refresh/custom_refresh_footer.dart';
-import 'package:wanma_print/page/common_widgit/refresh/custom_refresh_header.dart';
+import '../../../common/dao/data_dao.dart';
+import '../../../widget/middle_text.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
-import '../../page/receipt_management/dialogs/my_dialog.dart';
 import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:wanma_print/page/common_widgit/select_list/select_item.dart';
 import 'package:flutter/services.dart';
-import 'dialogs/material_search_page.dart';
+import 'dialogs/my_dialog.dart';
+import 'dialogs/print_dialog.dart';
 
 class MaterialDetail extends StatelessWidget {
   static const String sName = Config.MATERIAL_DETAIL;

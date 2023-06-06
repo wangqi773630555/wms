@@ -1,10 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:wanma_print/page/receipt_management/dialogs/counter_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../widget/middle_text.dart';
+import 'counter_page.dart';
 
 class MyDialog extends Dialog {
   final String title;

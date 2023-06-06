@@ -1,31 +1,27 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../common/config/config.dart';
-import 'package:flutter/material.dart';
+import '../../../common/config/config.dart';
 import 'package:flutter/services.dart';
 import 'package:wanma_print/common/dao/data_dao.dart';
-import 'package:wanma_print/page/production_report/select_work.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-import '../../common/config/config.dart';
-import '../../common/utils/common_utils.dart';
-import '../../widget/loading.dart';
+import '../../../common/utils/common_utils.dart';
+import '../../../widget/loading.dart';
 import 'common_widget/production_header.dart';
-
-import '../../common/dao/data_dao.dart';
 
 import 'package:barcode_scan2/barcode_scan2.dart';
 
-class Sheath extends StatelessWidget {
-  static final String sName = Config.SHEATH;
-  const Sheath({Key? key}) : super(key: key);
+class Cabling extends StatelessWidget {
+  static final String sName = Config.CABLING;
+  const Cabling({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     var args = ModalRoute.of(context)!.settings.arguments;
     return Scaffold(
         appBar: AppBar(
-          title: Text('护套报工'),
+          title: Text('成缆报工'),
           centerTitle: true,
         ),
         body: SeriesConnections(args));
@@ -48,6 +44,9 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
   TextEditingController vc5 = TextEditingController();
   TextEditingController vc6 = TextEditingController();
   TextEditingController vc7 = TextEditingController();
+  TextEditingController vc8 = TextEditingController();
+  TextEditingController vc9 = TextEditingController();
+  TextEditingController vc10 = TextEditingController();
   var extraField1 = ''; //danwei
   // var extraField2 = '';
   // var extraField3 = '';
@@ -113,19 +112,19 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
                 eqpIdValue = element['value'].toString();
               }
 
-              print('eqpIdList:$_eqpIdItems===$eqpIdList');
+              print('eqpIdList:$eqpIdList');
               // print('_eqpIdItems:$_eqpIdItems');
             }
+            // if (element['key'] == 'color') {
+            //   colorList = element['list'];
+            //   _colorItems = [];
+            //   CommonUtils.renderDropdownMenuItem(
+            //       colorList, _colorItems, "value", "key");
+            //   if (element['value'] != null && element['value'] != '') {
+            //     colorValue = element['value'].toString();
+            //   }
+            // }
 
-            if (element['key'] == 'color') {
-              colorList = element['list'];
-              _colorItems = [];
-              CommonUtils.renderDropdownMenuItem(
-                  colorList, _colorItems, "value", "key");
-              if (element['value'] != null && element['value'] != '') {
-                colorValue = element['value'].toString();
-              }
-            }
             if (element['key'] == 'qty') {
               vc1.text = (element['value'] ?? '').toString();
               extraField1 = element['extraField'] ?? '';
@@ -143,28 +142,34 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
                 radioValue2 = element['value'];
               }
             }
-            if (element['title'] == '成缆编号') {
-              vc2.text = (element['value'] ?? '').toString();
-              // extraField2 = element['extraField'];
+            if (element['title'] == '对绞编号') {
+              List list = element['value'] ?? [];
+              if (list.length == 4) {
+                vc2.text = (list[0] ?? '').toString();
+                vc3.text = (list[1] ?? '').toString();
+                vc4.text = (list[2] ?? '').toString();
+                vc5.text = (list[3] ?? '').toString();
+              }
             }
             if (element['title'] == '收线盘号') {
-              vc3.text = (element['value'] ?? '').toString();
+              vc6.text = (element['value'] ?? '').toString();
               // extraField3 = element['extraField'];
             }
-            if (element['title'] == '护套外径') {
-              vc4.text = (element['value'] ?? '').toString();
+            if (element['title'] == '绞合节距') {
+              vc7.text = (element['value'] ?? '').toString();
             }
             if (element['title'] == '通断线') {
-              vc5.text = (element['value'] ?? '').toString();
+              vc8.text = (element['value'] ?? '').toString();
             }
-            if (element['title'] == '护套外观') {
-              vc6.text = (element['value'] ?? '').toString();
+            if (element['title'] == '缆芯排列') {
+              vc9.text = (element['value'] ?? '').toString();
               // extraField4 = element['extraField'];
             }
-            if (element['title'] == '护套厚度') {
-              vc7.text = (element['value'] ?? '').toString();
+            if (element['title'] == '绞向') {
+              vc10.text = (element['value'] ?? '').toString();
               // extraField5 = element['extraField'];
             }
+
             if (flag == true && element['title'] == '生产日期') {
               bgDate = '';
               bgDate = (element['value'] ?? '').toString();
@@ -199,18 +204,14 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
       Fluttertoast.showToast(msg: '部分内容未填写');
       return;
     }
-    if (radioValue2 == null || radioValue2 == '') {
-      Fluttertoast.showToast(msg: '部分内容未填写');
-      return;
-    }
     if (eqpIdValue == null || eqpIdValue == '') {
       Fluttertoast.showToast(msg: '部分内容未填写');
       return;
     }
-    if (colorValue == null || colorValue == '') {
-      Fluttertoast.showToast(msg: '部分内容未填写');
-      return;
-    }
+    // if (colorValue == null || colorValue == '') {
+    //   Fluttertoast.showToast(msg: '部分内容未填写');
+    //   return;
+    // }
     if (vc1.text == '') {
       Fluttertoast.showToast(msg: '部分内容未填写');
       return;
@@ -227,6 +228,10 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
       Fluttertoast.showToast(msg: '部分内容未填写');
       return;
     }
+    if (radioValue2 == null || radioValue2 == '') {
+      Fluttertoast.showToast(msg: '部分内容未填写');
+      return;
+    }
     if (vc5.text == '') {
       Fluttertoast.showToast(msg: '部分内容未填写');
       return;
@@ -239,24 +244,38 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
       Fluttertoast.showToast(msg: '部分内容未填写');
       return;
     }
-    // circle = false;
+    if (vc8.text == '') {
+      Fluttertoast.showToast(msg: '部分内容未填写');
+      return;
+    }
+    if (vc9.text == '') {
+      Fluttertoast.showToast(msg: '部分内容未填写');
+      return;
+    }
+    if (vc10.text == '') {
+      Fluttertoast.showToast(msg: '部分内容未填写');
+      return;
+    }
     if (bgDate == '') {
       Fluttertoast.showToast(msg: '部分内容未填写');
       return;
     }
+    // circle = false;
     var paras = {
       'is_finished': radioValue2,
       "shift_type": (radioValue ?? '').toString(),
       "eqp_id": int.parse(eqpIdValue),
+      // "color": colorValue,
       "qty": double.parse(vc1.text),
-      "cabling_no": vc2.text,
-      "carrier_id": vc3.text,
-      "color": colorValue,
-      "sheath_out_radius": double.parse(vc4.text),
-      "break_no": vc5.text,
-      "sheath_appearance": vc6.text,
-      "sheath_thickness": vc7.text,
-      'shift_date': bgDate,
+
+      "pair_nos": [vc2.text, vc3.text, vc4.text, vc5.text],
+
+      "carrier_id": vc6.text,
+      "stranding_pitch": vc7.text,
+      "break_no": vc8.text,
+      "core_sort": vc9.text,
+      "stranding_direction": vc10.text,
+      'shift_date': bgDate
     };
     // print(paras.keys.length);
     // print(vc1.text);
@@ -269,7 +288,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
     // print(radioValue);
     // print(eqpIdValue);
     // print(colorValue);
-
+    // print(paras);
     Loading.show(context);
     DataDao.getProductionSave(widget.idsList[1], widget.idsList[0],
             widget.idsList[2], widget.idsList[3], paras)
@@ -302,6 +321,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
               });
             }
           }
+
           if (f == false) {
             print('+++++2');
             Fluttertoast.showToast(
@@ -311,13 +331,25 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
             //   eqpIdValue = '';
             // });
           }
-        } else if (txt == '收线盘号') {
+        } else if (txt == '1') {
+          setState(() {
+            vc2.text = scanResult!.rawContent.toString();
+          });
+        } else if (txt == '2') {
           setState(() {
             vc3.text = scanResult!.rawContent.toString();
           });
-        } else {
+        } else if (txt == '3') {
           setState(() {
-            vc2.text = scanResult!.rawContent.toString();
+            vc4.text = scanResult!.rawContent.toString();
+          });
+        } else if (txt == '4') {
+          setState(() {
+            vc5.text = scanResult!.rawContent.toString();
+          });
+        } else if (txt == '5') {
+          setState(() {
+            vc6.text = scanResult!.rawContent.toString();
           });
         }
 
@@ -389,21 +421,21 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
                       (modeMap['result_qty'] ?? '').toString(),
                       modeMap['recipe_title'] ?? ''),
 
-                  // productionList[0]['render']=='LABEL'?
                   textRow('流水编号', ''),
                   selectRow('生产机台', true, _eqpIdItems),
                   selectDate('生产日期'),
                   radioWidget(),
-                  selectRow('色谱', false, _colorItems),
+                  // selectRow('色谱', false, _colorItems),
                   cellForRow('长度', vc1, false, extraField1, 'double'),
-                  cellForRow('成缆编号', vc2, true, '', 'char'), //char???
-                  // cellForRow('芯线线径', vc3, false, extraField3, 'double'),
-                  cellForRow('收线盘号', vc3, true, '', 'char'),
-                  cellForRow('护套外径', vc4, false, '', 'double'),
-                  cellForRow('通断线', vc5, false, '', 'char'),
-                  cellForRow('护套外观', vc6, false, '', 'char'),
-                  cellForRow('护套厚度', vc7, false, '', 'char'),
-                  // cellForRow('导体伸率', vc7, false, extraField5, 'double'),
+                  cellForRow('对绞编号', vc2, true, '1', 'char'),
+                  cellForRow('', vc3, true, '2', 'char'),
+                  cellForRow('', vc4, true, '3', 'char'),
+                  cellForRow('', vc5, true, '4', 'char'),
+                  cellForRow('收线盘号', vc6, true, '5', 'char'),
+                  cellForRow('绞合节距', vc7, false, '', 'char'),
+                  cellForRow('通断线', vc8, false, '', 'char'),
+                  cellForRow('芯线排列', vc9, false, '', 'char'),
+                  cellForRow('绞向', vc10, false, '', 'char'),
                   radioWidgetTwo(), //是否完工
                   textRow('报工人', people),
                   textRow('报工时间', time),
@@ -580,7 +612,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
             width: _wwidth - 80 - 70,
             height: 35,
             margin: EdgeInsets.only(right: 5),
-            padding: EdgeInsets.only(left: 5, right: 5),
+            padding: EdgeInsets.only(left: 10),
             decoration: BoxDecoration(
               // color: Colors.red,
               border: Border.all(width: 1),
@@ -657,7 +689,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
           isScan == true
               ? IconButton(
                   onPressed: () {
-                    scanAction(txt);
+                    scanAction(txts);
                   },
                   icon: Icon(Icons.fit_screen_outlined))
               : Text(txts)

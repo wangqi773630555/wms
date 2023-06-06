@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
-import 'package:wanma_print/page/receipt_management/dialogs/material_search_page.dart';
-import 'package:wanma_print/page/receipt_management/dialogs/print_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../FlutterPlugins.dart';
-import '../../common/config/config.dart';
+import '../../../FlutterPlugins.dart';
+import '../../../common/config/config.dart';
 
-import '../../common/dao/data_dao.dart';
-import '../../widget/middle_text.dart';
-// import '../../widget/search_page.dart';
+import '../../../common/dao/data_dao.dart';
+import '../../../widget/middle_text.dart';
 import 'package:wanma_print/page/common_widgit/refresh/custom_refresh_footer.dart';
 import 'package:wanma_print/page/common_widgit/refresh/custom_refresh_header.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
-import '../../page/receipt_management/dialogs/my_dialog.dart';
-// import '../repair/material_search_page.dart';
+
+import 'dialogs/material_search_page.dart';
+import 'dialogs/my_dialog.dart';
 
 class MaterialReceiptDetail extends StatelessWidget {
   static const String sName = Config.MATERIAL_RECEIPT_DETAIL;

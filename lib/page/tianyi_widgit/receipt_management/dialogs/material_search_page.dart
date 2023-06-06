@@ -5,7 +5,7 @@ import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:wanma_print/common/dao/data_dao.dart';
 import 'package:wanma_print/widget/search_bar.dart';
 
-import '../../../common/utils/navigator_utils.dart';
+import '../../../../common/utils/navigator_utils.dart';
 
 class MaterialSearchPage extends StatefulWidget {
   final pageMark;

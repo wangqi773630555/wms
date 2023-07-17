@@ -51,7 +51,7 @@ class _TaskWaitNotarizeState extends State<TaskWaitNotarize> {
     });
     selectStartResult = null;
     pickerData.clear();
-    getWmWare2("",8);
+    getWmWare2("", 8);
   }
 
   @override
@@ -87,20 +87,51 @@ class _TaskWaitNotarizeState extends State<TaskWaitNotarize> {
                                 fontSize: 18,
                               ),
                             ),
-                            Text((data['from_ware_name1']!=null?data['from_ware_name1']:"")+'>'+(data['from_ware_name2']!=null?data['from_ware_name2']:"")+'>'+(data['from_ware_name3']!=null?data['from_ware_name3']:""),
+                            Text(
+                                (data['from_ware_name1'] != null
+                                        ? data['from_ware_name1']
+                                        : "") +
+                                    '>' +
+                                    (data['from_ware_name2'] != null
+                                        ? data['from_ware_name2']
+                                        : "") +
+                                    '>' +
+                                    (data['from_ware_name3'] != null
+                                        ? data['from_ware_name3']
+                                        : ""),
                                 style: TextStyle(
                                     fontSize: 14, color: Colors.black54)),
                             Padding(padding: EdgeInsets.only(top: 8)),
-                            Divider(height: 1,),
+                            Divider(
+                              height: 1,
+                            ),
                             Padding(padding: EdgeInsets.only(top: 8)),
-                            Row(children: [
-                              Expanded(child: Text((data['to_ware_name1']!=null?data['to_ware_name1']:"")+'>'+(data['to_ware_name2']!=null?data['to_ware_name2']:"")+'>'+(data['to_ware_name3']!=null?data['to_ware_name3']:""),
-                                  style: TextStyle(
-                                      fontSize: 14, color: Colors.black54)),),
-                              Text(data['add_user']!=null?data['add_user']:'',
-                                  style: TextStyle(
-                                      fontSize: 14, color: Colors.black54)),
-                            ],),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                      (data['to_ware_name1'] != null
+                                              ? data['to_ware_name1']
+                                              : "") +
+                                          '>' +
+                                          (data['to_ware_name2'] != null
+                                              ? data['to_ware_name2']
+                                              : "") +
+                                          '>' +
+                                          (data['to_ware_name3'] != null
+                                              ? data['to_ware_name3']
+                                              : ""),
+                                      style: TextStyle(
+                                          fontSize: 14, color: Colors.black54)),
+                                ),
+                                Text(
+                                    data['add_user'] != null
+                                        ? data['add_user']
+                                        : '',
+                                    style: TextStyle(
+                                        fontSize: 14, color: Colors.black54)),
+                              ],
+                            ),
                           ],
                         ),
                       )
@@ -161,7 +192,6 @@ class _TaskWaitNotarizeState extends State<TaskWaitNotarize> {
               height: 40.0,
               child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    //backgroundColor: Colors.yellow[700],
                     primary: Colors.yellow[700],
                     //change background color of button
                     //change text color of button
@@ -182,8 +212,8 @@ class _TaskWaitNotarizeState extends State<TaskWaitNotarize> {
                             Map<String, dynamic> map = Map();
                             map['part_name'] = listDefault[i]['part_name'];
                             map['part_id'] = listDefault[i]['part_id'];
-                            map['qty'] = double.parse(listDefault[i]['qty']
-                                .toString());
+                            map['qty'] =
+                                double.parse(listDefault[i]['qty'].toString());
                             details.add(map);
                           }
                           map['details'] = details;
@@ -196,7 +226,6 @@ class _TaskWaitNotarizeState extends State<TaskWaitNotarize> {
         ],
       ),
     );
-
   }
 
   Widget _searchDefaultWidget(
@@ -301,11 +330,8 @@ class _TaskWaitNotarizeState extends State<TaskWaitNotarize> {
                 ),
                 SizedBox(
                   height: 35.0,
-                  child: _searchDefaultWidget(
-                      hint,
-                      TextEditingController(),
-                      listDefault[index]['qty']
-                          .toString()),
+                  child: _searchDefaultWidget(hint, TextEditingController(),
+                      listDefault[index]['qty'].toString()),
                 ),
               ],
             ),
@@ -331,7 +357,6 @@ class _TaskWaitNotarizeState extends State<TaskWaitNotarize> {
       ),
     );
   }
-
 
   @override
   void dispose() async {
@@ -364,16 +389,16 @@ class _TaskWaitNotarizeState extends State<TaskWaitNotarize> {
 
   confirmTask(Map<String, dynamic> body) {
     DataDao.confirmTask(body).then((res) {
-      if(res!=null&&res.result) {
+      if (res != null && res.result) {
         Fluttertoast.showToast(msg: '提交成功');
         Navigator.pop(context, '1');
       }
     });
   }
 
-  getWmWare2(var liku_tag,var page) {
-    DataDao.getWmWare2(liku_tag,page).then((res) {
-      if(res!=null&&res.result) {
+  getWmWare2(var liku_tag, var page) {
+    DataDao.getWmWare2(liku_tag, page).then((res) {
+      if (res != null && res.result) {
         setState(() {
           var datas = res.data['data']['wares'];
           for (int i = 0; i < datas.length; i++) {
@@ -387,7 +412,7 @@ class _TaskWaitNotarizeState extends State<TaskWaitNotarize> {
   //6.1
   getWmsStockParts() {
     DataDao.getWmsStockParts(data['sync_id']).then((res) {
-      if(res!=null&&res.result) {
+      if (res != null && res.result) {
         var datas = res.data['data']['parts'];
         listDefault = datas;
       }
@@ -443,8 +468,4 @@ class BottomSheetState extends State<BottomSheetStart> {
       ),
     );
   }
-
-
 }
-
-

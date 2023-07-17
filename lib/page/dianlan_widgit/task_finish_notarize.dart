@@ -121,7 +121,8 @@ class _TaskFinishNotarizeState extends State<TaskFinishNotarize> {
                   height: 40.0,
                   child: ElevatedButton(
                       style:  ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
+                        //backgroundColor: Colors.red,
+                        primary: Colors.red,
                       ),
                       onPressed: () => {
                         syncAGVTaskEnd(),
@@ -133,7 +134,8 @@ class _TaskFinishNotarizeState extends State<TaskFinishNotarize> {
                   height: 40.0,
                   child: ElevatedButton(
                       style:  ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
+                        //backgroundColor: Colors.green,
+                        primary: Colors.green,
                       ),
                       onPressed: () => {
                         Navigator.pop(context),

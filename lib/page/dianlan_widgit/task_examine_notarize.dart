@@ -105,8 +105,10 @@ class _TaskExamineNotarizeState extends State<TaskExamineNotarize> {
                   height: 40.0,
                   child: ElevatedButton(
                       style:  ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
+                        //backgroundColor: Colors.red,
+                        primary: Colors.red,
                       ),
+
                       onPressed: () => {
                         Navigator.pop(context),
                         Navigator.pushNamed(context, TaskFinishNotarize.sName, arguments: data['id']),

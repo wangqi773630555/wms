@@ -320,7 +320,7 @@ class _MenuPageState extends State<MenuPage> {
   }
   //获取我的应用
   getAppUserList() {
-    UserDao.getAppUserList().then((res) {
+    UserDao.getAppUserList(1).then((res) {
       if (res != null && res.result) {
         var data = res.data['data'];
         menuList[0]['children'] = data;

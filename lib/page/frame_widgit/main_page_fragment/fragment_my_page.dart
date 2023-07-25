@@ -281,7 +281,7 @@ class _FragmentMyPageState extends State<FragmentMyPage> with RouteAware{
         if(title=='我的应用'){
           NavigatorUtils.goMainTabMore(mYcontext);
         }else if(title=='我的卡片'){
-          Fluttertoast.showToast(msg: '暂未开通');
+          NavigatorUtils.goPage(context,Config.My_cards);
         }else if(title=='账户与安全'){
           NavigatorUtils.goAccountSecurity(mYcontext);
         }else if(title=='帮助与反馈'){

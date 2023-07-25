@@ -57,6 +57,8 @@ class Config {
   static const Account_security = "account_security";
   static const Change_password = "change_password";
   static const Change_work = "change_work";
+  static const My_cards = "my_cards";
+  static const All_cards = "all_cards";
 
   //本地缓存字段
   static const NICK_NAME = "nickname";

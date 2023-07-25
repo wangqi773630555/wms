@@ -260,14 +260,18 @@ class UserDao {
   /**
    * 首页应用菜单
    */
-  static getAppUserList() async {
+  static getAppUserList(resType) async {
     Map<String, String> header = {
       'Authorization': await LocalStorage.get(Config.UA)
     };
     String param = 'workId=${await LocalStorage.get(Config.WORK_ID)}';
+    Map<String, dynamic> requestParams;
+    requestParams = {
+      'resType': resType,
+    };
     var res = await HttpManager.netFetch(
         '${UrlConstant.getAppUserList()}?${param}',
-        null,
+        requestParams,
         header,
         Options(method: 'post'));
 

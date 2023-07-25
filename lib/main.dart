@@ -25,8 +25,10 @@ import 'package:wanma_print/page/dianlan_widgit/warehouse_adjust.dart';
 import 'package:wanma_print/page/dianlan_widgit/warehouse_move.dart';
 import 'package:wanma_print/page/frame_widgit/main_page.dart';
 import 'package:wanma_print/page/frame_widgit/mine/account_security_page.dart';
+import 'package:wanma_print/page/frame_widgit/mine/all_cards_page.dart';
 import 'package:wanma_print/page/frame_widgit/mine/change_password_page.dart';
 import 'package:wanma_print/page/frame_widgit/mine/change_work_page.dart';
+import 'package:wanma_print/page/frame_widgit/mine/my_cards_page.dart';
 import 'package:wanma_print/page/print_page.dart';
 import 'package:wanma_print/page/app.dart';
 
@@ -228,7 +230,14 @@ class MyApp extends StatelessWidget {
             UpperMould.sName:(context)=>CommonLayer(
               child: UpperMould(),
             ),
-
+            //我的卡片
+            MyCardsPage.sName:(context)=>CommonLayer(
+              child: MyCardsPage(),
+            ),
+            //选择卡片
+            AllCardsPage.sName:(context)=>CommonLayer(
+              child: AllCardsPage(),
+            ),
 
           },
         );

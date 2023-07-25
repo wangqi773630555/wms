@@ -17,9 +17,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 
 var mYcontext;
-List<String> secondList = [];
-List<String> firstList = [];
 List<dynamic> gridList = [];
+List<dynamic> cardList = [];
 bool isFirst = true;
 
 class FragmentHomePage extends StatefulWidget {
@@ -43,11 +42,13 @@ class _FragmentHomePageState extends State<FragmentHomePage> with RouteAware{
     gridList.add(map);*/
     if(isFirst||gridList.isEmpty) {
       getAppUserList();
+      getAppUserListForCards();
       stream = ScanEventUtils.eventBus.on<ScanEvent>().listen((event) {
         if (event.page == ScanConfig.MAIN_REFRESH) {
           LogUtil.d("刷新首页菜单");
           isFirst = true;
           getAppUserList();
+          getAppUserListForCards();
         }
       });
     }
@@ -223,14 +224,15 @@ class _FragmentHomePageState extends State<FragmentHomePage> with RouteAware{
     return _list;
   }
 
-//一级列表
+  //一级列表
   List<Widget> _createListViewItem() {
     List<Widget> _list = [];
-    for (int i = 0; i < firstList.length; i++) {
+    for (int i = 0; i < cardList.length; i++) {
       Widget item = Container(
         //设置控
-        padding: EdgeInsets.fromLTRB(10, 0, 0, 10),
-        margin: const EdgeInsets.fromLTRB(0, 0, 0, 5),
+        padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+        margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+        //设置整体浮动
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -242,51 +244,17 @@ class _FragmentHomePageState extends State<FragmentHomePage> with RouteAware{
             ),
           ],
         ),
+        //背景色，注意不能和decoration的color同时使用
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                Text(
-                  firstList[i],
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 13,
-                      fontWeight: FontWeight.bold),
-                ),
-                Expanded(child: Text("")),
-                TextButton(
-                  style: ButtonStyle(
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    minimumSize: MaterialStateProperty.all(Size(0, 0)),
-                    padding: MaterialStateProperty.all(EdgeInsets.zero),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.all(8),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          '去处理',
-                          style: TextStyle(
-                              color: Colors.black87,
-                              fontSize: 13,
-                              fontWeight: FontWeight.normal),
-                        ),
-                        Icon(
-                          Icons.chevron_right,
-                          color: Colors.grey,
-                        ),
-                      ],
-                    ),
-                  ),
-                  onPressed: () {
-                    Fluttertoast.showToast(msg: '暂未开通');
-                  },
-                ),
-              ],
+            Text(
+              cardList[i]['resName'],
+              style:
+              TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
             ),
-            _createSecondListViewItem(secondList),
+            Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 0)),
+            _createGridViewItemCard(i),
           ],
         ),
       );
@@ -295,131 +263,61 @@ class _FragmentHomePageState extends State<FragmentHomePage> with RouteAware{
     return _list;
   }
 
-//二级列表
-  Widget _createSecondListViewItem(List<String> list) {
+  //二级grid列表
+  Widget _createGridViewItemCard(int index) {
+
     List<Widget> _list = [];
-    for (int i = 0; i < list.length; i++) {
-      _list.add(_createItem());
+    List childrenList = cardList[index]['appInfo'] ?? [];
+
+    for (int i = 0; i < childrenList.length; i++) {
+      Widget item = Container(
+        //color: Colors.primaries[i],
+        child: Stack(alignment: AlignmentDirectional.topCenter, children: [
+          Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _imageWrapper(childrenList[i]['icon']),
+              Padding(padding: EdgeInsets.all(4)),
+              Text(
+                childrenList[i]['resName'],
+                style: TextStyle(
+                    color: Color.fromARGB(255, 51, 51, 51), fontSize: 13),
+              )
+            ],
+          ),
+        ]),
+      );
+      _list.add(TextButton(
+        style: ButtonStyle(
+          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          minimumSize: MaterialStateProperty.all(Size(0, 0)),
+          padding: MaterialStateProperty.all(EdgeInsets.zero),
+        ),
+        child: item,
+        onPressed: () {
+          if(childrenList[i]['route']=='materialDetail'){
+            //扫码收货
+            NavigatorUtils.goMaterialDetail(context, '');
+          }else {
+            NavigatorUtils.goPage(context, childrenList[i]['route'],);
+          }
+        },
+      ));
     }
-    return Column(
+    return GridView(
+      // 设置滚动的方式
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      // 禁止滚动
+      padding: EdgeInsets.all(0),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 4,
+      ),
       children: _list,
     );
   }
 
-  Widget _createItem(){
-    Widget item = Container(
-      padding: EdgeInsets.only(right: 10),
-      child: Column(children: [
-        MySeparator(color: Colors.grey),
-        /*每行数据*/
-        Padding(padding: EdgeInsets.all(3)),
-        Row(children: [
-          Text(
-            '检验号:',
-            style: TextStyle(
-                color: Color.fromARGB(255, 51, 51, 51), fontSize: 13,fontWeight: FontWeight.bold),
-          ),
-          Text(
-            '2819739000:',
-            style: TextStyle(
-                color: Color.fromARGB(255, 51, 51, 51), fontSize: 13),
-          ),
-          Expanded(child: Text('')),
-          Container(
-            padding: EdgeInsets.fromLTRB(10, 4, 10,4),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-              boxShadow: [
-                BoxShadow(
-                  color: Color.fromARGB(255, 218, 249, 215),
-                ),
-              ],
-            ),
-            child: Text('巡检',style: TextStyle(color: Color.fromARGB(255, 45, 202, 3),fontSize: 11),),
-          ),
-        ],),
-        Padding(padding: EdgeInsets.all(3)),
-        /*每行数据*/
-        Row(children: [
-          Text(
-            '供应商',
-            style: TextStyle(
-                color: Color.fromARGB(255, 51, 51, 51), fontSize: 13),
-          ),
-          Expanded(child: Text('')),
-          Text(
-            '浙江万马天屹有限公司',
-            style: TextStyle(
-                color: Color.fromARGB(255, 51, 51, 51), fontSize: 13),
-          ),
-        ],),
-        Padding(padding: EdgeInsets.all(3)),
-        /*每行数据*/
-        Row(children: [
-          Text(
-            '供应商编码',
-            style: TextStyle(
-                color: Color.fromARGB(255, 51, 51, 51), fontSize: 13),
-          ),
-          Expanded(child: Text('')),
-          Text(
-            '01822338889',
-            style: TextStyle(
-                color: Color.fromARGB(255, 51, 51, 51), fontSize: 13),
-          ),
-        ],),
-        Padding(padding: EdgeInsets.all(3)),
-        /*每行数据*/
-        Row(children: [
-          Text(
-            '内向交货单号',
-            style: TextStyle(
-                color: Color.fromARGB(255, 51, 51, 51), fontSize: 13),
-          ),
-          Expanded(child: Text('')),
-          Text(
-            '283839',
-            style: TextStyle(
-                color: Color.fromARGB(255, 51, 51, 51), fontSize: 13),
-          ),
-        ],),
-        Padding(padding: EdgeInsets.all(3)),
-        /*每行数据*/
-        Row(children: [
-          Text(
-            '送货日期',
-            style: TextStyle(
-                color: Color.fromARGB(255, 51, 51, 51), fontSize: 13),
-          ),
-          Expanded(child: Text('')),
-          Text(
-            '2022-10-10',
-            style: TextStyle(
-                color: Color.fromARGB(255, 51, 51, 51), fontSize: 13),
-          ),
-        ],),
-        Padding(padding: EdgeInsets.all(3)),
-        /*每行数据*/
-        Row(children: [
-          Text(
-            '订单号',
-            style: TextStyle(
-                color: Color.fromARGB(255, 51, 51, 51), fontSize: 13),
-          ),
-          Expanded(child: Text('')),
-          Text(
-            '2893302002',
-            style: TextStyle(
-                color: Color.fromARGB(255, 51, 51, 51), fontSize: 13),
-          ),
-        ],),
-        Padding(padding: EdgeInsets.all(3)),
-
-      ],),
-
-    );
-    return item;
-  }
 
   Widget _imageWrapper(String imageUrl) {
     if(imageUrl!='') {
@@ -446,7 +344,7 @@ class _FragmentHomePageState extends State<FragmentHomePage> with RouteAware{
    * 获取首页应用
    */
   getAppUserList(){
-    UserDao.getAppUserList().then((res) {
+    UserDao.getAppUserList(1).then((res) {
       if (res != null && res.result) {
         var data = res.data['data'];
         gridList.clear();
@@ -460,6 +358,24 @@ class _FragmentHomePageState extends State<FragmentHomePage> with RouteAware{
         gridList.add(map);
         setState(() {
           isFirst = false;
+        });
+
+      }
+    });
+  }
+
+  /**
+   * 获取首页应用
+   */
+  getAppUserListForCards(){
+    UserDao.getAppUserList(2).then((res) {
+      if (res != null && res.result) {
+        var data = res.data['data'];
+        cardList.clear();
+        if(data!=null){
+          cardList = data;
+        }
+        setState(() {
         });
 
       }
@@ -484,6 +400,7 @@ class _FragmentHomePageState extends State<FragmentHomePage> with RouteAware{
    if(Config.REFRESH==1){
      Config.REFRESH = 0;
      getAppUserList();
+     getAppUserListForCards();
    }
     super.didPopNext();
   }

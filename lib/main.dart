@@ -36,6 +36,9 @@ import 'package:wanma_print/page/login_page.dart';
 import 'package:wanma_print/page/tianyi_widgit/load%20material/load_details.dart';
 import 'package:wanma_print/page/tianyi_widgit/load%20material/load_list.dart';
 import 'package:wanma_print/page/tianyi_widgit/load%20material/load_process.dart';
+import 'package:wanma_print/page/tianyi_widgit/process_management/process_management.dart';
+import 'package:wanma_print/page/tianyi_widgit/process_management/process_management_detail.dart';
+import 'package:wanma_print/page/tianyi_widgit/process_management/process_select_work.dart';
 import 'package:wanma_print/page/tianyi_widgit/production_report/cabling.dart';
 import 'package:wanma_print/page/tianyi_widgit/production_report/form_circle.dart';
 import 'package:wanma_print/page/tianyi_widgit/production_report/production_report.dart';
@@ -100,7 +103,7 @@ class MyApp extends StatelessWidget {
       store: store,
       child: StoreBuilder<WMState>(builder: (context, store) {
         return MaterialApp(
-          navigatorObservers:[routeObserver],
+          navigatorObservers: [routeObserver],
           title: '万马智造',
           theme: store.state.themeData,
           localizationsDelegates: [
@@ -171,74 +174,83 @@ class MyApp extends StatelessWidget {
                   child: MainPage(),
                 ),
             MenuPage.sName: (context) => CommonLayer(
-              child: MenuPage(),
-            ),
+                  child: MenuPage(),
+                ),
             AccountSecurityPage.sName: (context) => CommonLayer(
-              child: AccountSecurityPage(),
-            ),
-            ChangePasswordPage.sName:(context) => CommonLayer(
-              child: ChangePasswordPage(),
-            ),
-            ChangeWorkPage.sName:(context) => CommonLayer(
-              child: ChangeWorkPage(),
-            ),
+                  child: AccountSecurityPage(),
+                ),
+            ChangePasswordPage.sName: (context) => CommonLayer(
+                  child: ChangePasswordPage(),
+                ),
+            ChangeWorkPage.sName: (context) => CommonLayer(
+                  child: ChangeWorkPage(),
+                ),
             //上架
-            ShelvesUp.sName:(context) => CommonLayer(
-              child: ShelvesUp(),
-            ),
+            ShelvesUp.sName: (context) => CommonLayer(
+                  child: ShelvesUp(),
+                ),
             //物料搜索
-            SearchMaterial.sName:(context) => CommonLayer(
-              child: SearchMaterial(),
-            ),
+            SearchMaterial.sName: (context) => CommonLayer(
+                  child: SearchMaterial(),
+                ),
             //下架
-            ShelvesDown.sName:(context) => CommonLayer(
-              child: ShelvesDown(),
-            ),
+            ShelvesDown.sName: (context) => CommonLayer(
+                  child: ShelvesDown(),
+                ),
             //物料选择（用于筛选目的库位）
-            SearchMaterialFiltrate.sName:(context)=>CommonLayer(
-              child: SearchMaterialFiltrate(),
-            ),
+            SearchMaterialFiltrate.sName: (context) => CommonLayer(
+                  child: SearchMaterialFiltrate(),
+                ),
             //移库
-            WarehouseMove.sName:(context)=>CommonLayer(
-              child: WarehouseMove(),
-            ),
+            WarehouseMove.sName: (context) => CommonLayer(
+                  child: WarehouseMove(),
+                ),
             //调库
-            WarehouseAdjust.sName:(context)=>CommonLayer(
-              child: WarehouseAdjust(),
-            ),
+            WarehouseAdjust.sName: (context) => CommonLayer(
+                  child: WarehouseAdjust(),
+                ),
             //当前任务
-            CurrentTask.sName:(context)=>CommonLayer(
-              child: CurrentTask(),
-            ),
+            CurrentTask.sName: (context) => CommonLayer(
+                  child: CurrentTask(),
+                ),
             //回库确认
-            TaskReturnNotarize.sName:(context)=>CommonLayer(
-              child: TaskReturnNotarize(),
-            ),
+            TaskReturnNotarize.sName: (context) => CommonLayer(
+                  child: TaskReturnNotarize(),
+                ),
             //任务确认
-            TaskWaitNotarize.sName:(context)=>CommonLayer(
-              child: TaskWaitNotarize(),
-            ),
+            TaskWaitNotarize.sName: (context) => CommonLayer(
+                  child: TaskWaitNotarize(),
+                ),
             //任务结束
-            TaskFinishNotarize.sName:(context)=>CommonLayer(
-              child: TaskFinishNotarize(),
-            ),
+            TaskFinishNotarize.sName: (context) => CommonLayer(
+                  child: TaskFinishNotarize(),
+                ),
             //任务查看
-            TaskExamineNotarize.sName:(context)=>CommonLayer(
-              child: TaskExamineNotarize(),
-            ),
+            TaskExamineNotarize.sName: (context) => CommonLayer(
+                  child: TaskExamineNotarize(),
+                ),
             //上模管理
-            UpperMould.sName:(context)=>CommonLayer(
-              child: UpperMould(),
-            ),
+            UpperMould.sName: (context) => CommonLayer(
+                  child: UpperMould(),
+                ),
             //我的卡片
-            MyCardsPage.sName:(context)=>CommonLayer(
-              child: MyCardsPage(),
-            ),
+            MyCardsPage.sName: (context) => CommonLayer(
+                  child: MyCardsPage(),
+                ),
             //选择卡片
-            AllCardsPage.sName:(context)=>CommonLayer(
-              child: AllCardsPage(),
-            ),
-
+            AllCardsPage.sName: (context) => CommonLayer(
+                  child: AllCardsPage(),
+                ),
+            //工艺管理
+            // ProcessManagement.sName: (context) => CommonLayer(
+            //       child: ProcessManagement(),
+            // ),
+            ProcessManageMentDetail.sName: ((context) => CommonLayer(
+                  child: ProcessManageMentDetail(),
+                )),
+            ProcessSelectWork.sName: ((context) => CommonLayer(
+                  child: ProcessSelectWork(),
+                ))
           },
         );
       }),

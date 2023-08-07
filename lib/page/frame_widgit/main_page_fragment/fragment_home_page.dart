@@ -15,7 +15,6 @@ import '../../../main.dart';
 import '../../common_widgit/line/divider_dotted.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-
 var mYcontext;
 List<dynamic> gridList = [];
 List<dynamic> cardList = [];
@@ -27,20 +26,19 @@ class FragmentHomePage extends StatefulWidget {
   _FragmentHomePageState createState() => _FragmentHomePageState();
 }
 
-class _FragmentHomePageState extends State<FragmentHomePage> with RouteAware{
-
+class _FragmentHomePageState extends State<FragmentHomePage> with RouteAware {
   StreamSubscription? stream;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-   /* gridList.clear();
+    /* gridList.clear();
     Map map = Map();
     map['resName'] = '更多';
     map['icon'] = 'images/home/gengduo.png';
     map['route'] = 'maintabmore';
     gridList.add(map);*/
-    if(isFirst||gridList.isEmpty) {
+    if (isFirst || gridList.isEmpty) {
       getAppUserList();
       getAppUserListForCards();
       stream = ScanEventUtils.eventBus.on<ScanEvent>().listen((event) {
@@ -59,13 +57,12 @@ class _FragmentHomePageState extends State<FragmentHomePage> with RouteAware{
   Widget build(BuildContext context) {
     // TODO: implement build
     mYcontext = context;
-   // secondList.clear();
+    // secondList.clear();
     //secondList.add("第1条数据\n");
     //secondList.add("第2条数据\n");
 
     //firstList.clear();
     //firstList.add("任务列表1");
-
 
     return getRootView();
   }
@@ -148,7 +145,6 @@ class _FragmentHomePageState extends State<FragmentHomePage> with RouteAware{
 //创建banner
   Widget _createBanner() {
     return Container(
-
       width: double.infinity,
       margin: const EdgeInsets.fromLTRB(5, 5, 5, 5),
       child: Card(
@@ -173,7 +169,7 @@ class _FragmentHomePageState extends State<FragmentHomePage> with RouteAware{
 //grid列表
   List<Widget> _createGridViewItem() {
     List<Widget> _list = [];
-    if(gridList==null){
+    if (gridList == null) {
       return _list;
     }
     for (int i = 0; i < gridList.length; i++) {
@@ -212,11 +208,14 @@ class _FragmentHomePageState extends State<FragmentHomePage> with RouteAware{
             //NavigatorUtils.goPage(context, "warehouse_adjust");
             //当前任务
             //NavigatorUtils.goPage(context, "current_task");
-          }else if(gridList[i]['route']=='materialDetail'){
+          } else if (gridList[i]['route'] == 'materialDetail') {
             //扫码收货
             NavigatorUtils.goMaterialDetail(context, '');
-          }else{
-            NavigatorUtils.goPage(context, gridList[i]['route'],);
+          } else {
+            NavigatorUtils.goPage(
+              context,
+              gridList[i]['route'],
+            );
           }
         },
       ));
@@ -251,7 +250,7 @@ class _FragmentHomePageState extends State<FragmentHomePage> with RouteAware{
             Text(
               cardList[i]['resName'],
               style:
-              TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
             ),
             Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 0)),
             _createGridViewItemCard(i),
@@ -265,7 +264,6 @@ class _FragmentHomePageState extends State<FragmentHomePage> with RouteAware{
 
   //二级grid列表
   Widget _createGridViewItemCard(int index) {
-
     List<Widget> _list = [];
     List childrenList = cardList[index]['appInfo'] ?? [];
 
@@ -296,11 +294,14 @@ class _FragmentHomePageState extends State<FragmentHomePage> with RouteAware{
         ),
         child: item,
         onPressed: () {
-          if(childrenList[i]['route']=='materialDetail'){
+          if (childrenList[i]['route'] == 'materialDetail') {
             //扫码收货
             NavigatorUtils.goMaterialDetail(context, '');
-          }else {
-            NavigatorUtils.goPage(context, childrenList[i]['route'],);
+          } else {
+            NavigatorUtils.goPage(
+              context,
+              childrenList[i]['route'],
+            );
           }
         },
       ));
@@ -318,20 +319,19 @@ class _FragmentHomePageState extends State<FragmentHomePage> with RouteAware{
     );
   }
 
-
   Widget _imageWrapper(String imageUrl) {
-    if(imageUrl!='') {
+    if (imageUrl != '') {
       return SizedBox(
         width: 30,
         height: 30,
         child: CachedNetworkImage(
           imageUrl: imageUrl,
-        //  placeholder: (context, url) => Image.asset('images/home/gengduo.png'),
+          //  placeholder: (context, url) => Image.asset('images/home/gengduo.png'),
           errorWidget: (context, url, error) =>
               Image.asset('images/home/gengduo.png'),
         ),
       );
-    }else{
+    } else {
       return SizedBox(
         width: 30,
         height: 30,
@@ -343,12 +343,12 @@ class _FragmentHomePageState extends State<FragmentHomePage> with RouteAware{
   /**
    * 获取首页应用
    */
-  getAppUserList(){
+  getAppUserList() {
     UserDao.getAppUserList(1).then((res) {
       if (res != null && res.result) {
         var data = res.data['data'];
         gridList.clear();
-        if(data!=null){
+        if (data != null) {
           gridList = data;
         }
         Map map = Map();
@@ -359,7 +359,6 @@ class _FragmentHomePageState extends State<FragmentHomePage> with RouteAware{
         setState(() {
           isFirst = false;
         });
-
       }
     });
   }
@@ -367,17 +366,15 @@ class _FragmentHomePageState extends State<FragmentHomePage> with RouteAware{
   /**
    * 获取首页应用
    */
-  getAppUserListForCards(){
+  getAppUserListForCards() {
     UserDao.getAppUserList(2).then((res) {
       if (res != null && res.result) {
         var data = res.data['data'];
         cardList.clear();
-        if(data!=null){
+        if (data != null) {
           cardList = data;
         }
-        setState(() {
-        });
-
+        setState(() {});
       }
     });
   }
@@ -388,6 +385,7 @@ class _FragmentHomePageState extends State<FragmentHomePage> with RouteAware{
     routeObserver.unsubscribe(this);
     super.dispose();
   }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -397,13 +395,11 @@ class _FragmentHomePageState extends State<FragmentHomePage> with RouteAware{
   @override
   void didPopNext() {
     LogUtil.d("resume${Config.REFRESH}");
-   if(Config.REFRESH==1){
-     Config.REFRESH = 0;
-     getAppUserList();
-     getAppUserListForCards();
-   }
+    if (Config.REFRESH == 1) {
+      Config.REFRESH = 0;
+      getAppUserList();
+      getAppUserListForCards();
+    }
     super.didPopNext();
   }
-
-
 }

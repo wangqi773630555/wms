@@ -90,7 +90,7 @@ class _SeriesConnectionStates extends State<SeriesConnections> {
   getData(flag, ids) {
     DataDao.getProductions(widget.idsList[1], widget.idsList[0], ids, flag)
         .then((res) {
-      print('1111111111111');
+      // print('1111111111111');
       circle = true;
       if (res.data != null && res.data != '') {
         if (res.data['code'] == 351) {

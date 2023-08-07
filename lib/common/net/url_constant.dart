@@ -4,21 +4,19 @@ import '../local/local_storage.dart';
 ///接口地址
 class UrlConstant {
   //测试环境
-  //static const String host = 'https://gatewaydev.wanmaco.com/'; //登录测试（新框架）
-  //static const String host2 = 'http://itest.wanmagroup.com/'; //测试（天屹数据缆）
-  static const String host3 = 'http://dlmestest.wanmagroup.com/api/'; //测试（电缆低压三厂）
+  // static const String host = 'https://gatewaydev.wanmaco.com/'; //登录测试（新框架）
+  // static const String host2 = 'http://itest.wanmagroup.com/'; //测试（天屹数据缆）
+  // static const String host3 =
+  //     'http://dlmestest.wanmagroup.com/api/'; //测试（电缆低压三厂）
 
   //本地环境
   //static const String host2 = 'http://10.3.32.33:94/';//裴明明本地
-   // static const String host3 = 'http://10.3.32.37:8002/'; //测试 志航本地（电缆低压三厂）
+  // static const String host3 = 'http://10.3.32.37:8002/'; //测试 志航本地（电缆低压三厂）
 
-
-  //正式环境
-   static const String host ='https://gateway.wanmaco.com/'; //登录正式（新框架）
-   static const String host2 = 'http://wms.wanmagroup.com/'; //正式（天屹数据缆）
-   //static const String host3 = 'http://dlmes.wanmagroup.com/api/'; //正式（电缆低压三厂）
-
-
+  // 正式环境
+  static const String host = 'https://gateway.wanmaco.com/'; //登录正式（新框架）
+  static const String host2 = 'http://wms.wanmagroup.com/'; //正式（天屹数据缆）
+  static const String host3 = 'http://dlmes.wanmagroup.com/api/'; //正式（电缆低压三厂）
 
   //登陆
   static getLogin() {
@@ -160,6 +158,7 @@ class UrlConstant {
   static removeApp() {
     return '${host}ams/app-user-info/removeApp';
   }
+
   static appVerison() {
     return '${host}ams/app-version/getVersion';
   }
@@ -209,7 +208,6 @@ class UrlConstant {
     return '${host3}agv/rtAgvCommon/testAgv?';
   }
 
-
   static getSelectLoad() {
     return '${host2}sync/mesProxy/mesJsonReq?route=/eqp/ctEqpModule/getSelectLoad&';
   }
@@ -222,8 +220,29 @@ class UrlConstant {
     return '${host2}sync/mesProxy/mesJsonReq?route=/eqp/ctEqpModule/getCtEqpModule&';
   }
 
+  //工艺管理
+// 首页列表
+  static getCtProcessIndexData() {
+    return '${host2}sync/mesProxy/mesJsonReq?route=/process/ctProcessPartEqpPara/indexData&';
+  }
 
+  //扫码/查看工艺参数
+  static getCtProcessScanOrderId() {
+    return '${host2}sync/mesProxy/mesJsonReq?route=/process/ctProcessPartEqpPara/scanOrderId&';
+  }
 
+  //获取设备列表
+  static getCtProcessBindEqps() {
+    return '${host2}sync/mesProxy/mesJsonReq?route=/process/ctProcessPartEqpPara/getBindEqps&';
+  }
 
+  // 获取辅机参数信息
+  static getCtProcessEqpParas() {
+    return '${host2}sync/mesProxy/mesJsonReq?route=/process/ctProcessPartEqpPara/getEqpParas&';
+  }
 
+  // 参数下置
+  static getCtProcessSave() {
+    return '${host2}sync/downParasmesProxy/mesJsonReq?route=/process/ctProcessPartEqpPara/downParas&';
+  }
 }

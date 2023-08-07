@@ -1,4 +1,3 @@
-
 class Config {
   static const DEBUG = true;
 
@@ -50,7 +49,6 @@ class Config {
   static const Material_LoadProcess = 'materialLoadProcess';
   static const Material_LoadDetails = 'materialLoadDetails';
 
-
   //new
   static const My_Home_Page_New = 'myhomepagenew';
   static const Main_tab_more = "maintabmore";
@@ -98,14 +96,9 @@ class Config {
   //任务查看
   static const TASK_EXAMINE_NOTARIZE = "task_examine_notarize";
 
-
-  //天屹
-  //上模管理
   static const UPPER_MOULD = "upper_mould";
-
-
-
-
-
-
+  //天屹
+  static const PROCESS_MANAGEMENT = "process_management";
+  static const PROCESS_MANAGEMENT_DETAIL = "process_management_detail";
+  static const PROCESS_SELECT_WORK = "process_select_work";
 }

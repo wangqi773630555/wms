@@ -12,6 +12,8 @@ import '../../page/param_setting.dart';
 import '../../page/tianyi_widgit/load material/load_details.dart';
 import '../../page/tianyi_widgit/load material/load_list.dart';
 import '../../page/tianyi_widgit/load material/load_process.dart';
+import '../../page/tianyi_widgit/process_management/process_management_detail.dart';
+import '../../page/tianyi_widgit/process_management/process_select_work.dart';
 import '../../page/tianyi_widgit/production_report/cabling.dart';
 import '../../page/tianyi_widgit/production_report/form_circle.dart';
 import '../../page/tianyi_widgit/production_report/production_report.dart';
@@ -44,7 +46,7 @@ class NavigatorUtils {
   }
 
   //公用路由
-  static goPage(BuildContext context,String route) {
+  static goPage(BuildContext context, String route) {
     Navigator.pushNamed(context, route);
   }
 
@@ -145,6 +147,20 @@ class NavigatorUtils {
     Navigator.pushNamed(context, MaterialLoadDetails.sName, arguments: data);
   }
 
+  static goProgressManagementDetail(
+      BuildContext context, name, ids, recipe_id, part_id, flag) async {
+    await Navigator.pushNamed(context, ProcessManageMentDetail.sName,
+        arguments: [name, ids, recipe_id, part_id, flag]);
+  }
+
+  static goProgressSelectWork(BuildContext context, ids) async {
+    await Navigator.pushNamed(context, ProcessSelectWork.sName, arguments: ids);
+  }
+
+  // static goProcessManagementDetail(BuildContext context) {
+  //   Navigator.pushNamed(context, ProcessManageMentDetail.sName);
+  // }
+
   //新首页
   ///主页
   static goHomeNew(BuildContext context) {
@@ -170,5 +186,4 @@ class NavigatorUtils {
   static goChangeWork(BuildContext context) {
     Navigator.pushNamed(context, ChangeWorkPage.sName);
   }
-
 }

@@ -50,6 +50,7 @@ class _ProcessManageMentDetailBodyState
   List<Widget> celldList = [];
   List saveLs = [];
   double hh = 0;
+  bool ff = true;
   // List<DropdownMenuItem<String>> _eqpIdItems = [];
   var eqpIdValue;
   @override
@@ -198,6 +199,7 @@ class _ProcessManageMentDetailBodyState
                           hh = _hheight;
                         } else {
                           hh = _hheight - 300;
+                          ff = value;
                         }
                       });
                     },

@@ -76,61 +76,6 @@ class SHeader extends StatelessWidget {
           ),
         ],
       ),
-
-      //    Column(
-      //     mainAxisSize: MainAxisSize.min,
-      //     children: <Widget>[
-      //       Row(
-      //         children: [
-      //           Container(
-      //             padding: EdgeInsets.only(left: 15, top: 10, bottom: 5),
-      //             width: wwidth - 70,
-      //             child: Row(
-      //               children: [
-      //                 Text(
-      //                   '订单号:',
-      //                   style:
-      //                       TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-      //                   // showCursor: true,
-      //                 ),
-      //                 SelectableText(
-      //                   txt,
-      //                   // _modelList[index]['deliver_no'],
-      //                   style: TextStyle(
-      //                     fontSize: 18,
-      //                   ),
-      //                 ),
-      //               ],
-      //             ),
-      //           ),
-      //           Text(
-      //             ts,
-      //             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-      //           )
-      //         ],
-      //       ),
-      //       Divider(),
-      //       Container(
-      //         padding: EdgeInsets.only(bottom: 10),
-      //         child: Column(
-      //           children: [
-      //             textCells('客户订单号', txt1),
-      //             textCells('产品名称', txt2),
-      //             textCells('产品规格', txt3),
-      //             textCells('任务数量', txt4),
-      //             textCells('SAP订单号', txt5),
-      //             isSelectWork == false ? textCells('已报工数量', txt6) : Container(),
-      //             Divider()
-      //           ],
-      //         ),
-      //       ),
-      //       // Divider(),
-      //       // _modelList[index]['status_text'] == '已取消'
-      //       //     ? Container()
-      //       //     :
-      //     ],
-      //   ),
-      //
     );
   }
 

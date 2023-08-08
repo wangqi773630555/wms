@@ -262,7 +262,8 @@ class _UpperMouldState extends State<ProcessManagement> {
       ),
       onSubmitted: (text) async {
         if (text != '') {
-          await NavigatorUtils.goSelectWork(context, text).then((result) {
+          await NavigatorUtils.goProgressSelectWork(context, text)
+              .then((result) {
             print('========');
             setState(() {
               productionList.clear();

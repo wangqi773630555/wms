@@ -50,7 +50,7 @@ class _ProcessManageMentDetailBodyState
   List<Widget> celldList = [];
   List saveLs = [];
   double hh = 0;
-  bool ff = true;
+  bool ff = false;
   // List<DropdownMenuItem<String>> _eqpIdItems = [];
   var eqpIdValue;
   @override
@@ -183,7 +183,8 @@ class _ProcessManageMentDetailBodyState
         Container(
             width: _wwidth,
             height: _hheight - 140,
-            child: Column(
+            child: SingleChildScrollView(
+                child: Column(
               children: [
                 Container(
                   child: SHeader(
@@ -195,7 +196,7 @@ class _ProcessManageMentDetailBodyState
                       setState(() {
                         // FocusScope.of(context).requestFocus(FocusNode());
                         ff = value;
-                        // (context as Element).markNeedsBuild();
+                        (context as Element).markNeedsBuild();
                       });
 
                       print('++++++++++%@$value');
@@ -215,7 +216,7 @@ class _ProcessManageMentDetailBodyState
                 selectRow('生产机台', true, _eqpIdItems, _wwidth),
                 listBlocks(context, _wwidth, _hheight),
               ],
-            )),
+            ))),
         saveButt(),
       ],
     ));
@@ -458,7 +459,7 @@ class _ProcessManageMentDetailBodyState
             child: TextField(
                 controller: textController,
                 textAlign: TextAlign.center,
-                autofocus: true,
+                // autofocus: true,
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp("[0-9.]")),
                 ],

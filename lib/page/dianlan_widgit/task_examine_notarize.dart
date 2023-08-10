@@ -96,7 +96,7 @@ class _TaskExamineNotarizeState extends State<TaskExamineNotarize> {
               ),
             ),
           ),
-          Visibility(visible:false,child: Container(
+          Visibility(visible:true,child: Container(
             padding: EdgeInsets.all(10),
             child: Column(
               children: [
@@ -110,9 +110,9 @@ class _TaskExamineNotarizeState extends State<TaskExamineNotarize> {
                       ),
 
                       onPressed: () => {
-                        Navigator.pop(context),
-                        Navigator.pushNamed(context, TaskFinishNotarize.sName, arguments: data['id']),
-
+                       /* Navigator.pop(context),
+                        Navigator.pushNamed(context, TaskFinishNotarize.sName, arguments: data['id']),*/
+                        syncAGVTaskEnd()
                       }, child: Text('紧急停止')),
                 ),
               ],
@@ -122,6 +122,15 @@ class _TaskExamineNotarizeState extends State<TaskExamineNotarize> {
         ],
       ),
     );
+  }
+
+  syncAGVTaskEnd() {
+    DataDao.syncAGVTaskEnd(data['task_id']).then((res) {
+      if(res!=null&&res.result) {
+        Fluttertoast.showToast(msg: '提交成功');
+        Navigator.pop(context, '1');
+      }
+    });
   }
 
 

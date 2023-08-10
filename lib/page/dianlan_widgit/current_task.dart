@@ -215,7 +215,12 @@ class _CurrentTaskState extends State<CurrentTask> {
             }
           });
         }else if(confirm_status=='3'){
-         Navigator.pushNamed(context, TaskExamineNotarize.sName, arguments: _modelList[index]);
+          var result =  Navigator.pushNamed(context, TaskExamineNotarize.sName, arguments: _modelList[index]);
+          result.then((value) => {
+           if(value!=null){
+             getInintData()
+           }
+         });
         }else{
           var result = Navigator.pushNamed(context, TaskWaitNotarize.sName, arguments: _modelList[index]);
           result.then((value) => {

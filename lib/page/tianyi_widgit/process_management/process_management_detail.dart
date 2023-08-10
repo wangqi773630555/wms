@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:wanma_print/page/tianyi_widgit/process_management/s_header.dart';
-
 import '../../../common/config/config.dart';
-
 import 'package:flutter/services.dart';
 import 'package:wanma_print/common/dao/data_dao.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
 import '../../../common/utils/common_utils.dart';
 import 'package:barcode_scan2/barcode_scan2.dart';
+
+import '../../../widget/loading.dart';
 
 class ProcessManageMentDetail extends StatelessWidget {
   static final String sName = Config.PROCESS_MANAGEMENT_DETAIL;
   const ProcessManageMentDetail({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     var args = ModalRoute.of(context)!.settings.arguments;
@@ -29,7 +27,6 @@ class ProcessManageMentDetail extends StatelessWidget {
 class ProcessManageMentDetailBody extends StatefulWidget {
   final idsList;
   const ProcessManageMentDetailBody(this.idsList, {Key? key}) : super(key: key);
-
   @override
   State<ProcessManageMentDetailBody> createState() =>
       _ProcessManageMentDetailBodyState();
@@ -41,7 +38,6 @@ class _ProcessManageMentDetailBodyState
   List<DropdownMenuItem<String>> _eqpIdItems = [];
   Map modelist = {};
   Map modelist2 = {};
-  // Map modelist = {};
   List productionList = [];
   List eqpIdItemsList = [];
   List keyList = [];
@@ -51,16 +47,10 @@ class _ProcessManageMentDetailBodyState
   List saveLs = [];
   double hh = 0;
   bool ff = false;
-  // List<DropdownMenuItem<String>> _eqpIdItems = [];
   var eqpIdValue;
   @override
   void initState() {
-    // TODO: implement initState
-
     super.initState();
-    // print('-------');
-
-    // print(this.widget.idsList[0]);
     getDataBindEqps();
     getDataList();
   }
@@ -91,7 +81,6 @@ class _ProcessManageMentDetailBodyState
               msg: res.data['msg'].toString(), timeInSecForIosWeb: 5);
         } else {
           eqpIdItemsList = res.data['data'];
-          print('-----eqpIdItemsList--$eqpIdItemsList');
           if (eqpIdItemsList.length > 0) {
             for (var element in eqpIdItemsList) {
               _eqpIdItems = [];
@@ -124,26 +113,18 @@ class _ProcessManageMentDetailBodyState
           valueList = [];
           saveLs = [];
           textFieldList = [];
-          //
-          // FocusNode _focusNode = FocusNode();
-
-          // textFieldList.add(txtController);
           keyList.addAll(modelist2.keys);
           valueList.addAll(modelist2.values);
           for (var element in valueList) {
             List sls = [];
             for (var element2 in element) {
               TextEditingController txtController = TextEditingController();
-              //
               txtController.text =
                   (element2['meter_para_standard'] ?? '').toString();
               sls.add(txtController);
             }
             textFieldList.add(sls);
           }
-
-          print('-keyList-----${textFieldList}');
-          // productionList = modelist['recipes'];
         }
       }
       setState(() {});
@@ -155,26 +136,25 @@ class _ProcessManageMentDetailBodyState
       'order_id': this.widget.idsList[1],
       'ctProcessPartEqpParas': ls
     };
-    print('requestParams###$requestParams');
-    // DataDao.getCtProcessSave(this.widget.idsList[1], ls).then((res) {
-    //   if (res.data != null && res.data != '') {
-    //     if (res.data['code'] == 351) {
-    //       Navigator.pop(context);
-    //       Fluttertoast.showToast(
-    //           msg: res.data['msg'].toString(), timeInSecForIosWeb: 5);
-    //     }
-    //     if (res.data['code'] == 200) {}
-    //   }
-    //   setState(() {});
-    // });
+    // print('requestParams###$requestParams');
+    Loading.show(context);
+    DataDao.getCtProcessSave(this.widget.idsList[1], requestParams).then((res) {
+      if (res.data != null && res.data != '') {
+        Loading.hide(context);
+        if (res != null && res.result) {
+          Fluttertoast.showToast(
+              msg: res.data['msg'].toString(), timeInSecForIosWeb: 5);
+          if (res.data['code'] == 200) {
+            Navigator.pop(context);
+          }
+        }
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    // print('------');
-    // print(this.widget.idsList);
     var _wwidth = MediaQuery.of(context).size.width;
-    // ignore: non_constant_identifier_names
     var _hheight = MediaQuery.of(context).size.height;
     hh = _hheight;
     return SingleChildScrollView(
@@ -194,12 +174,9 @@ class _ProcessManageMentDetailBodyState
                     this.widget.idsList[1].toString(),
                     (value) {
                       setState(() {
-                        // FocusScope.of(context).requestFocus(FocusNode());
                         ff = value;
                         (context as Element).markNeedsBuild();
                       });
-
-                      print('++++++++++%@$value');
                     },
                     modelist['customer_po'] ?? '',
                     modelist['part_name'] ?? '',
@@ -274,7 +251,6 @@ class _ProcessManageMentDetailBodyState
 
   Future<void> _scan() async {
     scanResult = null;
-
     try {
       final result = await BarcodeScanner.scan(
         options: ScanOptions(
@@ -285,10 +261,7 @@ class _ProcessManageMentDetailBodyState
           },
         ),
       );
-
       scanResult = result;
-      // showAlert(scanResult!.rawContent);
-
     } on PlatformException catch (e) {
       setState(() {
         scanResult = ScanResult(
@@ -301,7 +274,6 @@ class _ProcessManageMentDetailBodyState
 
   scanAction(txt) async {
     await _scan();
-
     Future.delayed(const Duration(milliseconds: 500), () {
       bool f = false;
       if (scanResult?.rawContent != "" && scanResult?.rawContent != null) {
@@ -318,7 +290,6 @@ class _ProcessManageMentDetailBodyState
         }
 
         if (f == false) {
-          print('+++++2');
           Fluttertoast.showToast(
             msg: "${scanResult!.rawContent}不存在",
           );
@@ -327,21 +298,18 @@ class _ProcessManageMentDetailBodyState
           });
         }
       }
-
       setState(() {});
     });
   }
 
   Widget blocks(w, tit, List ls, index) {
-    // textFieldList = [];
     celldList = [];
     int i = 0;
     for (var element in ls) {
       saveLs.add({
-        'meter_para_standard': element['meter_para_standard'],
+        'meter_para_standard': element['meter_para_standard'] ?? '',
         'meter_para_id': element['id']
       });
-      // String str = ls.length.toString();
       celldList.add(textCells(
           element['para_desc'].toString(),
           (element['meter_para_standard'] ?? '').toString(),
@@ -384,16 +352,7 @@ class _ProcessManageMentDetailBodyState
   }
 
   Widget listBlocks(BuildContext context, w, h) {
-    // setState(() {
-    //               if (value == true) {
-    //                 hh = _hheight;
-    //               } else {
-    //                 hh = _hheight - 300;
-    //               }
-    //
-    //             });
     return Container(
-        // color: Colors.cyan,
         width: w,
         height: ff == false ? h - 260 : h - 420,
         child: ListView.builder(
@@ -407,7 +366,6 @@ class _ProcessManageMentDetailBodyState
   Widget saveButt() {
     return InkWell(
       child: Container(
-        // margin: e,
         width: 200,
         height: 40,
         alignment: Alignment.center,
@@ -423,16 +381,14 @@ class _ProcessManageMentDetailBodyState
         ),
       ),
       onTap: () {
-        // print('====save:$saveLs');
+        List ts = saveLs;
         getCtProcessSave(saveLs);
+        saveLs = ts;
       },
     );
   }
 
   Widget textCells(String label, dynamic values, w, ids, textController) {
-    // TextEditingController txtController;
-    print('!!!!!!!!!!!!!!!!!!!!!!!!');
-    // textController.text = values;
     return Container(
       margin: EdgeInsets.only(top: 5),
       child: Row(
@@ -459,39 +415,19 @@ class _ProcessManageMentDetailBodyState
             child: TextField(
                 controller: textController,
                 textAlign: TextAlign.center,
-                // autofocus: true,
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp("[0-9.]")),
                 ],
-                // focusNode: _focusNode,
                 style: TextStyle(fontSize: 14),
                 decoration: InputDecoration(),
                 onChanged: (String value) {
-                  //   txtController.value = TextEditingValue(
-                  //       text: txtController.text,
-                  //       selection: TextSelection.fromPosition(TextPosition(
-                  //         affinity: TextAffinity.downstream,
-                  //         offset: txtController.text.length,
-                  //       )));
-                  //   // },
-
-                  //   // txtController.text = value;
-                  //   for (var i = 0; i < saveLs.length; i++) {
-                  //     if (saveLs[i]['meter_para_id'].toString() ==
-                  //         ids.toString()) {
-                  //       saveLs[i]['meter_para_standard'] =
-                  //           int.parse(txtController.text);
-                  //     }
-                  //   }
-                  // },
-
-                  // onSubmitted: (String value) {
-                  //   txtController.value = TextEditingValue(
-                  //       text: txtController.text,
-                  //       selection: TextSelection.fromPosition(TextPosition(
-                  //         affinity: TextAffinity.downstream,
-                  //         offset: txtController.text.length,
-                  //       )));
+                  for (var i = 0; i < saveLs.length; i++) {
+                    if (saveLs[i]['meter_para_id'].toString() ==
+                        ids.toString()) {
+                      // print('val-----${saveLs[i]['meter_para_standard']}');
+                      saveLs[i]['meter_para_standard'] = double.parse(value);
+                    }
+                  }
                 }),
           ),
         ],
@@ -502,7 +438,5 @@ class _ProcessManageMentDetailBodyState
   @override
   void dispose() {
     super.dispose();
-//释放
-    // _focusNode1.dispose();
   }
 }

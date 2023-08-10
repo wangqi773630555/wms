@@ -1,37 +1,8 @@
-// import 'package:flutter/material.dart';
-
-// import '../../../common/config/config.dart';
-
-// // class ProcessManagement extends StatefulWidget {
-// class UpperMould extends StatefulWidget {
-//   // static final String sName = Config.PROCESS_MANAGEMENT;
-//   static final String sName = Config.UPPER_MOULD;
-
-//   // const ProcessManagement({Key? key}) : super(key: key);
-//   const UpperMould({Key? key}) : super(key: key);
-//   @override
-//   // State<ProcessManagement> createState() => _ProcessManagementState();
-//   State<UpperMould> createState() => _UpperMouldState();
-// }
-
-// // class _ProcessManagementState extends State<ProcessManagement> {
-// class _UpperMouldState extends State<UpperMould> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text(''),
-//         centerTitle: true,
-//       ),
-//     );
-//   }
-// }
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wanma_print/common/dao/data_dao.dart';
 import 'package:wanma_print/common/utils/scanevent_utils.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
 import '../../../common/config/config.dart';
 import '../../../common/config/scanConfig.dart';
 import '../../../common/event/scan_event.dart';
@@ -39,18 +10,13 @@ import '../../../common/utils/navigator_utils.dart';
 import 'package:barcode_scan2/barcode_scan2.dart';
 import 'dart:async';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
-
 import '../../common_widgit/refresh/custom_refresh_footer.dart';
 import '../../common_widgit/refresh/custom_refresh_header.dart';
 
 class ProcessManagement extends StatefulWidget {
   static final String sName = Config.PROCESS_MANAGEMENT;
-  // static final String sName = Config.UPPER_MOULD;
-
-  // const ProcessManagement({Key? key}) : super(key: key);
   const ProcessManagement({Key? key}) : super(key: key);
   @override
-  // State<ProcessManagement> createState() => _ProcessManagementState();
   State<ProcessManagement> createState() => _UpperMouldState();
 }
 
@@ -66,29 +32,21 @@ class _UpperMouldState extends State<ProcessManagement> {
   var _pageNum = 1;
   var _totalNum;
   late EasyRefreshController _easyfreshController;
-  // List _tempList = [];
-  // var _cirCular = true;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    // stream = ScanEventUtils.eventBus.on<ScanEvent>().listen((event) {
-
     _easyfreshController = EasyRefreshController();
     getData(_pageNum, _pageSize);
     scanAction2();
-
     ScanConfig.scanPage = ScanConfig.PRODUCTION_REPORT;
   }
 
   scanAction2() async {
     Future.delayed(const Duration(milliseconds: 500), () async {
-      // bool f = false;
       stream = ScanEventUtils.eventBus.on<ScanEvent>().listen((event) async {
         if (event.page == ScanConfig.PRODUCTION_REPORT) {
           await NavigatorUtils.goSelectWork(context, event.scanResult)
               .then((res) {
-            // print('fanhui');
             setState(() {
               _pageNum = 1;
               productionList.clear();
@@ -107,14 +65,12 @@ class _UpperMouldState extends State<ProcessManagement> {
 
   scanAction(txt) async {
     await _scan();
-
     Future.delayed(const Duration(milliseconds: 500), () async {
       bool f = false;
       if (scanResult?.rawContent != "" && scanResult?.rawContent != null) {
         await NavigatorUtils.goProgressSelectWork(
                 context, scanResult?.rawContent)
             .then((res) {
-          // print('fanhui');
           setState(() {
             productionList.clear();
             _pageNum = 1;
@@ -122,17 +78,12 @@ class _UpperMouldState extends State<ProcessManagement> {
           });
         });
       }
-      //延时执行的代码
-
-      setState(() {
-        //延时更新状态
-      });
+      setState(() {});
     });
   }
 
   Future<void> _scan() async {
     scanResult = null;
-
     try {
       final result = await BarcodeScanner.scan(
         options: ScanOptions(
@@ -162,7 +113,6 @@ class _UpperMouldState extends State<ProcessManagement> {
         List modelList = res.data['data']['list'];
         productionList.addAll(modelList);
         _totalNum = res.data['data']['totalPage'];
-        print('------');
         print(productionList);
       }
       setState(() {});
@@ -171,9 +121,7 @@ class _UpperMouldState extends State<ProcessManagement> {
 
   void dispose() async {
     super.dispose();
-
     _searController.dispose();
-
     ScanConfig.scanPage = "";
     if (stream != null) {
       stream?.cancel();
@@ -183,7 +131,6 @@ class _UpperMouldState extends State<ProcessManagement> {
 
   Widget build(BuildContext context) {
     _wwidth = MediaQuery.of(context).size.width;
-    // ignore: non_constant_identifier_names
     _hheight = MediaQuery.of(context).size.height;
     return Scaffold(
         appBar: AppBar(
@@ -205,7 +152,6 @@ class _UpperMouldState extends State<ProcessManagement> {
                     child: Column(children: [
                       _searchRow(),
                       Container(
-                        // margin: EdgeInsets.only(top: 5),
                         height: _hheight - 180,
                         width: _wwidth - 20,
                         child: _listWidget(),
@@ -216,7 +162,6 @@ class _UpperMouldState extends State<ProcessManagement> {
 
   Widget cardList() {
     return Container(
-        // color: Colors.red,
         width: _wwidth,
         height: _hheight - 130,
         child: ListView.builder(
@@ -255,7 +200,6 @@ class _UpperMouldState extends State<ProcessManagement> {
           color: Colors.blue,
           onPressed: () {
             scanAction('');
-            print('........');
           },
         ),
         fillColor: Colors.white,
@@ -264,7 +208,6 @@ class _UpperMouldState extends State<ProcessManagement> {
         if (text != '') {
           await NavigatorUtils.goProgressSelectWork(context, text)
               .then((result) {
-            print('========');
             setState(() {
               productionList.clear();
               _pageNum = 1;
@@ -288,7 +231,6 @@ class _UpperMouldState extends State<ProcessManagement> {
         // 控制器关闭刷新功能
         productionList.clear();
         _pageNum = 1;
-
         await getData(_pageNum, _pageSize);
         setState(() {});
         _easyfreshController.resetLoadState();
@@ -379,7 +321,6 @@ class _UpperMouldState extends State<ProcessManagement> {
                               productionList[index]['part_id'],
                               true)
                           .then((result) {
-                        print('=1=======');
                         setState(() {
                           productionList.clear();
                           _pageNum = 1;
@@ -452,7 +393,6 @@ class _UpperMouldState extends State<ProcessManagement> {
       height: h,
       margin: EdgeInsets.only(
         right: rightWW,
-        // left:
       ),
       child: TextButton(
         child: Text(

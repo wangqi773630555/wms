@@ -242,9 +242,9 @@ class MyApp extends StatelessWidget {
                   child: AllCardsPage(),
                 ),
             //工艺管理
-            // ProcessManagement.sName: (context) => CommonLayer(
-            //       child: ProcessManagement(),
-            // ),
+            ProcessManagement.sName: (context) => CommonLayer(
+                  child: ProcessManagement(),
+                ),
             ProcessManageMentDetail.sName: ((context) => CommonLayer(
                   child: ProcessManageMentDetail(),
                 )),

@@ -1,7 +1,6 @@
 name: wanma_print
 description: 万马打印
 
-
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -16,14 +15,14 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+1
+version: 1.0.1+2
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
-  # flutter:
-  #   sdk: flutter
+  flutter:
+    sdk: flutter
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -49,19 +48,19 @@ dev_dependencies:
   #土司
   fluttertoast: ^8.0.3
   #数据库
-  sqflite: ^2.0.0
+  # sqflite: ^2.0.0
   #相册与拍照
   image_picker: ^0.8.1
   #uri
-  url_launcher: ^6.0.4
+  url_launcher: ^6.0.20
   #缓存
   flutter_cache_manager: ^3.0.0
   #时间格式
   date_format: ^2.0.0
   #选择器
   flutter_picker: ^2.0.5
-  # #图表
-  # fl_chart: ^0.9.0
+  #图表
+  fl_chart: ^0.9.0
   #包信息
   package_info_plus: 1.4.2
   #扫码
@@ -75,7 +74,7 @@ dev_dependencies:
   flutter_cupertino_datetime_picker: ^3.0.0
   find_dropdown: ^1.0.0
   #jishu
-  bruno: ^3.0.0
+
   flutter_switch: ^0.3.1
   package_info: ^2.0.2
   #图片缓存
@@ -106,7 +105,7 @@ flutter:
     - images/home/icon_banner.png
     - images/home/gengduo.png
     - images/home/banner.png
-    # - images/home/img4.png
+
     - images/mine/about.png
     - images/mine/app.png
     - images/mine/help.png
@@ -114,20 +113,10 @@ flutter:
     - images/mine/print.png
     - images/mine/safe.png
     - images/mine/card.png
-    
-    - assets/data/
-    - assets/images/
-    - assets/images/home/
-    - assets/images/store/
-    - assets/images/state/
-    - assets/images/order/
-    - assets/images/order/dark/
-    - assets/images/login/
-    - assets/images/goods/
-    - assets/images/shop/
-    - assets/images/account/
-    - assets/images/statistic/
-    - - assets/images/mine/
+
+
+
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

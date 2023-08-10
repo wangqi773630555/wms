@@ -50,6 +50,7 @@ class _ProcessManageMentDetailBodyState
   List<Widget> celldList = [];
   List saveLs = [];
   double hh = 0;
+  bool ff = false;
   // List<DropdownMenuItem<String>> _eqpIdItems = [];
   var eqpIdValue;
   @override
@@ -180,10 +181,10 @@ class _ProcessManageMentDetailBodyState
         child: Column(
       children: [
         Container(
-            // color: Colors.red,
             width: _wwidth,
             height: _hheight - 140,
-            child: Column(
+            child: SingleChildScrollView(
+                child: Column(
               children: [
                 Container(
                   child: SHeader(
@@ -192,14 +193,13 @@ class _ProcessManageMentDetailBodyState
                     true,
                     this.widget.idsList[1].toString(),
                     (value) {
-                      print('++++++++++%@$value');
                       setState(() {
-                        if (value == true) {
-                          hh = _hheight;
-                        } else {
-                          hh = _hheight - 300;
-                        }
+                        // FocusScope.of(context).requestFocus(FocusNode());
+                        ff = value;
+                        (context as Element).markNeedsBuild();
                       });
+
+                      print('++++++++++%@$value');
                     },
                     modelist['customer_po'] ?? '',
                     modelist['part_name'] ?? '',
@@ -214,9 +214,9 @@ class _ProcessManageMentDetailBodyState
                   height: 4,
                 ),
                 selectRow('生产机台', true, _eqpIdItems, _wwidth),
-                listBlocks(context, _wwidth, hh),
+                listBlocks(context, _wwidth, _hheight),
               ],
-            )),
+            ))),
         saveButt(),
       ],
     ));
@@ -384,10 +384,18 @@ class _ProcessManageMentDetailBodyState
   }
 
   Widget listBlocks(BuildContext context, w, h) {
+    // setState(() {
+    //               if (value == true) {
+    //                 hh = _hheight;
+    //               } else {
+    //                 hh = _hheight - 300;
+    //               }
+    //
+    //             });
     return Container(
         // color: Colors.cyan,
         width: w,
-        height: h - 260,
+        height: ff == false ? h - 260 : h - 420,
         child: ListView.builder(
           itemBuilder: (context, index) {
             return blocks(w, keyList[index], valueList[index], index);
@@ -451,7 +459,7 @@ class _ProcessManageMentDetailBodyState
             child: TextField(
                 controller: textController,
                 textAlign: TextAlign.center,
-                autofocus: true,
+                // autofocus: true,
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp("[0-9.]")),
                 ],

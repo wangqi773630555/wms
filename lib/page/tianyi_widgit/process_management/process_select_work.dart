@@ -14,7 +14,7 @@ class ProcessSelectWork extends StatelessWidget {
     var args = ModalRoute.of(context)!.settings.arguments;
     return Scaffold(
         appBar: AppBar(
-          title: Text('选择报工工序'),
+          title: Text('选择工艺管理工序'),
           centerTitle: true,
         ),
         body: SelectWorks(args));
@@ -117,12 +117,12 @@ class _SelectWorkStates extends State<SelectWorks> {
         Divider(
           color: Colors.white,
         ),
-        rowForSelect('串联 报工', Color.fromARGB(255, 22, 55, 238),
+        rowForSelect('串联工艺管理', Color.fromARGB(255, 22, 55, 238),
             Color.fromARGB(255, 69, 94, 241), chuanlian),
         Divider(
           color: Colors.white,
         ),
-        rowForSelect('护套 报工', Color.fromARGB(255, 198, 116, 213),
+        rowForSelect('护套工艺管理', Color.fromARGB(255, 198, 116, 213),
             Color.fromARGB(255, 212, 137, 225), hutao),
         Divider(
           color: Colors.white,

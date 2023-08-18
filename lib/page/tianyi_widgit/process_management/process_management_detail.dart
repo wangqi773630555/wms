@@ -50,7 +50,7 @@ class _ProcessManageMentDetailBodyState
   double hh = 0;
   bool ff = false;
   bool isCircle = false;
-  // bool isRed = false;
+  bool isRed = false;
   var eqpIdValue;
   @override
   void initState() {
@@ -138,7 +138,7 @@ class _ProcessManageMentDetailBodyState
                 'meter_para_id': element2['id'],
                 'meter_para_deviation': element2['meter_para_deviation'] ?? '',
                 'para_desc': element2['para_desc'],
-                // 'textFieldColorIsRed': 0
+                'textFieldColorIsRed': 0
               });
               //  ColorLs.add(false);
 
@@ -163,11 +163,14 @@ class _ProcessManageMentDetailBodyState
       if (ls[i]['meter_para_standard'] == '' ||
           ls[i]['meter_para_standard'] == null) {
         isEmptyLs.add(Text('${ls[i]['para_desc'].toString()}为空!'));
-        // setState(() {
-        // saveLs[i]['textFieldColorIsRed'] = 1;
-        // print('#############${saveLs[i]['textFieldColorIsRed']}');
-        // });
+        setState(() {
+          saveLs[i]['textFieldColorIsRed'] = 1;
+        });
       } else {
+        //输入框灰色
+        setState(() {
+          saveLs[i]['textFieldColorIsRed'] = 0;
+        });
         if (ls[i]['meter_para_deviation'] != '' &&
             ls[i]['meter_para_deviation'] != null &&
             ls[i]['meter_para_standard2'] != '' &&
@@ -180,14 +183,22 @@ class _ProcessManageMentDetailBodyState
           if (ls[i]['meter_para_standard'] > top ||
               ls[i]['meter_para_standard'] < down) {
             isWarmLs.add(Text('${ls[i]['para_desc'].toString()}'));
+            setState(() {
+              saveLs[i]['textFieldColorIsRed'] = 1;
+            });
+          } else {
+            //输入框灰色色
+            setState(() {
+              saveLs[i]['textFieldColorIsRed'] = 0;
+            });
           }
         }
       }
     }
 
-    // for (var element in ls) {
-
-    // }
+    for (var element in saveLs) {
+      print('#############${element['textFieldColorIsRed']}');
+    }
     var requestParams = {
       'order_id': this.widget.idsList[1],
       'ctProcessPartEqpParas': paramLs
@@ -439,9 +450,8 @@ class _ProcessManageMentDetailBodyState
           w,
           element['id'],
           textFieldList[index][i],
-          (element['meter_para_deviation'] ?? '').toString(),
-          0));
-      print('+++++===========${index * i}');
+          (element['meter_para_deviation'] ?? '').toString()));
+      print('+++++===========${index + i + (index * i)}');
       i++;
     }
     return Stack(
@@ -515,8 +525,13 @@ class _ProcessManageMentDetailBodyState
     );
   }
 
-  Widget textCells(
-      String label, dynamic values, w, ids, textController, txt, isRed) {
+  Widget textCells(String label, dynamic values, w, ids, textController, txt) {
+    var isRed;
+    for (var element in saveLs) {
+      if (element['para_desc'].toString() == label) {
+        isRed = element['textFieldColorIsRed'];
+      }
+    }
     return Container(
       margin: EdgeInsets.only(top: 5),
       child: Row(

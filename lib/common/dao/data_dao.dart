@@ -883,7 +883,7 @@ class DataDao {
   /**
    * 上模管理  确认上模
    */
-  static saveUpModule(id, recipe_id, eqp_id, jth, module) async {
+  static saveUpModule(id, recipe_id, eqp_id, jth, module,order_id) async {
     Map<String, String> header = {
       'Authorization': await LocalStorage.get(Config.UA)
     };
@@ -895,7 +895,8 @@ class DataDao {
       'recipe_id': recipe_id,
       'eqp_id': eqp_id,
       'jth': jth,
-      'module': module
+      'module': module,
+      'order_id': order_id
     };
     var res = await HttpManager.netFetch(
         '${UrlConstant.saveUpModule()}${setSk}',
@@ -1362,13 +1363,13 @@ class DataDao {
 
   //获取设备列表
 
-  static getCtProcessBindEqps(recipeId, partId) async {
+  static getCtProcessBindEqps(recipeId, partId, dataId) async {
     Map<String, String> header = {
       'Authorization': await LocalStorage.get(Config.UA)
     };
     String setSk = '_SK_=${await LocalStorage.get(Config.SET_KEY)}';
     Map<String, dynamic> requestParams;
-    requestParams = {'recipe_id': recipeId, 'part_id': partId};
+    requestParams = {'recipe_id': recipeId, 'part_id': partId, 'id': dataId};
     var res = await HttpManager.netFetch(
         '${UrlConstant.getCtProcessBindEqps()}${setSk}',
         requestParams,

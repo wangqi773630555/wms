@@ -45,8 +45,12 @@ class _ProcessManageMentDetailBodyState
   List textFieldList = [];
   List<Widget> celldList = [];
   List saveLs = [];
+  // List ColorLs = [];
+  // List bzhLs = [];//
   double hh = 0;
   bool ff = false;
+  bool isCircle = false;
+  // bool isRed = false;
   var eqpIdValue;
   @override
   void initState() {
@@ -72,7 +76,9 @@ class _ProcessManageMentDetailBodyState
   }
 
   getDataBindEqps() {
-    DataDao.getCtProcessBindEqps(this.widget.idsList[2], this.widget.idsList[3])
+    // print('__________${this.widget.idsList}');
+    DataDao.getCtProcessBindEqps(this.widget.idsList[2], this.widget.idsList[3],
+            this.widget.idsList[1])
         .then((res) {
       if (res.data != null && res.data != '') {
         if (res.data['code'] == 351) {
@@ -82,11 +88,11 @@ class _ProcessManageMentDetailBodyState
         } else {
           eqpIdItemsList = res.data['data'];
           if (eqpIdItemsList.length > 0) {
-            for (var element in eqpIdItemsList) {
-              _eqpIdItems = [];
-              CommonUtils.renderDropdownMenuItem(
-                  eqpIdItemsList, _eqpIdItems, "description", "eqp_id");
-            }
+            // for (var element in eqpIdItemsList) {
+            _eqpIdItems = [];
+            CommonUtils.renderDropdownMenuItem(
+                eqpIdItemsList, _eqpIdItems, "description", "eqp_id");
+            // }
             setState(() {
               eqpIdValue = eqpIdItemsList[0]['eqp_id'].toString();
               getEqpParas(int.parse(eqpIdValue));
@@ -99,9 +105,11 @@ class _ProcessManageMentDetailBodyState
   }
 
   getEqpParas(eqp_id) {
+    isCircle = true;
     DataDao.getCtProcessEqpParas(
             eqp_id, this.widget.idsList[2], this.widget.idsList[3])
         .then((res) {
+      isCircle = false;
       if (res.data != null && res.data != '') {
         if (res.data['code'] == 351) {
           Navigator.pop(context);
@@ -112,6 +120,7 @@ class _ProcessManageMentDetailBodyState
           keyList = [];
           valueList = [];
           saveLs = [];
+          // ColorLs = [];
           textFieldList = [];
           keyList.addAll(modelist2.keys);
           valueList.addAll(modelist2.values);
@@ -122,6 +131,17 @@ class _ProcessManageMentDetailBodyState
               txtController.text =
                   (element2['meter_para_standard'] ?? '').toString();
               sls.add(txtController);
+
+              saveLs.add({
+                'meter_para_standard': element2['meter_para_standard'] ?? '',
+                'meter_para_standard2': element2['meter_para_standard'] ?? '',
+                'meter_para_id': element2['id'],
+                'meter_para_deviation': element2['meter_para_deviation'] ?? '',
+                'para_desc': element2['para_desc'],
+                // 'textFieldColorIsRed': 0
+              });
+              //  ColorLs.add(false);
+
             }
             textFieldList.add(sls);
           }
@@ -131,12 +151,68 @@ class _ProcessManageMentDetailBodyState
     });
   }
 
-  getCtProcessSave(ls) {
+  getCtProcessSave(List ls) {
+    List<Widget> isEmptyLs = [];
+    List<Widget> isWarmLs = [];
+    List paramLs = [];
+    for (var i = 0; i < ls.length; i++) {
+      paramLs.add({
+        'meter_para_standard': ls[i]['meter_para_standard'],
+        'meter_para_id': ls[i]['meter_para_id'],
+      });
+      if (ls[i]['meter_para_standard'] == '' ||
+          ls[i]['meter_para_standard'] == null) {
+        isEmptyLs.add(Text('${ls[i]['para_desc'].toString()}为空!'));
+        // setState(() {
+        // saveLs[i]['textFieldColorIsRed'] = 1;
+        // print('#############${saveLs[i]['textFieldColorIsRed']}');
+        // });
+      } else {
+        if (ls[i]['meter_para_deviation'] != '' &&
+            ls[i]['meter_para_deviation'] != null &&
+            ls[i]['meter_para_standard2'] != '' &&
+            ls[i]['meter_para_standard2'] != null) {
+          // print('+++++++++++${element['meter_para_standard2']}');
+          double top =
+              ls[i]['meter_para_standard2'] + ls[i]['meter_para_deviation'];
+          double down =
+              ls[i]['meter_para_standard2'] - ls[i]['meter_para_deviation'];
+          if (ls[i]['meter_para_standard'] > top ||
+              ls[i]['meter_para_standard'] < down) {
+            isWarmLs.add(Text('${ls[i]['para_desc'].toString()}'));
+          }
+        }
+      }
+    }
+
+    // for (var element in ls) {
+
+    // }
     var requestParams = {
       'order_id': this.widget.idsList[1],
-      'ctProcessPartEqpParas': ls
+      'ctProcessPartEqpParas': paramLs
     };
+    if (isEmptyLs.length > 0) {
+      // setState(() {
+      //   saveLs;
+      // });
+      showConfirmDialog(context, isEmptyLs, () {}, "提示");
+    } else {
+      if (isWarmLs.length > 0) {
+        showConfirmDialog(context, isWarmLs, () {
+          getsave(requestParams);
+        }, "*以下参数不符合标准范围，是否确认下置？");
+      } else {
+        getsave(requestParams);
+      }
+    }
+
+    print('========ls${paramLs.length}');
+
     // print('requestParams###$requestParams');
+  }
+
+  getsave(requestParams) {
     Loading.show(context);
     DataDao.getCtProcessSave(this.widget.idsList[1], requestParams).then((res) {
       if (res.data != null && res.data != '') {
@@ -150,6 +226,49 @@ class _ProcessManageMentDetailBodyState
         }
       }
     });
+  }
+
+  void showConfirmDialog(
+      BuildContext context, List<Widget> ls, Function confirmCallback, str) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return new AlertDialog(
+            title: new Text(
+              str,
+              style: TextStyle(color: Colors.red, fontSize: 16),
+            ),
+            content: ls.length > 0
+                ? Container(
+                    child: SingleChildScrollView(
+                      child: Column(children: ls),
+                    ),
+                  )
+                : Container(),
+            actions: <Widget>[
+              new TextButton(
+                onPressed: () {
+                  confirmCallback();
+                  Navigator.of(context).pop();
+                },
+                child: new Text(
+                  "确认",
+                  style: TextStyle(color: Colors.blue, fontSize: 18),
+                ),
+              ),
+              str != "提示"
+                  ? new TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: new Text(
+                        "取消",
+                        style: TextStyle(fontSize: 18),
+                      ))
+                  : Container(),
+            ],
+          );
+        });
   }
 
   @override
@@ -191,7 +310,15 @@ class _ProcessManageMentDetailBodyState
                   height: 4,
                 ),
                 selectRow('生产机台', true, _eqpIdItems, _wwidth),
-                listBlocks(context, _wwidth, _hheight),
+                isCircle == true
+                    ? Container(
+                        margin: EdgeInsets.only(top: 100),
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            semanticsLabel: '加载中...',
+                          ),
+                        ))
+                    : listBlocks(context, _wwidth, _hheight),
               ],
             ))),
         saveButt(),
@@ -306,16 +433,15 @@ class _ProcessManageMentDetailBodyState
     celldList = [];
     int i = 0;
     for (var element in ls) {
-      saveLs.add({
-        'meter_para_standard': element['meter_para_standard'] ?? '',
-        'meter_para_id': element['id']
-      });
       celldList.add(textCells(
           element['para_desc'].toString(),
           (element['meter_para_standard'] ?? '').toString(),
           w,
           element['id'],
-          textFieldList[index][i]));
+          textFieldList[index][i],
+          (element['meter_para_deviation'] ?? '').toString(),
+          0));
+      print('+++++===========${index * i}');
       i++;
     }
     return Stack(
@@ -381,14 +507,16 @@ class _ProcessManageMentDetailBodyState
         ),
       ),
       onTap: () {
-        List ts = saveLs;
+        print('===++++++++${saveLs.length}');
+        // List ts = saveLs;
         getCtProcessSave(saveLs);
-        saveLs = ts;
+        // saveLs = ts;
       },
     );
   }
 
-  Widget textCells(String label, dynamic values, w, ids, textController) {
+  Widget textCells(
+      String label, dynamic values, w, ids, textController, txt, isRed) {
     return Container(
       margin: EdgeInsets.only(top: 5),
       child: Row(
@@ -406,30 +534,96 @@ class _ProcessManageMentDetailBodyState
           ),
           Container(
             alignment: Alignment.bottomCenter,
-            decoration: BoxDecoration(
-              border: Border.all(width: 0.5),
-              borderRadius: BorderRadius.all(Radius.circular(0)),
-            ),
-            width: w - 155,
+            // decoration: BoxDecoration(
+            //   border: Border.all(
+            //     width: 1,
+            //     // color: Colors.red,
+            //   ),
+            //   borderRadius: BorderRadius.all(Radius.circular(0)),
+            // ),
+            width: w - 265,
             height: 40,
             child: TextField(
                 controller: textController,
+                decoration: InputDecoration(
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                        color: isRed == 1 ? Colors.red : Colors.grey,
+                        width: 1.0),
+                    borderRadius: BorderRadius.all(Radius.circular(0)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                        color: isRed == 1 ? Colors.red : Colors.grey,
+                        width: 1.0),
+                    borderRadius: BorderRadius.all(Radius.circular(0)),
+                  ),
+                  // border: new OutlineInputBorder(
+                  //
+                  //     borderSide: BorderSide(
+                  //         width: 1, color: Colors.red) //This is Ignored,
+                  //     ),
+                ),
                 textAlign: TextAlign.center,
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp("[0-9.]")),
                 ],
                 style: TextStyle(fontSize: 14),
-                decoration: InputDecoration(),
+                // decoration: InputDecoration(),
                 onChanged: (String value) {
                   for (var i = 0; i < saveLs.length; i++) {
                     if (saveLs[i]['meter_para_id'].toString() ==
                         ids.toString()) {
                       // print('val-----${saveLs[i]['meter_para_standard']}');
-                      saveLs[i]['meter_para_standard'] = double.parse(value);
+                      value == ''
+                          ? saveLs[i]['meter_para_standard'] = ''
+                          : saveLs[i]['meter_para_standard'] =
+                              double.parse(value);
                     }
                   }
                 }),
           ),
+          Container(
+            // color: Colors.green,
+            width: 30,
+            height: 30,
+            child: Column(children: [
+              Container(
+                margin: EdgeInsets.only(top: 5),
+                // color: Colors.blue,
+                width: 30,
+                height: 10,
+                child: Icon(
+                  Icons.add,
+                  color: Colors.grey,
+                ),
+              ),
+              Container(
+                // color: Colors.yellow,
+                margin: EdgeInsets.only(top: 0),
+                width: 30,
+                height: 10,
+                child: Icon(
+                  Icons.remove,
+                  color: Colors.grey,
+                ),
+              )
+            ]),
+          ),
+          Container(
+            alignment: Alignment.center,
+            height: 40,
+            width: 80,
+            child: Text(
+              txt,
+              style: TextStyle(color: Colors.grey),
+            ),
+            decoration: new BoxDecoration(
+              // color: Colors.white,
+              // borderRadius: BorderRadius.all(Radius.circular(25.0)),
+              border: new Border.all(width: 1, color: Colors.grey),
+            ),
+          )
         ],
       ),
     );

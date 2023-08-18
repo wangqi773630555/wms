@@ -35,6 +35,7 @@ class _UpperMouldState extends State<UpperMould> {
   StreamSubscription? stream;
   TextEditingController _mjController = TextEditingController();
   TextEditingController _jtController = TextEditingController();
+  TextEditingController _ddController = TextEditingController();
 
   late EasyRefreshController _easyfreshController;
   bool isLeft = true;
@@ -161,6 +162,8 @@ class _UpperMouldState extends State<UpperMould> {
                         Padding(padding: EdgeInsets.all(3)),
                         _editText('机台号', '非必填', _jtController),
                         _editTextForScan('模具编码', '请输入物料号', _mjController),
+                        Padding(padding: EdgeInsets.all(10)),
+                        _editTextForScan('订单号', '请输入订单号', _ddController),
                         Padding(padding: EdgeInsets.all(10)),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -433,7 +436,7 @@ class _UpperMouldState extends State<UpperMould> {
               onPressed: () async {
                 await _scan();
                 if (scanResult?.type != ResultType.Error) {
-                  _mjController.text = scanResult!.rawContent;
+                  _controller.text = scanResult!.rawContent;
                 }
               },
             ),
@@ -735,7 +738,7 @@ class _UpperMouldState extends State<UpperMould> {
    */
   saveUpModule() {
     DataDao.saveUpModule(_type_id, _recipe_id, _counter_id, _jtController.text,
-            _mjController.text)
+            _mjController.text,_ddController.text)
         .then((res) {
       if (res != null && res.result) {
         setState(() {

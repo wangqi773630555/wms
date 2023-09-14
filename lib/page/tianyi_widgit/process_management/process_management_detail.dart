@@ -559,44 +559,83 @@ class _ProcessManageMentDetailBodyState
             width: w - 265,
             height: 40,
             child: TextField(
-                controller: textController,
-                decoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        color: isRed == 1 ? Colors.red : Colors.grey,
-                        width: 1.0),
-                    borderRadius: BorderRadius.all(Radius.circular(0)),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        color: isRed == 1 ? Colors.red : Colors.grey,
-                        width: 1.0),
-                    borderRadius: BorderRadius.all(Radius.circular(0)),
-                  ),
-                  // border: new OutlineInputBorder(
-                  //
-                  //     borderSide: BorderSide(
-                  //         width: 1, color: Colors.red) //This is Ignored,
-                  //     ),
+              controller: textController,
+              decoration: InputDecoration(
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                      color: isRed == 1 ? Colors.red : Colors.grey, width: 1.0),
+                  borderRadius: BorderRadius.all(Radius.circular(0)),
                 ),
-                textAlign: TextAlign.center,
-                inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp("[0-9.]")),
-                ],
-                style: TextStyle(fontSize: 14),
-                // decoration: InputDecoration(),
-                onChanged: (String value) {
-                  for (var i = 0; i < saveLs.length; i++) {
-                    if (saveLs[i]['meter_para_id'].toString() ==
-                        ids.toString()) {
-                      // print('val-----${saveLs[i]['meter_para_standard']}');
-                      value == ''
-                          ? saveLs[i]['meter_para_standard'] = ''
-                          : saveLs[i]['meter_para_standard'] =
-                              double.parse(value);
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                      color: isRed == 1 ? Colors.red : Colors.grey, width: 1.0),
+                  borderRadius: BorderRadius.all(Radius.circular(0)),
+                ),
+                // border: new OutlineInputBorder(
+                //
+                //     borderSide: BorderSide(
+                //         width: 1, color: Colors.red) //This is Ignored,
+                //     ),
+              ),
+              textAlign: TextAlign.center,
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp("[0-9.]")),
+              ],
+              style: TextStyle(fontSize: 14),
+              // decoration: InputDecoration(),
+              onChanged: (String value) {
+                for (var i = 0; i < saveLs.length; i++) {
+                  if (saveLs[i]['meter_para_id'].toString() == ids.toString()) {
+                    // print('val-----${saveLs[i]['meter_para_standard']}');
+                    value == ''
+                        ? saveLs[i]['meter_para_standard'] = ''
+                        : saveLs[i]['meter_para_standard'] =
+                            double.parse(value);
+                  }
+                }
+              },
+              onSubmitted: (String value) {
+                for (var i = 0; i < saveLs.length; i++) {
+                  if (saveLs[i]['meter_para_id'].toString() == ids.toString()) {
+                    // print('val-----${saveLs[i]['meter_para_standard']}');
+                    value == ''
+                        ? saveLs[i]['meter_para_standard'] = ''
+                        : saveLs[i]['meter_para_standard'] =
+                            double.parse(value);
+
+                    setState(() {
+                      saveLs[i]['textFieldColorIsRed'] = 0;
+                    });
+                    if (saveLs[i]['meter_para_deviation'] != '' &&
+                        saveLs[i]['meter_para_deviation'] != null &&
+                        saveLs[i]['meter_para_standard2'] != '' &&
+                        saveLs[i]['meter_para_standard2'] != null) {
+                      // print('+++++++++++${element['meter_para_standard2']}');
+                      double top = saveLs[i]['meter_para_standard2'] +
+                          saveLs[i]['meter_para_deviation'];
+                      double down = saveLs[i]['meter_para_standard2'] -
+                          saveLs[i]['meter_para_deviation'];
+                      if (saveLs[i]['meter_para_standard'] > top ||
+                          saveLs[i]['meter_para_standard'] < down) {
+                        setState(() {
+                          saveLs[i]['textFieldColorIsRed'] = 1;
+                          showConfirmDialog(
+                              context,
+                              [Text('参数【${saveLs[i]['para_desc']}】不符合标准范围')],
+                              () {},
+                              '提示');
+                        });
+                      } else {
+                        //输入框灰色色
+                        setState(() {
+                          saveLs[i]['textFieldColorIsRed'] = 0;
+                        });
+                      }
                     }
                   }
-                }),
+                }
+              },
+            ),
           ),
           Container(
             // color: Colors.green,

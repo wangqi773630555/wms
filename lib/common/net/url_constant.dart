@@ -243,6 +243,6 @@ class UrlConstant {
 
   // 参数下置
   static getCtProcessSave() {
-    return '${host2}sync/downParasmesProxy/mesJsonReq?route=/process/ctProcessPartEqpPara/downParas&';
+    return '${host2}sync/mesProxy/mesJsonReq?route=/process/ctProcessPartEqpPara/downParas&';
   }
 }

@@ -199,10 +199,10 @@ class _ProcessManageMentDetailBodyState
     for (var element in saveLs) {
       print('#############${element['textFieldColorIsRed']}');
     }
-    var requestParams = {
-      'order_id': this.widget.idsList[1],
-      'ctProcessPartEqpParas': paramLs
-    };
+    // var requestParams = {
+    //   'order_id': this.widget.idsList[1],
+    //   'ctProcessPartEqpParas': paramLs
+    // };
     if (isEmptyLs.length > 0) {
       // setState(() {
       //   saveLs;
@@ -211,23 +211,23 @@ class _ProcessManageMentDetailBodyState
     } else {
       if (isWarmLs.length > 0) {
         showConfirmDialog(context, isWarmLs, () {
-          getsave(requestParams);
+          getsave(paramLs);
         }, "*以下参数不符合标准范围，是否确认下置？");
       } else {
-        getsave(requestParams);
+        getsave(paramLs);
       }
     }
 
-    print('========ls${paramLs.length}');
+    print('===${this.widget.idsList[1]}=====ls$paramLs');
 
     // print('requestParams###$requestParams');
   }
 
-  getsave(requestParams) {
-    Loading.show(context);
-    DataDao.getCtProcessSave(this.widget.idsList[1], requestParams).then((res) {
+  getsave(paramLs) {
+//     Loading.show(context);
+//  Loading.hide(context);
+    DataDao.getCtProcessSave(this.widget.idsList[1], paramLs).then((res) {
       if (res.data != null && res.data != '') {
-        Loading.hide(context);
         if (res != null && res.result) {
           Fluttertoast.showToast(
               msg: res.data['msg'].toString(), timeInSecForIosWeb: 5);

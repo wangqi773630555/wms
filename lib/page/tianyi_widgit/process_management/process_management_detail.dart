@@ -110,6 +110,7 @@ class _ProcessManageMentDetailBodyState
             eqp_id, this.widget.idsList[2], this.widget.idsList[3])
         .then((res) {
       isCircle = false;
+      setState(() {});
       if (res.data != null && res.data != '') {
         if (res.data['code'] == 351) {
           Navigator.pop(context);

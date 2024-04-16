@@ -439,6 +439,37 @@ class UserDao {
     }
   }
 
+  static signin(resCode) async {
+    Map<String, String> header = {
+      'Authorization': await LocalStorage.get(Config.UA)
+    };
+    Map<String, dynamic> requestParams;
+    requestParams = {
+      'res':resCode,
+    };
+    var res = await HttpManager.netFetch(
+        '${UrlConstant.signin()}',
+        requestParams,
+        header,
+        Options(method: 'post'));
+
+    var resultData;
+    if (res != null && res.result) {
+      if (res.data['code'] == 200) {
+        return ResultDao(res.data, res.result);
+      } else {
+      /*  resultData = ResultDao(
+            Code.errorHandleFunction(res.data['code'], res.data['msg'], false),
+            false);*/
+        return ResultDao(res.data['msg'], false);
+      }
+    } else {
+      resultData =
+          ResultDao(Code.errorHandleFunction(res.code, '', false), false);
+      return ResultDao(resultData, false);
+    }
+  }
+
 
 
 

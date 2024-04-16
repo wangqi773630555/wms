@@ -198,8 +198,8 @@ class _FragmentHomePageState extends State<FragmentHomePage> with RouteAware {
         onPressed: () {
           if (i == gridList.length - 1) {
             NavigatorUtils.goMainTabMore(mYcontext);
-            //上架
-            //NavigatorUtils.goPage(context, "shelves_up");
+            //打开
+            //NavigatorUtils.goPage(context, "scan_sign_in");
             //下架
             //NavigatorUtils.goPage(context, "shelves_down");
             //移库

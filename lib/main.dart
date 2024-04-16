@@ -13,6 +13,7 @@ import 'package:wanma_print/common/style/wm_style.dart';
 import 'package:wanma_print/common/utils/common_utils.dart';
 import 'package:wanma_print/common/utils/navigator_utils.dart';
 import 'package:wanma_print/page/dianlan_widgit/current_task.dart';
+import 'package:wanma_print/page/dianlan_widgit/scan_sign_in.dart';
 import 'package:wanma_print/page/dianlan_widgit/search_material.dart';
 import 'package:wanma_print/page/dianlan_widgit/search_material_filtrate.dart';
 import 'package:wanma_print/page/dianlan_widgit/shelves_down.dart';
@@ -250,7 +251,12 @@ class MyApp extends StatelessWidget {
                 )),
             ProcessSelectWork.sName: ((context) => CommonLayer(
                   child: ProcessSelectWork(),
-                ))
+                )),
+            ScanSignIn.sName: ((context) => CommonLayer(
+              child: ScanSignIn(),
+            ))
+
+
           },
         );
       }),

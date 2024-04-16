@@ -101,4 +101,6 @@ class Config {
   static const PROCESS_MANAGEMENT = "process_management";
   static const PROCESS_MANAGEMENT_DETAIL = "process_management_detail";
   static const PROCESS_SELECT_WORK = "process_select_work";
+  //签到
+  static const SCANSIGNIN = "scan_sign_in";
 }

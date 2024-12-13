@@ -1,8 +1,11 @@
 buildscript {
-    ext.kotlin_version = '1.5.21'
+    ext.kotlin_version = '1.6.10'
     repositories {
+        /* google()
+         jcenter()*/
         google()
         jcenter()
+        mavenCentral()
     }
 
     dependencies {
@@ -13,8 +16,24 @@ buildscript {
 
 allprojects {
     repositories {
+        /* google()
+         jcenter()*/
         google()
         jcenter()
+        mavenCentral()
+        maven {
+            url "https://jitpack.io"
+        }
+        maven {url 'https://maven.aliyun.com/repository/public'}
+        all { ArtifactRepository repo ->
+            if(repo instanceof MavenArtifactRepository){
+                def url = repo.url.toString()
+                if (url.startsWith('https://jcenter.bintray.com/')) {
+                    remove repo
+                }
+            }
+        }
+
     }
 }
 
@@ -27,4 +46,3 @@ subprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
-

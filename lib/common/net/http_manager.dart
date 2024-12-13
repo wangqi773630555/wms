@@ -81,9 +81,6 @@ class HttpManager {
         errorResponse.statusCode = Code.NETWORK_TIMEOUT;
       }
       if (Config.DEBUG) {
-        print('请求头: ' + option.headers.toString());
-       // print('请求参数: ' + params.toString());
-        LogUtil.d('请求参数: ' + jsonEncode(params));
         print('请求异常：' + e.toString());
         print('请求异常url：' + url);
       }
@@ -99,7 +96,11 @@ class HttpManager {
       print('请求头: ' + option.headers.toString());
       if (params != null) {
         //print('请求参数: ' + params.toString());
-        LogUtil.d('请求参数: ' + jsonEncode(params));
+        try{
+          LogUtil.d('请求参数: ' + json.encode(params));
+        }catch(e){
+          print('请求参数: ' + params.toString());
+        }
       }
       if (response != null) {
         LogUtil.d(response.toString());

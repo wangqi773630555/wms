@@ -439,16 +439,20 @@ class UserDao {
     }
   }
 
-  static signin(resCode) async {
+  static signin(resCode,img_id,remark,check_type) async {
     Map<String, String> header = {
       'Authorization': await LocalStorage.get(Config.UA)
     };
+    String setSk = '_SK_=${await LocalStorage.get(Config.SET_DL_KEY)}';
     Map<String, dynamic> requestParams;
     requestParams = {
       'res':resCode,
+      'img_id':img_id,
+      'check_type':check_type,
+      'remark':remark
     };
     var res = await HttpManager.netFetch(
-        '${UrlConstant.signin()}',
+        '${UrlConstant.signin()}?${setSk}',
         requestParams,
         header,
         Options(method: 'post'));
@@ -458,10 +462,10 @@ class UserDao {
       if (res.data['code'] == 200) {
         return ResultDao(res.data, res.result);
       } else {
-      /*  resultData = ResultDao(
+        resultData = ResultDao(
             Code.errorHandleFunction(res.data['code'], res.data['msg'], false),
-            false);*/
-        return ResultDao(res.data['msg'], false);
+            false);
+       // return ResultDao(res.data['msg'], false);
       }
     } else {
       resultData =
@@ -469,7 +473,6 @@ class UserDao {
       return ResultDao(resultData, false);
     }
   }
-
 
 
 

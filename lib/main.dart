@@ -14,6 +14,7 @@ import 'package:wanma_print/common/utils/common_utils.dart';
 import 'package:wanma_print/common/utils/navigator_utils.dart';
 import 'package:wanma_print/page/dianlan_widgit/current_task.dart';
 import 'package:wanma_print/page/dianlan_widgit/scan_sign_in.dart';
+import 'package:wanma_print/page/dianlan_widgit/scan_sign_in_list.dart';
 import 'package:wanma_print/page/dianlan_widgit/search_material.dart';
 import 'package:wanma_print/page/dianlan_widgit/search_material_filtrate.dart';
 import 'package:wanma_print/page/dianlan_widgit/shelves_down.dart';
@@ -254,7 +255,11 @@ class MyApp extends StatelessWidget {
                 )),
             ScanSignIn.sName: ((context) => CommonLayer(
               child: ScanSignIn(),
+            )),
+            ScanSignInList.sName: ((context) => CommonLayer(
+              child: ScanSignInList(),
             ))
+
 
 
           },

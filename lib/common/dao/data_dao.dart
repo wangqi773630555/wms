@@ -1456,4 +1456,114 @@ class DataDao {
       return ResultDao(resultData, false);
     }
   }
+
+  ///上传文件
+  static getUploadFile(file, name, type, size, lastModifiedDate) async {
+    Map<String, String> header = {
+      'Content-Type': "multipart/form-data",
+      'Authorization': await LocalStorage.get(Config.UA)
+    };
+    String setSk = '?_SK_=${await LocalStorage.get(Config.SET_DL_KEY)}';
+    Map<String, dynamic> requestParams = {
+      'file': await MultipartFile.fromFile(file.path),
+      'name': name,
+      'type': type,
+      'size': size,
+      'lastModifiedDate': lastModifiedDate
+    };
+
+    var formData = FormData.fromMap(requestParams);
+
+    var res = await HttpManager.netFetch(
+        '${UrlConstant.getUploadFile()}${setSk}',
+        formData, header, Options(method: 'post'));
+    var resultData;
+    if (res != null && res.result) {
+      if (res.data['code'] == 'ok') {
+        return ResultDao(res.data, res.result);
+      } else {
+        resultData = ResultDao(
+            Code.errorHandleFunction(res.data['code'], res.data['msg'], false),
+            false);
+        return ResultDao(resultData, false);
+      }
+    } else {
+      resultData =
+          ResultDao(Code.errorHandleFunction(res.code, '', false), false);
+      return ResultDao(resultData, false);
+    }
+  }
+
+
+  static rtQmSampleInit() async {
+    Map<String, String> header = {
+      'Authorization': await LocalStorage.get(Config.UA)
+    };
+    String setSk = '?_SK_=${await LocalStorage.get(Config.SET_DL_KEY)}';
+    Map<String, dynamic> requestParams;
+    requestParams = {};
+    var res = await HttpManager.netFetch(
+        '${UrlConstant.rtQmSampleInit()}${setSk}',
+        requestParams,
+        header,
+        Options(method: 'post'));
+    var resultData;
+    if (res != null && res.result) {
+      if (res.data['code'] == 'ok') {
+        return ResultDao(res.data, res.result);
+      } else {
+        resultData = ResultDao(
+            Code.errorHandleFunction(res.data['code'], res.data['message'], false),
+            false);
+        return ResultDao(resultData, false);
+      }
+    } else {
+      resultData =
+          ResultDao(Code.errorHandleFunction(res.code, '', false), false);
+      return ResultDao(resultData, false);
+    }
+  }
+
+
+
+
+  /**
+   * 获取签到列表
+   */
+  static getUserScanCodeList(pageNumber, pageSize,startDay, endDay,eqp_name) async {
+    Map<String, String> header = {
+      //'Authorization': 'SK:${await LocalStorage.get(Config.SET_DL_KEY)}'
+    };
+    String setSk = '?_SK_=${await LocalStorage.get(Config.SET_DL_KEY)}';
+    Map<String, dynamic> requestParams;
+    requestParams = {
+      'pageNum': pageNumber,
+      'pageSize': pageSize,
+      'params':{
+        'start_date':startDay,
+        'end_date':endDay,
+        'eqp_name':eqp_name
+      }
+    };
+    var res = await HttpManager.netFetch(
+        '${UrlConstant.getUserScanCodeList()}${setSk}',
+        requestParams,
+        header,
+        Options(method: 'post'));
+    var resultData;
+    if (res != null && res.result) {
+      if (res.data['code'] == 'ok') {
+        return ResultDao(res.data, res.result);
+      } else {
+        resultData = ResultDao(
+            Code.errorHandleFunction(res.data['code'], res.data['message'], false),
+            false);
+        return ResultDao(resultData, false);
+      }
+    } else {
+      resultData =
+          ResultDao(Code.errorHandleFunction(res.code, '', false), false);
+      return ResultDao(resultData, false);
+    }
+  }
 }

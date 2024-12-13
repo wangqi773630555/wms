@@ -211,6 +211,11 @@ class _FragmentHomePageState extends State<FragmentHomePage> with RouteAware {
           } else if (gridList[i]['route'] == 'materialDetail') {
             //扫码收货
             NavigatorUtils.goMaterialDetail(context, '');
+          } else if(gridList[i]['route']=='scanSignin'){
+            NavigatorUtils.goPage(
+              context,
+              'scan_sign_in',
+            );
           } else {
             NavigatorUtils.goPage(
               context,

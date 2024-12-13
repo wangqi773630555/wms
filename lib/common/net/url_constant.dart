@@ -4,9 +4,12 @@ import '../local/local_storage.dart';
 ///接口地址
 class UrlConstant {
   //测试环境
-   //static const String host = 'https://gatewaydev.wanmaco.com/'; //登录测试（新框架）
-   //static const String host2 = 'http://itest.wanmagroup.com/'; //测试（天屹数据缆）
-   //static const String host3 = 'http://dlmestest.wanmagroup.com/api/'; //测试（电缆低压三厂）
+   /*static const String host = 'https://gatewaydev.wanmaco.com/'; //登录测试（新框架）
+   static const String host2 = 'http://itest.wanmagroup.com/'; //测试（天屹数据缆）
+   static const String host3 = 'http://dlmestest.wanmagroup.com/api/'; //测试（电缆低压三厂）
+   static const String host4 = 'https://public.wanmaco.com/'; //正式*/
+   //static const String host4 = 'http://mestest.shenxinpack.com/eqptest/api/'; //正式*/
+
 
   //本地环境
   //static const String host2 = 'http://10.3.32.33:94/';//裴明明本地
@@ -251,4 +254,35 @@ class UrlConstant {
   static signin() {
     return '${host4}dl-wms-service/common/common/scanCode';
   }
+
+  /// 上传文件
+  static getUploadFile() {
+    return '${host4}dl-wms-service/base/ctBaseFile/uploadFile50';
+  }
+
+  /// 文件下载
+  static getDownloadFile() {
+    return '${host4}dl-wms-service/common/download';
+  }
+
+  //获取sk
+  static getUserSk() {
+    return '${host4}dl-wms-service/common/common/getUserSk';
+  }
+
+  //获取机台
+  static rtQmSampleInit() {
+    return '${host4}dl-wms-service/qm/rtQmSample/init';
+  }
+
+  //获取签到列表
+  static getUserScanCodeList() {
+    return '${host4}dl-wms-service/common/common/getUserScanCodeList';
+  }
+
+
+
+
+
+
 }

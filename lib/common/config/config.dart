@@ -103,4 +103,6 @@ class Config {
   static const PROCESS_SELECT_WORK = "process_select_work";
   //签到
   static const SCANSIGNIN = "scan_sign_in";
+  //签到记录
+  static const SCANSIGNINLIST = "scan_sign_in_list";
 }

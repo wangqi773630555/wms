@@ -22,11 +22,13 @@ class _LoginPageState extends State<LoginPage> {
   var _userName = '';
   var _password = '';
   var appType = '';
+  bool toPage = true;
 
   final TextEditingController userController = TextEditingController();
   final TextEditingController pwController = TextEditingController();
   FocusNode userNameFocusNode = FocusNode();
   FocusNode passwordFocusNode = FocusNode();
+  int timestamp = 0;
 
   _LoginPageState() : super();
 
@@ -34,6 +36,8 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
     initParams();
+    toPage = true;
+
   }
 
   initParams() async {
@@ -152,6 +156,18 @@ class _LoginPageState extends State<LoginPage> {
                                     ],
                                   ),
                                   onPressed: () {
+                                    // 获取当前时间
+                                    DateTime now = DateTime.now();
+                                    // 获取时间戳（毫秒）
+                                    int nowtimestamp = now.millisecondsSinceEpoch;
+                                    if(nowtimestamp-timestamp<5000){
+                                      //大于三秒才可以继续操作
+                                      timestamp = nowtimestamp;
+                                      Fluttertoast.showToast(msg: '操作过于频繁，请5秒后重试');
+                                      return;
+                                    }
+                                    timestamp = nowtimestamp;
+
                                     userNameFocusNode.unfocus();
                                     passwordFocusNode.unfocus();
                                     CommonUtils.showLoadingDialog(context);
@@ -173,7 +189,12 @@ class _LoginPageState extends State<LoginPage> {
                                     UserDao.login(_userName, _password, appType,
                                             store)
                                         .then((res) {
-                                      Navigator.pop(context);
+                                          try{
+                                            Navigator.pop(context);
+                                          }catch(e){
+
+                                          }
+
                                       if (res != null && res.result) {
                                         Future.delayed(
                                             const Duration(milliseconds: 500),
@@ -215,6 +236,7 @@ class _LoginPageState extends State<LoginPage> {
                                                 });
                                               }
                                             });
+
                                           }
                                           return true;
                                         });
@@ -278,7 +300,14 @@ class _LoginPageState extends State<LoginPage> {
     UserDao.getAuthorizeResources('').then((res) {
       if (res != null && res.result) {
         Config.REFRESH=1;
-        NavigatorUtils.goHomeNew(context);
+        try{
+          if(toPage) {
+            toPage = false;
+            NavigatorUtils.goHomeNew(context);
+          }
+        }catch(e){
+
+        }
       }
     });
   }

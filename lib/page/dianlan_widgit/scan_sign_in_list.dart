@@ -336,11 +336,7 @@ class _ScanSignInListState extends State<ScanSignInList> {
 
             if (isStart) {
               _selectDateStart = dateTime;
-              startDay = dateTime.year.toString() +
-                  '-' +
-                  monthStr +
-                  '-' +
-                  dateTime.day.toString();
+              startDay = dateTime.year.toString() + '-' + monthStr + '-' + dayStr;
             } else {
               _selectDateEnd = dateTime;
               endDay = dateTime.year.toString() + '-' + monthStr + '-' + dayStr;

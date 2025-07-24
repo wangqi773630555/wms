@@ -1457,6 +1457,7 @@ class DataDao {
     }
   }
 
+
   ///上传文件
   static getUploadFile(file, name, type, size, lastModifiedDate) async {
     Map<String, String> header = {
@@ -1566,4 +1567,240 @@ class DataDao {
       return ResultDao(resultData, false);
     }
   }
+
+
+  static taksPage(pageNumber, pageSize,lotId, col02,xnyZjBarcode) async {
+    Map<String, String> header = {
+      'Authorization':  await LocalStorage.get(Config.UA)
+    };
+    Map<String, dynamic> requestParams;
+    requestParams = {
+      'pageNum': pageNumber,
+      'pageSize': pageSize,
+      'lotId': lotId,
+      'col02': col02,
+      'xnyZjBarcode':xnyZjBarcode
+    };
+    var res = await HttpManager.netFetch(
+        '${UrlConstant.taskPage()}',
+        requestParams,
+        header,
+        Options(method: 'post'));
+    var resultData;
+    if (res != null && res.result) {
+      if (res.data['code'] == 200) {
+        return ResultDao(res.data, res.result);
+      } else {
+        resultData = ResultDao(
+            Code.errorHandleFunction(res.data['code'], res.data['message'], false),
+            false);
+        return ResultDao(resultData, false);
+      }
+    } else {
+      resultData =
+          ResultDao(Code.errorHandleFunction(res.code, '', false), false);
+      return ResultDao(resultData, false);
+    }
+  }
+
+  static sheetList(id) async {
+    Map<String, String> header = {
+      'Authorization':  await LocalStorage.get(Config.UA)
+    };
+    Map<String, dynamic> requestParams;
+    requestParams = {
+      'id': id,
+    };
+    var res = await HttpManager.netFetch(
+        '${UrlConstant.sheetList()}?id=${id}',
+        null,
+        header,
+        Options(method: 'get'));
+    var resultData;
+    if (res != null && res.result) {
+      if (res.data['code'] == 200) {
+        return ResultDao(res.data, res.result);
+      } else {
+        resultData = ResultDao(
+            Code.errorHandleFunction(res.data['code'], res.data['message'], false),
+            false);
+        return ResultDao(resultData, false);
+      }
+    } else {
+      resultData =
+          ResultDao(Code.errorHandleFunction(res.code, '', false), false);
+      return ResultDao(resultData, false);
+    }
+  }
+
+  static updateSheetInfo(id, col02) async {
+    Map<String, String> header = {
+      'Authorization':  await LocalStorage.get(Config.UA)
+    };
+    Map<String, dynamic> requestParams;
+    requestParams = {
+      'id': id,
+      'col02': col02,
+    };
+    var res = await HttpManager.netFetch(
+        '${UrlConstant.updateSheetInfo()}',
+        requestParams,
+        header,
+        Options(method: 'post'));
+    var resultData;
+    if (res != null && res.result) {
+      if (res.data['code'] == 200) {
+        return ResultDao(res.data, res.result);
+      } else {
+        resultData = ResultDao(
+            Code.errorHandleFunction(res.data['code'], res.data['message'], false),
+            false);
+        return ResultDao(resultData, false);
+      }
+    } else {
+      resultData =
+          ResultDao(Code.errorHandleFunction(res.code, '', false), false);
+      return ResultDao(resultData, false);
+    }
+  }
+
+
+  static upload(file) async {
+    Map<String, String> header = {
+      'Content-Type': "multipart/form-data",
+      'Authorization': await LocalStorage.get(Config.UA)
+    };
+    Map<String, dynamic> requestParams = {
+      'file': await MultipartFile.fromFile(file.path),
+    };
+
+    var formData = FormData.fromMap(requestParams);
+
+    var res = await HttpManager.netFetch(
+        '${UrlConstant.upload()}',
+        formData, header, Options(method: 'post'));
+    var resultData;
+    if (res != null && res.result) {
+      if (res.data['code'] == 200) {
+        return ResultDao(res.data, res.result);
+      } else {
+        resultData = ResultDao(
+            Code.errorHandleFunction(res.data['code'], res.data['msg'], false),
+            false);
+        return ResultDao(resultData, false);
+      }
+    } else {
+      resultData =
+          ResultDao(Code.errorHandleFunction(res.code, '', false), false);
+      return ResultDao(resultData, false);
+    }
+  }
+
+
+  /**
+   * 【APP扫码盘库】扫码获取在制品信息
+   */
+  static getProdWoResultSemis(var code) async {
+    Map<String, String> header = {
+      'Authorization': await LocalStorage.get(Config.UA)
+    };
+    String sk = await LocalStorage.get(Config.SET_DL_KEY);
+    Map<String, dynamic> requestParams;
+    requestParams = {
+      "_SK_": sk,
+      "code": code
+    };
+    // print('======-----##$requestParams');
+    var res = await HttpManager.netFetch(
+        '${UrlConstant.getResult()}',
+        requestParams,
+        header,
+        Options(method: 'post'));
+    var resultData;
+    if (res != null && res.result) {
+      if (res.data['code'] == 200) {
+        return ResultDao(res.data, res.result);
+      } else {
+        resultData = ResultDao(
+            Code.errorHandleFunction(res.data['code'], res.data['msg'], false),
+            false);
+        return ResultDao(resultData, false);
+      }
+    } else {
+      resultData =
+          ResultDao(Code.errorHandleFunction(res.code, '', false), false);
+      return ResultDao(resultData, false);
+    }
+  }
+
+  /**
+   * 【APP扫码盘库】获取扫码APP参数清单
+   */
+  static loadPara() async {
+    Map<String, String> header = {
+      'Authorization': await LocalStorage.get(Config.UA)
+    };
+    String sk = await LocalStorage.get(Config.SET_DL_KEY);
+    Map<String, dynamic> requestParams;
+    requestParams = {"_SK_": sk};
+    // print('======-----##$requestParams');
+    var res = await HttpManager.netFetch(
+        '${UrlConstant.loadPara()}',
+        requestParams,
+        header,
+        Options(method: 'post'));
+    var resultData;
+    if (res != null && res.result) {
+      if (res.data['code'] == 200) {
+        return ResultDao(res.data, res.result);
+      } else {
+        resultData = ResultDao(
+            Code.errorHandleFunction(res.data['code'], res.data['msg'], false),
+            false);
+        return ResultDao(resultData, false);
+      }
+    } else {
+      resultData =
+          ResultDao(Code.errorHandleFunction(res.code, '', false), false);
+      return ResultDao(resultData, false);
+    }
+  }
+
+  /**
+   * 【APP扫码盘库】保存盘点信息
+   */
+  static saveResult(var datas) async {
+    Map<String, String> header = {
+      'Authorization': await LocalStorage.get(Config.UA)
+    };
+    String sk = await LocalStorage.get(Config.SET_DL_KEY);
+    Map<String, dynamic> requestParams;
+    requestParams = {
+      '_SK_': sk,
+      'list': datas
+    };
+    // print('======-----##$requestParams');
+    var res = await HttpManager.netFetch(
+        '${UrlConstant.saveResult()}',
+        requestParams,
+        header,
+        Options(method: 'post'));
+    var resultData;
+    if (res != null && res.result) {
+      if (res.data['code'] == 200) {
+        return ResultDao(res.data, res.result);
+      } else {
+        resultData = ResultDao(
+            Code.errorHandleFunction(res.data['code'], res.data['msg'], false),
+            false);
+        return ResultDao(resultData, false);
+      }
+    } else {
+      resultData =
+          ResultDao(Code.errorHandleFunction(res.code, '', false), false);
+      return ResultDao(resultData, false);
+    }
+  }
+
+
 }

@@ -1,24 +1,22 @@
-import '../config/config.dart';
-import '../local/local_storage.dart';
-
 ///接口地址
 class UrlConstant {
-  //测试环境
-  /* static const String host = 'https://gatewaydev.wanmaco.com/'; //登录测试（新框架）
+   //测试环境
+   static const String host = 'https://gatewaydev.wanmaco.com/'; //登录测试（新框架）
    static const String host2 = 'http://itest.wanmagroup.com/'; //测试（天屹数据缆）
    static const String host3 = 'http://dlmestest.wanmagroup.com/api/'; //测试（电缆低压三厂）
-   static const String host4 = 'https://public.wanmaco.com/'; //正式*/
+   static const String host4 = 'https://public.wanmaco.com/'; //正式
+
+
 
 
   //本地环境
-  //static const String host2 = 'http://10.3.32.33:94/';//裴明明本地
-  // static const String host3 = 'http://10.3.32.37:8002/'; //测试 志航本地（电缆低压三厂）
+  // static const String host3 = 'http://10.3.32.37:8002/'; //测试 智航本地（电缆低压三厂）
 
   // 正式环境
-  static const String host = 'https://gateway.wanmaco.com/'; //登录正式（新框架）
+ /* static const String host = 'https://gateway.wanmaco.com/'; //登录正式（新框架）
   static const String host2 = 'http://wms.wanmaco.com/'; //正式（天屹数据缆）
   static const String host3 = 'http://dlmes.wanmagroup.com/api/'; //正式（电缆低压三厂）
-  static const String host4 = 'https://public.wanmaco.com/'; //正式
+  static const String host4 = 'https://public.wanmaco.com/'; //正式*/
 
 
   //登陆
@@ -279,8 +277,42 @@ class UrlConstant {
     return '${host4}dl-wms-service/common/common/getUserScanCodeList';
   }
 
+  //获取检验任务列表
+  static taskPage() {
+    return '${host}ams/qms-data/taskPage';
+  }
+
+  //检验单列表
+  static sheetList() {
+    return '${host}ams/qms-data/sheetList';
+  }
 
 
+  //保存检验单附件
+  static updateSheetInfo() {
+    return '${host}ams/qms-data/sheet/updateSheetInfo';
+  }
+
+
+  // 上传文件
+  static upload() {
+    return '${host}file-server/minio/file/upload';
+  }
+
+  //【APP扫码盘库】扫码获取在制品信息
+  static getResult() {
+    return '${host}ams/mes-data/semi/getResult';
+  }
+
+  //【APP扫码盘库】获取扫码APP参数清单
+  static loadPara() {
+    return '${host}ams/mes-data/semi/loadPara';
+  }
+
+  //【APP扫码盘库】保存盘点信息
+  static saveResult() {
+    return '${host}ams/mes-data/semi/saveResult';
+  }
 
 
 

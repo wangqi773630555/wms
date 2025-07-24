@@ -105,4 +105,14 @@ class Config {
   static const SCANSIGNIN = "scan_sign_in";
   //签到记录
   static const SCANSIGNINLIST = "scan_sign_in_list";
+
+  //新能源
+  //枪线任务列表
+  static const TASKLIST = "task_list";
+  //检验单列表
+  static const CHECKOUTLIST = "checkout_list";
+  //图片列表
+  static const PHOTOLIST = "photo_list";
+  //半制品盘库
+  static const SEMI_FINISHED_CHECK = "semi_finished_check";
 }

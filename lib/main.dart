@@ -17,6 +17,7 @@ import 'package:wanma_print/page/dianlan_widgit/scan_sign_in.dart';
 import 'package:wanma_print/page/dianlan_widgit/scan_sign_in_list.dart';
 import 'package:wanma_print/page/dianlan_widgit/search_material.dart';
 import 'package:wanma_print/page/dianlan_widgit/search_material_filtrate.dart';
+import 'package:wanma_print/page/dianlan_widgit/semi_finished_check.dart';
 import 'package:wanma_print/page/dianlan_widgit/shelves_down.dart';
 import 'package:wanma_print/page/dianlan_widgit/shelves_up.dart';
 import 'package:wanma_print/page/dianlan_widgit/task_examine_notarize.dart';
@@ -57,11 +58,15 @@ import 'package:wanma_print/page/tianyi_widgit/upper_mould.dart';
 import 'package:wanma_print/page/welcome_page.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/rendering.dart' show debugPaintSizeEnabled;
+import 'package:wanma_print/page/xinnengyuan_widgit/checkout_list.dart';
+import 'package:wanma_print/page/xinnengyuan_widgit/photo_list.dart';
+import 'package:wanma_print/page/xinnengyuan_widgit/task_list.dart';
 
 import 'common/utils/barcolor_util.dart';
 import 'page/frame_widgit/menu_page.dart';
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
+
 void main() async {
   //处理未捕获异常
   FlutterError.onError = (FlutterErrorDetails details) async {
@@ -254,13 +259,27 @@ class MyApp extends StatelessWidget {
                   child: ProcessSelectWork(),
                 )),
             ScanSignIn.sName: ((context) => CommonLayer(
-              child: ScanSignIn(),
-            )),
+                  child: ScanSignIn(),
+                )),
             ScanSignInList.sName: ((context) => CommonLayer(
-              child: ScanSignInList(),
-            ))
-
-
+                  child: ScanSignInList(),
+                )),
+            //查询检验任务
+            TaskList.sName: ((context) => CommonLayer(
+                  child: TaskList(),
+                )),
+            //检验单列表
+            CheckOutList.sName: ((context) => CommonLayer(
+              child: CheckOutList(),
+            )),
+            //照片列表
+            PhotoList.sName: ((context) => CommonLayer(
+              child: PhotoList(),
+            )),
+            //半制品盘库
+            SemiFinishedCheck.sName: ((context) => CommonLayer(
+              child: SemiFinishedCheck(),
+            )),
 
           },
         );

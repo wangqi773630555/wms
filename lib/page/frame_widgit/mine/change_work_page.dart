@@ -225,7 +225,7 @@ class _ChangeWorkPageState extends State<ChangeWorkPage> {
         LocalStorage.save(Config.WORK_ID, id);
         LocalStorage.save(Config.ORG_NAME, orgName);
         workId = id;
-        ScanEventUtils.send(ScanConfig.MAIN_REFRESH, '');
+        //ScanEventUtils.send(ScanConfig.MAIN_REFRESH, '');
         setState(() {
           Fluttertoast.showToast(msg: '切换成功');
         });

@@ -32,21 +32,15 @@ class _FragmentHomePageState extends State<FragmentHomePage> with RouteAware {
   void initState() {
     // TODO: implement initState
     super.initState();
-    /* gridList.clear();
-    Map map = Map();
-    map['resName'] = '更多';
-    map['icon'] = 'images/home/gengduo.png';
-    map['route'] = 'maintabmore';
-    gridList.add(map);*/
-    if (isFirst || gridList.isEmpty) {
+    if (isFirst || gridList.isEmpty||gridList.length==1) {
       getAppUserList();
-      getAppUserListForCards();
+      //getAppUserListForCards();
       stream = ScanEventUtils.eventBus.on<ScanEvent>().listen((event) {
         if (event.page == ScanConfig.MAIN_REFRESH) {
           LogUtil.d("刷新首页菜单");
           isFirst = true;
           getAppUserList();
-          getAppUserListForCards();
+          //getAppUserListForCards();
         }
       });
     }
@@ -208,6 +202,9 @@ class _FragmentHomePageState extends State<FragmentHomePage> with RouteAware {
             //NavigatorUtils.goPage(context, "warehouse_adjust");
             //当前任务
             //NavigatorUtils.goPage(context, "current_task");
+            //查询检验任务
+            //NavigatorUtils.goPage(context, "task_list");
+
           } else if (gridList[i]['route'] == 'materialDetail') {
             //扫码收货
             NavigatorUtils.goMaterialDetail(context, '');
@@ -356,6 +353,16 @@ class _FragmentHomePageState extends State<FragmentHomePage> with RouteAware {
         if (data != null) {
           gridList = data;
         }
+        Map map = Map();
+        map['resName'] = '更多';
+        map['icon'] = '';
+        map['route'] = 'maintabmore';
+        gridList.add(map);
+        setState(() {
+          isFirst = false;
+        });
+      }else{
+        gridList.clear();
         Map map = Map();
         map['resName'] = '更多';
         map['icon'] = '';

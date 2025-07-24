@@ -272,6 +272,7 @@ class _MenuPageState extends State<MenuPage> {
             NavigatorUtils.goMaterialDetail(context, '');
           }else {
             NavigatorUtils.goPage(context, childrenList[i]['route'],);
+            //NavigatorUtils.goPage(context, 'semi_finished_check',);
           }
         },
       ));

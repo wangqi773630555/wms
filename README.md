@@ -3,9 +3,11 @@
 
 #页面路径
 lib/page/frame_widgit （权限系统 框架模块）
-lib/page/dianlan_widgit （电缆 低压三场模块）
+lib/page/dianlan_widgit （电缆 低压三厂模块）
 lib/page/tianyi_widgit （天屹 天屹数据缆模块）
 lib/page/common_widgit （公共组件封装模块）
+lib/page/xinnengyuan_widgit （新能源模块）
+
 
 #框架菜单 动态配置
 https://app-test.wanmaco.com/#/appList （测试环境）

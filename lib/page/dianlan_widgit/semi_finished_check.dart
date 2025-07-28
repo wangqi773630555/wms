@@ -44,7 +44,7 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
   List typeList = [];
   var fcName = '';
   var qRcode = '';
-  var dlp_info_id = '';
+  var dlp_info_id;
 
   //规格
   TextEditingController _controllerGg = TextEditingController();
@@ -113,7 +113,7 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
           }
 
           //数据填充
-          fcName =  data['code_name'];
+          fcName =  data['dlp']['dept_name']+'-'+data['dlp']['pj']+'-'+data['dlp']['sn'];
           deptCode = data['dlp']['dept_code'];
           _controllerGg.text = data['dlp']['pj'];
           _controllerPjbh.text = data['dlp']['sn'];
@@ -147,7 +147,7 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
     List datas = [];
 
     for (int i = 0; i < _modelList.length; i++) {
-      var tag = (!checkList[i]['check1']&&!checkList[i]['check2']&&!checkList[i]['check3']&&!checkList[i]['check4']&&!checkList[i]['check5']&&!checkList[i]['check6']&&!checkList[i]['check7']&&!checkList[i]['check8']&&!checkList[i]['check9']&&!checkList[i]['check10'])?'0':'1';
+      var tag = (!checkList[i]['check1']&&!checkList[i]['check2']&&!checkList[i]['check3']&&!checkList[i]['check4']&&!checkList[i]['check5']&&!checkList[i]['check6']&&!checkList[i]['check7']&&!checkList[i]['check8']&&!checkList[i]['check9']&&!checkList[i]['check10'])?'1':'0';
       var json2 = {};
       if(checkList[i]['check1']){
         json2['po_no'] = checkList[i]['edit1'].text.toString();
@@ -202,6 +202,7 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
             checkList.clear();
             _modelList.clear();
             fcName = '';
+            deptCode = null;
           }else{
             Fluttertoast.showToast(msg: data['msg']);
           }

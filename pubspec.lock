@@ -141,6 +141,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.0.0"
+  dotted_border:
+    dependency: "direct dev"
+    description:
+      name: dotted_border
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.0.7"
   equatable:
     dependency: transitive
     description:

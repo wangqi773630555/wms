@@ -229,7 +229,7 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
     super.initState();
     _easyfreshController = EasyRefreshController();
     _selectDateStart = new DateTime(
-        DateTime.now().year, DateTime.now().month - 1, DateTime.now().day);
+        DateTime.now().year, DateTime.now().month, DateTime.now().day);
     startTime = _selectDateStart.toString().substring(0, 10);
     loadPara();
   }

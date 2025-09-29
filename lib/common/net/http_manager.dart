@@ -19,8 +19,8 @@ class HttpManager {
   static Dio? _dio;
   static BaseOptions? orgOption;
 
-  static const int CONNECT_TIMEOUT = 20000;
-  static const int RECEIVE_TIMEOUT = 20000;
+  static const int CONNECT_TIMEOUT = 60000;
+  static const int RECEIVE_TIMEOUT = 60000;
 
   static const Map<String, String> header = {
     'Content-Type': "application/json"

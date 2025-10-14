@@ -46,12 +46,18 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
   var qRcode = '';
   var dlp_info_id;
 
+  //所属分厂
+  TextEditingController _controllerSsfc = TextEditingController();
+
   //规格
   TextEditingController _controllerGg = TextEditingController();
+
   //盘具编号
   TextEditingController _controllerPjbh = TextEditingController();
 
   List checkList = [];
+
+  List files = [];
 
   getInintData() {
     DataDao.getProdWoResultSemis(qRcode).then((res) {
@@ -59,22 +65,12 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
         if (res != null && res.result) {
           var data = res.data['data'];
           _modelList.clear();
+         // _modelList.addAll([{}]);
           _modelList.addAll(data['list']);
           //创建选中的数据的数组
           checkList.clear();
           for (int i = 0; i < _modelList.length; i++) {
             Map map = {};
-            map['checkAll'] = false;
-            map['check1'] = false;
-            map['check2'] = false;
-            map['check3'] = false;
-            map['check4'] = false;
-            map['check5'] = false;
-            map['check6'] = false;
-            map['check7'] = false;
-            map['check8'] = false;
-            map['check9'] = false;
-            map['check10'] = false;
             TextEditingController eidt1 = TextEditingController();
             eidt1.text = _modelList[i]['po_no'] ?? '';
             TextEditingController eidt2 = TextEditingController();
@@ -92,10 +88,9 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
             TextEditingController eidt8 = TextEditingController();
             eidt8.text = _modelList[i]['color'] ?? '';
             TextEditingController eidt9 = TextEditingController();
-            try{
+            try {
               eidt9.text = _modelList[i]['qty'].toString() ?? '';
-            }catch(e){
-            }
+            } catch (e) {}
             TextEditingController eidt10 = TextEditingController();
             eidt10.text = _modelList[i]['result_date'] ?? '';
 
@@ -114,7 +109,8 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
 
           //数据填充
           fcName =  data['dlp']['dept_name']+'-'+data['dlp']['pj']+'-'+data['dlp']['sn'];
-          deptCode = data['dlp']['dept_code'];
+          //deptCode = data['dlp']['dept_code'];
+          _controllerPjbh.text = data['dlp']['dept_name'];
           _controllerGg.text = data['dlp']['pj'];
           _controllerPjbh.text = data['dlp']['sn'];
           dlp_info_id = data['dlp']['dlp_info_id'];
@@ -123,14 +119,27 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
     });
   }
 
+
+  getSemisByOrder(){
+    DataDao.getSemisByOrder(qRcode).then((res) {
+      setState(() {
+        if (res != null && res.result) {
+          var data = res.data['data'];
+          files = data['list'];
+          _modelList.addAll([{}]);
+          showCustomDialog(context).then((value) {});
+        }
+      });
+    });
+  }
+
+
   loadPara() {
     DataDao.loadPara().then((res) {
       setState(() {
         if (res != null && res.result) {
-
           deptList = res.data['data']['depts'];
           for (int i = 0; i < deptList.length; i++) {
-
             DropdownMenuItem<Object> item = DropdownMenuItem(
               child: Text(deptList[i]['dept_name']),
               value: deptList[i]['dept_code'],
@@ -147,46 +156,27 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
     List datas = [];
 
     for (int i = 0; i < _modelList.length; i++) {
-      var tag = (!checkList[i]['check1']&&!checkList[i]['check2']&&!checkList[i]['check3']&&!checkList[i]['check4']&&!checkList[i]['check5']&&!checkList[i]['check6']&&!checkList[i]['check7']&&!checkList[i]['check8']&&!checkList[i]['check9']&&!checkList[i]['check10'])?'1':'0';
+      var tag = '0';
       var json2 = {};
-      if(checkList[i]['check1']){
         json2['po_no'] = checkList[i]['edit1'].text.toString();
-      }
-      if(checkList[i]['check2']){
         json2['customer_name'] = checkList[i]['edit2'].text.toString();
-      }
-      if(checkList[i]['check3']){
         json2['model'] = checkList[i]['edit3'].text.toString();
-      }
-      if(checkList[i]['check4']){
         json2['spec'] = checkList[i]['edit4'].text.toString();
-      }
-      if(checkList[i]['check5']){
         json2['vol'] = checkList[i]['edit5'].text.toString();
-      }
-      if(checkList[i]['check6']){
         json2['semi_part_name'] = checkList[i]['edit6'].text.toString();
-      }
-      if(checkList[i]['check7']){
         json2['recipe_name'] = checkList[i]['edit7'].text.toString();
-      }
-      if(checkList[i]['check8']){
         json2['color'] = checkList[i]['edit8'].text.toString();
-      }
-      if(checkList[i]['check9']){
         json2['qty'] = checkList[i]['edit9'].text.toString();
-      }
-      if(checkList[i]['check10']){
         json2['result_date'] = checkList[i]['edit10'].text.toString();
-      }
       var data = {
-        'code':qRcode,
-        'create_date':startTime,
-        'tag':tag,
-        'dlp_info_id':dlp_info_id,
-        'dept_code':deptCode,
-        'json1':jsonEncode(_modelList[i]),
-        'json2':jsonEncode(json2)
+        'code': qRcode,
+        'create_date': startTime,
+        'tag': tag,
+        'dlp_info_id': dlp_info_id,
+        'dept_code': deptCode,
+        'json1': jsonEncode(_modelList[i]),
+        'json2': jsonEncode(json2),
+        'ph':_controllerSsfc.text
       };
       datas.add(data);
     }
@@ -195,15 +185,16 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
       setState(() {
         if (res != null && res.result) {
           var data = res.data['data'];
-          if(data['code']==200||data['code']==null){
+          if (data['code'] == 200 || data['code'] == null) {
             Fluttertoast.showToast(msg: data['des']);
             _controllerPjbh.text = '';
             _controllerGg.text = '';
+            _controllerSsfc.text='';
             checkList.clear();
             _modelList.clear();
             fcName = '';
             deptCode = null;
-          }else{
+          } else {
             Fluttertoast.showToast(msg: data['msg']);
           }
         }
@@ -233,7 +224,6 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
     startTime = _selectDateStart.toString().substring(0, 10);
     loadPara();
   }
-
 
   Widget _headView() {
     return Column(
@@ -270,21 +260,45 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
                               if (scanResult?.rawContent != '') {
                                 //扫码结束
                                 setState(() {
-                                  qRcode = scanResult?.rawContent??'';
-                                /*  try{
+                                  qRcode = scanResult?.rawContent ?? '';
+                                  /*  try{
                                     deptCode = qRcode.toString().split(',')[0];
                                     _controllerGg.text = qRcode.toString().split(',')[1].split('-')[0];
                                     _controllerPjbh.text = qRcode.toString().split(',')[1].split('-')[1];
                                   }catch(e){
-                                    
-                                  }*/
-                                  getInintData();
 
+                                  }*/
+                                  if(qRcode.contains(',')){
+                                    getInintData();
+                                  }else{
+                                    getSemisByOrder();
+                                  }
                                 });
                               }
                             }
                           },
                         ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      _leftText('盘点分厂:'),
+                      Expanded(
+                        flex: 1,
+                        child: SizedBox(
+                          height: 30.0,
+                          child: _dropDownWidget('请选择'),
+                        ),
+                      ),
+                      Padding(padding: EdgeInsets.only(right: 10)),
+                      Container(
+                        margin: EdgeInsets.only(right: 15),
+                        alignment: Alignment.centerLeft,
+                        width: 35,
+                        height: 35,
                       ),
                     ],
                   ),
@@ -294,16 +308,9 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       _leftText('所属分厂:'),
-                      Expanded(
-                        flex: 1,
-                        child: SizedBox(
-                          height: 30.0,
-                          child: _dropDownWidget('请选择'),
-                        ),
-                      ),
-                      Padding(padding: EdgeInsets.only(right: 10)),
+                      _editView(_controllerSsfc, false),
                       _leftText('规格:'),
-                      _editView(_controllerGg),
+                      _editView(_controllerGg, true),
                     ],
                   ),
                   Container(
@@ -315,8 +322,8 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             _leftText('盘具编号:'),
-                            _editView(_controllerPjbh),
-                            Padding(padding: EdgeInsets.only(right: 10)),
+                            _editView(_controllerPjbh, true),
+                            Padding(padding: EdgeInsets.only(right: 17)),
                             //Expanded(child: Text('')),
 
                             ElevatedButton(
@@ -354,16 +361,39 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
               )
             : Container(),
         Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 10)),
-        _modelList.isEmpty?Container():Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            _leftText(
-              '所检盘具：${fcName}',
-            ),
-            Expanded(child: Text('')),
-
-          ],
-        ),
+        fcName==''
+            ? Container()
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  _leftText(
+                    '所检盘具：${fcName}',
+                  ),
+                  Expanded(child: Text('')),
+                ],
+              ),
+        Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 10)),
+        fcName==''
+            ? Container()
+            : SizedBox(
+                width: double.infinity,
+                height: 25.0,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Padding(padding: EdgeInsets.only(right: 10)),
+                    ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blueGrey,
+                        ),
+                        onPressed: () => {
+                              //搜索
+                              addData(),
+                            },
+                        child: Text('新增')),
+                    Padding(padding: EdgeInsets.only(right: 10)),
+                  ],
+                )),
         Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 10)),
         Expanded(
           child: Container(
@@ -399,47 +429,109 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
             ),
           ),
         ),
-        _modelList.isEmpty?Container():Container(
-          color: Colors.white,
-          padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
-          child:Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Expanded(child: Text('')),
-              SizedBox(
-                height: 25.0,
-                child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
+        _modelList.isEmpty
+            ? Container()
+            : Container(
+                color: Colors.white,
+                padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Expanded(child: Text('')),
+                    SizedBox(
+                      height: 25.0,
+                      child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green,
+                          ),
+                          onPressed: () => {
+                                // submit()
+                                saveResult()
+                              },
+                          child: Text('提交')),
                     ),
-                    onPressed: () => {
-                     // submit()
-                      saveResult()
-                    },
-                    child: Text('提交')),
+                    Padding(padding: EdgeInsets.only(right: 10)),
+                  ],
+                ),
               ),
-              Padding(padding: EdgeInsets.only(right: 10)),
-            ],
-          ),
-        ),
       ],
     );
   }
 
+  addData() {
+    var _date = new DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+    Map modelMap = {
+      'po_no': '',
+      'customer_name': '',
+      'model': '',
+      'spec': '',
+      'vol': '',
+      'semi_part_name': '',
+      'recipe_name': '',
+      'color': '',
+      'qty': '0',
+      'result_date': _date.toString().substring(0, 10),
+    };
+
+    TextEditingController eidt1 = TextEditingController();
+    eidt1.text = modelMap['po_no'] ?? '';
+    TextEditingController eidt2 = TextEditingController();
+    eidt2.text = modelMap['customer_name'] ?? '';
+    TextEditingController eidt3 = TextEditingController();
+    eidt3.text = modelMap['model'] ?? '';
+    TextEditingController eidt4 = TextEditingController();
+    eidt4.text = modelMap['spec'] ?? '';
+    TextEditingController eidt5 = TextEditingController();
+    eidt5.text = modelMap['vol'] ?? '';
+    TextEditingController eidt6 = TextEditingController();
+    eidt6.text = modelMap['semi_part_name'] ?? '';
+    TextEditingController eidt7 = TextEditingController();
+    eidt7.text = modelMap['recipe_name'] ?? '';
+    TextEditingController eidt8 = TextEditingController();
+    eidt8.text = modelMap['color'] ?? '';
+    TextEditingController eidt9 = TextEditingController();
+    try {
+      eidt9.text = modelMap['qty'].toString() ?? '';
+    } catch (e) {}
+    TextEditingController eidt10 = TextEditingController();
+    eidt10.text = modelMap['result_date'] ?? '';
+    Map checkMap = {
+      'edit1': eidt1,
+      'edit2': eidt2,
+      'edit3': eidt3,
+      'edit4': eidt4,
+      'edit5': eidt5,
+      'edit6': eidt6,
+      'edit7': eidt7,
+      'edit8': eidt8,
+      'edit9': eidt9,
+      'edit10': eidt10,
+    };
+    setState(() {
+      checkList.insert(0,checkMap);
+      _modelList.insert(0,modelMap);
+    });
+  }
+
   checkSubmit() {
-    if(deptCode==null){
+    /*  if(deptCode==null){
       Fluttertoast.showToast(msg: '请选择分厂');
       return;
-    }
-    if(_controllerGg.text.isEmpty){
+    }*/
+    if (_controllerGg.text.isEmpty) {
       Fluttertoast.showToast(msg: '请输入规格');
       return;
     }
-    if(_controllerPjbh.text.isEmpty){
+    if (_controllerPjbh.text.isEmpty) {
       Fluttertoast.showToast(msg: '请输入编号');
       return;
     }
-    qRcode = deptCode+','+_controllerGg.text.toString()+'-'+_controllerPjbh.text.toString();
+    //deptCode 不作为搜索条件 随便用00占位
+    qRcode = "00" +
+        ',' +
+        _controllerGg.text.toString() +
+        '-' +
+        _controllerPjbh.text.toString();
     getInintData();
   }
 
@@ -507,7 +599,7 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
             )));
   }
 
-  Widget _editView(TextEditingController _controller) {
+  Widget _editView(TextEditingController _controller, isEnable) {
     return Expanded(
       flex: 1,
       child: SizedBox(
@@ -515,6 +607,7 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
         child: Padding(
           padding: EdgeInsets.only(right: 10),
           child: TextField(
+            enabled: isEnable,
             maxLines: 1,
             style: TextStyle(fontSize: 14),
             controller: _controller,
@@ -618,93 +711,60 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    '线上盘具情况',
-                    style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-                Text(
-                  '整盘异常',
-                  style: TextStyle(fontSize: 16),
-                ),
-                Padding(padding: EdgeInsets.only(left: 5)),
-                IconButton(
-                  padding: EdgeInsets.zero,
-                  constraints: BoxConstraints(),
-                  icon: Icon(
-                    checkList[i]['checkAll']
-                        ? Icons.check_box
-                        : Icons.check_box_outline_blank,
-                    size: 20,
-                    color: Colors.black54,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      checkList[i]['checkAll'] = !checkList[i]['checkAll'];
-                      checkList[i]['check1'] = checkList[i]['checkAll'];
-                      checkList[i]['check2'] = checkList[i]['checkAll'];
-                      checkList[i]['check3'] = checkList[i]['checkAll'];
-                      checkList[i]['check4'] = checkList[i]['checkAll'];
-                      checkList[i]['check5'] = checkList[i]['checkAll'];
-                      checkList[i]['check6'] = checkList[i]['checkAll'];
-                      checkList[i]['check7'] = checkList[i]['checkAll'];
-                      checkList[i]['check8'] = checkList[i]['checkAll'];
-                      checkList[i]['check9'] = checkList[i]['checkAll'];
-                      checkList[i]['check10'] = checkList[i]['checkAll'];
-                    });
-                  },
-                ),
-                Padding(padding: EdgeInsets.only(left: 7)),
-              ],
-            ),
             Padding(padding: EdgeInsets.only(top: 5)),
-            //显示部分
-            DottedBorder(
-                color: Colors.grey,
-                strokeWidth: 1,
-                dashPattern: [6, 3], // 虚线样式，6像素实线，3像素间距
-                child: Container(
-                  padding: EdgeInsets.all(5),
-                  child: Column(
-                    children: [
-                      getItemTopWidget(i, '订单批号', 'check1',
-                          _modelList[i]['po_no'] ?? ''),
-                      getItemTopWidget(
-                          i, '客户', 'check2', _modelList[i]['customer_name'] ?? ''),
-                      getItemTopWidget(
-                          i, '型号', 'check3', _modelList[i]['model'] ?? ''),
-                      getItemTopWidget(
-                          i, '规格', 'check4', _modelList[i]['spec'] ?? ''),
-                      getItemTopWidget(i, '电压等级', 'check5',
-                          _modelList[i]['vol'] ?? ''),
-                      getItemTopWidget(
-                          i, '半制品', 'check6', _modelList[i]['semi_part_name'] ?? ''),
-                      getItemTopWidget(i, '所属工序', 'check7',
-                          _modelList[i]['recipe_name'] ?? ''),
-                      getItemTopWidget(
-                          i, '颜色', 'check8', _modelList[i]['color'] ?? ''),
-                      getItemTopWidget(i, '半成品数量', 'check9',
-                          _modelList[i]['qty'] ?? ''),
-                      getItemTopWidget(i, '报工日期', 'check10',
-                          _modelList[i]['result_date'] ?? ''),
-                    ],
-                  ),
+            SizedBox(
+                width: double.infinity,
+                height: 20.0,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      '线缆（${i + 1}）',
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Padding(padding: EdgeInsets.only(right: 10)),
+                    Expanded(child: Text('')),
+                    ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                        ),
+                        onPressed: () => {
+                              //删除
+                              setState(() {
+                                _modelList.removeAt(i);
+                                checkList.removeAt(i);
+                              }),
+                            },
+                        child: Text(
+                          '删除',
+                          style: TextStyle(fontSize: 12),
+                        )),
+                    Padding(padding: EdgeInsets.only(right: 10)),
+                    ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.yellow,
+                        ),
+                        onPressed: () => {
+                              //清空
+                              setState(() {
+                                checkList[i]['edit1'] = TextEditingController();
+                                checkList[i]['edit2'] = TextEditingController();
+                                checkList[i]['edit3'] = TextEditingController();
+                                checkList[i]['edit4'] = TextEditingController();
+                                checkList[i]['edit5'] = TextEditingController();
+                                checkList[i]['edit6'] = TextEditingController();
+                                checkList[i]['edit7'] = TextEditingController();
+                                checkList[i]['edit8'] = TextEditingController();
+                                checkList[i]['edit9'] = TextEditingController();
+                                checkList[i]['edit10'] = TextEditingController();
+                              }),
+                            },
+                        child: Text('清空', style: TextStyle(fontSize: 12))),
+                  ],
                 )),
-
-            Padding(padding: EdgeInsets.only(top: 5)),
-            Text(
-              '真实盘存',
-              style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold),
-            ),
             Padding(padding: EdgeInsets.only(top: 5)),
             //编辑部分
             DottedBorder(
@@ -716,26 +776,20 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
                   padding: EdgeInsets.all(5),
                   child: Column(
                     children: [
-                      getItemBottomWidget(i, '订单批号：    ', 'edit1',
-                          _modelList[i]['partTitle'] ?? '', 'check1'),
-                      getItemBottomWidget(i, '客户：            ', 'edit2',
-                          _modelList[i]['partTitle'] ?? '', 'check2'),
-                      getItemBottomWidget(i, '型号：            ', 'edit3',
-                          _modelList[i]['partTitle'] ?? '', 'check3'),
-                      getItemBottomWidget(i, '规格：            ', 'edit4',
-                          _modelList[i]['partTitle'] ?? '', 'check4'),
-                      getItemBottomWidget(i, '电压等级：    ', 'edit5',
-                          _modelList[i]['partTitle'] ?? '', 'check5'),
-                      getItemBottomWidget(i, '半制品：        ', 'edit6',
-                          _modelList[i]['partTitle'] ?? '', 'check6'),
-                      getItemBottomWidget(i, '所属工序：    ', 'edit7',
-                          _modelList[i]['partTitle'] ?? '', 'check7'),
-                      getItemBottomWidget(i, '颜色：            ', 'edit8',
-                          _modelList[i]['partTitle'] ?? '', 'check8'),
-                      getItemBottomWidget(i, '半成品数量：', 'edit9',
-                          _modelList[i]['partTitle'] ?? '', 'check9'),
-                      getItemBottomWidget(i, '报工日期：    ', 'edit10',
-                          _modelList[i]['partTitle'] ?? '', 'check10'),
+                      getItemBottomWidget(i, '订单批号：    ', 'edit1', 'check1'),
+                      getItemBottomWidget(
+                          i, '客户：            ', 'edit2', 'check2'),
+                      getItemBottomWidget(
+                          i, '型号：            ', 'edit3', 'check3'),
+                      getItemBottomWidget(
+                          i, '规格：            ', 'edit4', 'check4'),
+                      getItemBottomWidget(i, '电压等级：    ', 'edit5', 'check5'),
+                      getItemBottomWidget(i, '半制品：        ', 'edit6', 'check6'),
+                      getItemBottomWidget(i, '所属工序：    ', 'edit7', 'check7'),
+                      getItemBottomWidget(
+                          i, '颜色：            ', 'edit8', 'check8'),
+                      getItemBottomWidget(i, '半成品数量：', 'edit9', 'check9'),
+                      getItemBottomWidget(i, '报工日期：    ', 'edit10', 'check10'),
                     ],
                   ),
                 )),
@@ -745,67 +799,21 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
     );
   }
 
-  Widget getItemTopWidget(i, title, checkIndex, value) {
-    return Row(children: [
-      Expanded(
-        child: Text(
-          '${title}：${value}',
-          style: TextStyle(
-            fontSize: 14,
+  Widget getItemBottomWidget(i, title, editIndex, checkIndex) {
+    return Column(
+      children: [
+        Row(children: [
+          Text(
+            '${title}',
+            style: TextStyle(
+              fontSize: 14,
+            ),
           ),
-        ),
-      ),
-      IconButton(
-        padding: EdgeInsets.zero,
-        constraints: BoxConstraints(),
-        icon: Icon(
-          checkList[i][checkIndex]
-              ? Icons.check_box
-              : Icons.check_box_outline_blank,
-          size: 20,
-          color: Colors.black54,
-        ),
-        onPressed: () {
-          setState(() {
-            checkList[i][checkIndex] = !checkList[i][checkIndex];
-            if (checkList[i]['check1'] &&
-                checkList[i]['check2'] &&
-                checkList[i]['check3'] &&
-                checkList[i]['check4'] &&
-                checkList[i]['check5'] &&
-                checkList[i]['check6'] &&
-                checkList[i]['check7'] &&
-                checkList[i]['check8'] &&
-                checkList[i]['check9'] &&
-                checkList[i]['check10']) {
-              checkList[i]['checkAll'] = true;
-            } else {
-              checkList[i]['checkAll'] = false;
-            }
-          });
-        },
-      ),
-    ]);
-  }
-
-  Widget getItemBottomWidget(i, title, editIndex, value, checkIndex) {
-    bool show = checkList[i][checkIndex];
-    return show
-        ? Column(
-            children: [
-              Row(children: [
-                Text(
-                  '${title}',
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-                _editView20(checkList[i][editIndex]),
-              ]),
-              Padding(padding: EdgeInsets.only(top: 3))
-            ],
-          )
-        : Container();
+          _editView20(checkList[i][editIndex]),
+        ]),
+        Padding(padding: EdgeInsets.only(top: 3))
+      ],
+    );
   }
 
   Widget _leftText(value) {
@@ -821,8 +829,8 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
   Widget _dropDownWidget(String hint) {
     var value;
     List<DropdownMenuItem<Object>> items = [];
-      value = deptCode;
-      items = depts;
+    value = deptCode;
+    items = depts;
     return Container(
       height: 25,
       child: Stack(
@@ -889,6 +897,81 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
           format: BarcodeFormat.unknown,
           rawContent: '00000000');
     }
+  }
+
+  Future showCustomDialog(BuildContext context) async {
+    var result = await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+                return dialog(setState);
+              });
+        });
+    return result;
+  }
+
+  Widget dialog(setState) {
+    return Center(
+      child: Container(
+        margin: EdgeInsets.all(20),
+        child: Card(
+            child: Padding(
+              padding: EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: listItem(files, setState),
+              ),
+            )),
+      ),
+    );
+  }
+
+  List<Widget> listItem(list, setState) {
+    List<Widget> _list = [];
+    _list.add(Padding(padding: EdgeInsets.only(top: 10)));
+    _list.add(Text(
+      '此流水卡下现存多盘线缆',
+      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+    ));
+    _list.add(Padding(padding: EdgeInsets.only(top: 10)));
+    for (int i = 0; i < list.length; i++) {
+      Widget item = Container(
+        //设置控
+        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+        margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Expanded(
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  padding: EdgeInsets.all(0), //内边距
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap, //外边距
+                ),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "${list[i]['dept_name'].toString()}-${list[i]['pj'].toString()}-${list[i]['sn'].toString()}",
+                    style: TextStyle(fontSize: 14, color: Colors.blue),
+                  ),
+                ),
+                onPressed: () {
+                  //列表点击
+                  Navigator.pop(context);
+                  //获取到数据拼装成qRcode 再次获取主列表
+                  qRcode = "${list[i]['dept_name'].toString()},${list[i]['pj'].toString()}-${list[i]['sn'].toString()}";
+                  getInintData();
+                },
+              ),
+            ),
+          ],
+        ),
+      );
+      _list.add(item);
+    }
+    return _list;
   }
 
   @override

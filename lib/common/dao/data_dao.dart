@@ -1734,6 +1734,42 @@ class DataDao {
   }
 
   /**
+   * 【APP扫码盘库】扫码获取在制品信息
+   */
+  static getSemisByOrder(var code) async {
+    Map<String, String> header = {
+      'Authorization': await LocalStorage.get(Config.UA)
+    };
+    String sk = await LocalStorage.get(Config.SET_DL_KEY);
+    Map<String, dynamic> requestParams;
+    requestParams = {
+      "_SK_": sk,
+      "code": code
+    };
+    // print('======-----##$requestParams');
+    var res = await HttpManager.netFetch(
+        '${UrlConstant.getSemisByOrder()}',
+        requestParams,
+        header,
+        Options(method: 'post'));
+    var resultData;
+    if (res != null && res.result) {
+      if (res.data['code'] == 200) {
+        return ResultDao(res.data, res.result);
+      } else {
+        resultData = ResultDao(
+            Code.errorHandleFunction(res.data['code'], res.data['msg'], false),
+            false);
+        return ResultDao(resultData, false);
+      }
+    } else {
+      resultData =
+          ResultDao(Code.errorHandleFunction(res.code, '', false), false);
+      return ResultDao(resultData, false);
+    }
+  }
+
+  /**
    * 【APP扫码盘库】获取扫码APP参数清单
    */
   static loadPara() async {

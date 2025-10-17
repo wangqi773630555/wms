@@ -47,13 +47,16 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
   var dlp_info_id;
 
   //所属分厂
-  TextEditingController _controllerSsfc = TextEditingController();
+  var ssfc="";
 
   //规格
   TextEditingController _controllerGg = TextEditingController();
 
   //盘具编号
   TextEditingController _controllerPjbh = TextEditingController();
+
+  //订单批号
+  TextEditingController _controllerDdph = TextEditingController();
 
   List checkList = [];
 
@@ -104,13 +107,16 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
             map['edit8'] = eidt8;
             map['edit9'] = eidt9;
             map['edit10'] = eidt10;
+            map['final'] = false;
+            map['fc_id'] = deptCode;
+            map['isAdd'] = false;
             checkList.add(map);
           }
 
           //数据填充
           fcName =  data['dlp']['dept_name']+'-'+data['dlp']['pj']+'-'+data['dlp']['sn'];
           //deptCode = data['dlp']['dept_code'];
-          _controllerPjbh.text = data['dlp']['dept_name'];
+          ssfc = data['dlp']['dept_name'];
           _controllerGg.text = data['dlp']['pj'];
           _controllerPjbh.text = data['dlp']['sn'];
           dlp_info_id = data['dlp']['dlp_info_id'];
@@ -120,14 +126,15 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
   }
 
 
-  getSemisByOrder(){
-    DataDao.getSemisByOrder(qRcode).then((res) {
+  getSemisByOrder(code){
+    DataDao.getSemisByOrder(code).then((res) {
       setState(() {
         if (res != null && res.result) {
           var data = res.data['data'];
-          files = data['list'];
-          _modelList.addAll([{}]);
-          showCustomDialog(context).then((value) {});
+          if(data['list']!=null){
+            files = data['list'];
+            showCustomDialog(context).then((value) {});
+          }
         }
       });
     });
@@ -153,10 +160,19 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
 
   //提交
   saveResult() {
+
+    if(deptCode==null){
+      Fluttertoast.showToast(msg: '请选择盘点分厂');
+      return;
+    }
+
     List datas = [];
 
     for (int i = 0; i < _modelList.length; i++) {
-      var tag = '0';
+      /*if(checkList[i]['fc_id']==null){
+        Fluttertoast.showToast(msg: '请选择线缆所属');
+        return;
+      }*/
       var json2 = {};
         json2['po_no'] = checkList[i]['edit1'].text.toString();
         json2['customer_name'] = checkList[i]['edit2'].text.toString();
@@ -168,15 +184,22 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
         json2['color'] = checkList[i]['edit8'].text.toString();
         json2['qty'] = checkList[i]['edit9'].text.toString();
         json2['result_date'] = checkList[i]['edit10'].text.toString();
+
+        //是否异常
+        json2['tag'] = checkList[i]['final']?'1':'0';
+        //线缆归属
+        json2['dept_code'] = checkList[i]['fc_id'];
+
       var data = {
         'code': qRcode,
         'create_date': startTime,
-        'tag': tag,
+        'tag': checkList[i]['final']?'0':'1',
+        'line_dept_code':checkList[i]['fc_id'],
         'dlp_info_id': dlp_info_id,
         'dept_code': deptCode,
         'json1': jsonEncode(_modelList[i]),
         'json2': jsonEncode(json2),
-        'ph':_controllerSsfc.text
+        'ph':_controllerPjbh.text
       };
       datas.add(data);
     }
@@ -189,11 +212,10 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
             Fluttertoast.showToast(msg: data['des']);
             _controllerPjbh.text = '';
             _controllerGg.text = '';
-            _controllerSsfc.text='';
+            ssfc='';
             checkList.clear();
             _modelList.clear();
             fcName = '';
-            deptCode = null;
           } else {
             Fluttertoast.showToast(msg: data['msg']);
           }
@@ -211,7 +233,7 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
           centerTitle: true,
           actions: [],
         ),
-        body: _headView());
+        body: _ListView());
   }
 
   @override
@@ -224,177 +246,186 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
     startTime = _selectDateStart.toString().substring(0, 10);
     loadPara();
   }
-
-  Widget _headView() {
+  Widget _HeaderView(){
     return Column(
-      mainAxisSize: MainAxisSize.max,
       children: [
+
         open
             ? Column(
-                children: [
-                  Padding(padding: EdgeInsets.only(top: 5)),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      _leftText('盘库批次:'),
-                      _timeView(startTime ?? '', true),
-                      Padding(padding: EdgeInsets.only(right: 10)),
-                      Container(
-                        margin: EdgeInsets.only(right: 5),
-                        alignment: Alignment.centerLeft,
-                        width: 35,
-                        height: 35,
-                        child: IconButton(
-                          padding: EdgeInsets.zero,
-                          constraints: BoxConstraints(),
-                          icon: Icon(
-                            Icons.qr_code_scanner_outlined,
-                            size: 25,
-                            color: Colors.black54,
-                          ),
-                          onPressed: () async {
-                            await _scan();
-                            if (scanResult?.type != ResultType.Error) {
-                              //设备扫码
-                              if (scanResult?.rawContent != '') {
-                                //扫码结束
-                                setState(() {
-                                  qRcode = scanResult?.rawContent ?? '';
-                                  /*  try{
+          children: [
+            Padding(padding: EdgeInsets.only(top: 5)),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                _leftText('盘库批次:'),
+                _timeView(startTime ?? '', true),
+                Padding(padding: EdgeInsets.only(right: 10)),
+                Container(
+                  margin: EdgeInsets.only(right: 5),
+                  alignment: Alignment.centerLeft,
+                  width: 30,
+                  height: 30,
+                  child: IconButton(
+                    padding: EdgeInsets.zero,
+                    constraints: BoxConstraints(),
+                    icon: Icon(
+                      Icons.qr_code_scanner_outlined,
+                      size: 25,
+                      color: Colors.black54,
+                    ),
+                    onPressed: () async {
+                      await _scan();
+                      if (scanResult?.type != ResultType.Error) {
+                        //设备扫码
+                        if (scanResult?.rawContent != '') {
+                          //扫码结束
+                          setState(() {
+                            qRcode = scanResult?.rawContent ?? '';
+                            /*  try{
                                     deptCode = qRcode.toString().split(',')[0];
                                     _controllerGg.text = qRcode.toString().split(',')[1].split('-')[0];
                                     _controllerPjbh.text = qRcode.toString().split(',')[1].split('-')[1];
                                   }catch(e){
 
                                   }*/
-                                  if(qRcode.contains(',')){
-                                    getInintData();
-                                  }else{
-                                    getSemisByOrder();
-                                  }
-                                });
-                              }
+                            if(qRcode.contains(',')){
+                              getInintData();
+                            }else{
+                              getSemisByOrder(qRcode);
+                            }
+                          });
+                        }
+                      }
+                    },
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                _leftText('盘点分厂:'),
+                Expanded(
+                  flex: 1,
+                  child: SizedBox(
+                    height: 30.0,
+                    child: _dropDownWidget('请选择'),
+                  ),
+                ),
+                Padding(padding: EdgeInsets.only(right: 10)),
+                Container(
+                  margin: EdgeInsets.only(right: 15),
+                  alignment: Alignment.centerLeft,
+                  width: 35,
+                  height: 35,
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                _leftText('订单批号:'),
+                _editView(_controllerDdph, true),
+              ],
+            ),
+            Padding(padding: EdgeInsets.only(top: 5)),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                _leftText('盘具所属:'),
+                Expanded(child: Text(ssfc),flex: 1,),
+                _leftText('规格:'),
+                _editView(_controllerGg, true),
+              ],
+            ),
+            Padding(padding: EdgeInsets.only(top: 5)),
+            Container(
+              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+              child: SizedBox(
+                  width: double.infinity,
+                  height: 25.0,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      _leftText('盘具编号:'),
+                      _editView(_controllerPjbh, true),
+                      ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,
+                          ),
+                          onPressed: () => {
+                            //重置
+                            setState(() {
+                              qRcode = '';
+                              //deptCode = null;
+                              //startTime = _selectDateStart.toString().substring(0, 10);
+                              _controllerGg.text = '';
+                              _controllerPjbh.text = '';
+                              _controllerDdph.text = '';
+                              ssfc = '';
+                            })
+                          },
+                          child: Text('重置')),
+                      Padding(padding: EdgeInsets.only(right: 10)),
+                      ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blueGrey,
+                          ),
+                          onPressed: () => {
+                            //搜索
+                            if(_controllerDdph.text==''){
+                              checkSubmit(),
+                            }else{
+                              getSemisByOrder(_controllerDdph.text)
                             }
                           },
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      _leftText('盘点分厂:'),
-                      Expanded(
-                        flex: 1,
-                        child: SizedBox(
-                          height: 30.0,
-                          child: _dropDownWidget('请选择'),
-                        ),
-                      ),
+                          child: Text('搜索')),
                       Padding(padding: EdgeInsets.only(right: 10)),
-                      Container(
-                        margin: EdgeInsets.only(right: 15),
-                        alignment: Alignment.centerLeft,
-                        width: 35,
-                        height: 35,
-                      ),
                     ],
-                  ),
-                  Divider(),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      _leftText('所属分厂:'),
-                      _editView(_controllerSsfc, false),
-                      _leftText('规格:'),
-                      _editView(_controllerGg, true),
-                    ],
-                  ),
-                  Container(
-                    padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
-                    child: SizedBox(
-                        width: double.infinity,
-                        height: 25.0,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            _leftText('盘具编号:'),
-                            _editView(_controllerPjbh, true),
-                            Padding(padding: EdgeInsets.only(right: 17)),
-                            //Expanded(child: Text('')),
-
-                            ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.red,
-                                ),
-                                onPressed: () => {
-                                      //重置
-                                      setState(() {
-                                        qRcode = '';
-                                        deptCode = null;
-                                        startTime = _selectDateStart
-                                            .toString()
-                                            .substring(0, 10);
-                                        _controllerGg.text = '';
-                                        _controllerPjbh.text = '';
-                                      })
-                                    },
-                                child: Text('重置')),
-                            Padding(padding: EdgeInsets.only(right: 10)),
-                            ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.blueGrey,
-                                ),
-                                onPressed: () => {
-                                      //搜索
-                                      checkSubmit(),
-                                    },
-                                child: Text('搜索')),
-                            Padding(padding: EdgeInsets.only(right: 10)),
-                          ],
-                        )),
-                  ),
-                ],
-              )
+                  )),
+            ),
+          ],
+        )
             : Container(),
         Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 10)),
         fcName==''
             ? Container()
-            : Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  _leftText(
-                    '所检盘具：${fcName}',
-                  ),
-                  Expanded(child: Text('')),
-                ],
-              ),
-        Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 10)),
-        fcName==''
-            ? Container()
             : SizedBox(
-                width: double.infinity,
-                height: 25.0,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Padding(padding: EdgeInsets.only(right: 10)),
-                    ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blueGrey,
-                        ),
-                        onPressed: () => {
-                              //搜索
-                              addData(),
-                            },
-                        child: Text('新增')),
-                    Padding(padding: EdgeInsets.only(right: 10)),
-                  ],
-                )),
+            width: double.infinity,
+            height: 25.0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                _leftText(
+                  '所检盘具：${fcName}',
+                ),
+                Expanded(child: Text('')),
+
+                Padding(padding: EdgeInsets.only(right: 10)),
+                ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blueGrey,
+                    ),
+                    onPressed: () => {
+                      //搜索
+                      addData(),
+                    },
+                    child: Text('新增')),
+                Padding(padding: EdgeInsets.only(right: 10)),
+              ],
+            )),
         Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 10)),
+      ],
+    );
+  }
+  Widget _ListView() {
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      children: [
         Expanded(
           child: Container(
             // color: Color.fromARGB(111, 236, 243, 100),
@@ -423,7 +454,7 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
                     return _cellForRow(context, index);
                   },
                       // 设置返回数据个数
-                      childCount: _modelList.length),
+                      childCount: _modelList.length+1),
                 ),
               ],
             ),
@@ -506,7 +537,11 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
       'edit8': eidt8,
       'edit9': eidt9,
       'edit10': eidt10,
+      'final':true,
+      'fc_id':deptCode,
+      'isAdd' :true
     };
+
     setState(() {
       checkList.insert(0,checkMap);
       _modelList.insert(0,modelMap);
@@ -651,28 +686,29 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
     );
   }
 
-  Widget _editView20(TextEditingController _controller) {
+  Widget _editView20(TextEditingController _controller,isEnable) {
     return Expanded(
       flex: 1,
       child: SizedBox(
-        height: 20.0,
+        height: 26.0,
         child: Padding(
           padding: EdgeInsets.only(right: 10),
           child: TextField(
+            enabled: isEnable,
             maxLines: 1,
             style: TextStyle(fontSize: 14),
             controller: _controller,
             decoration: InputDecoration(
               fillColor: Colors.white12,
               filled: true,
-              contentPadding: EdgeInsets.all(5),
+              contentPadding: EdgeInsets.fromLTRB(5, 0, 0, 0),
               disabledBorder: OutlineInputBorder(
                 /*边角*/
                 borderRadius: BorderRadius.all(
                   Radius.circular(2), //边角为5
                 ),
                 borderSide: BorderSide(
-                  color: Colors.grey, //边线颜色为白色
+                  color: Colors.white, //边线颜色为白色
                   width: 1, //边线宽度为2
                 ),
               ),
@@ -702,101 +738,190 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
     );
   }
 
-  Widget _cellForRow(conttext, i) {
-    return GestureDetector(
-      child: Container(
-        width: double.infinity,
-        color: Colors.white,
-        padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(padding: EdgeInsets.only(top: 5)),
-            SizedBox(
-                width: double.infinity,
-                height: 20.0,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      '线缆（${i + 1}）',
-                      style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    Padding(padding: EdgeInsets.only(right: 10)),
-                    Expanded(child: Text('')),
-                    ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.red,
-                        ),
-                        onPressed: () => {
-                              //删除
-                              setState(() {
-                                _modelList.removeAt(i);
-                                checkList.removeAt(i);
-                              }),
-                            },
-                        child: Text(
-                          '删除',
-                          style: TextStyle(fontSize: 12),
-                        )),
-                    Padding(padding: EdgeInsets.only(right: 10)),
-                    ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.yellow,
-                        ),
-                        onPressed: () => {
-                              //清空
-                              setState(() {
-                                checkList[i]['edit1'] = TextEditingController();
-                                checkList[i]['edit2'] = TextEditingController();
-                                checkList[i]['edit3'] = TextEditingController();
-                                checkList[i]['edit4'] = TextEditingController();
-                                checkList[i]['edit5'] = TextEditingController();
-                                checkList[i]['edit6'] = TextEditingController();
-                                checkList[i]['edit7'] = TextEditingController();
-                                checkList[i]['edit8'] = TextEditingController();
-                                checkList[i]['edit9'] = TextEditingController();
-                                checkList[i]['edit10'] = TextEditingController();
-                              }),
-                            },
-                        child: Text('清空', style: TextStyle(fontSize: 12))),
-                  ],
-                )),
-            Padding(padding: EdgeInsets.only(top: 5)),
-            //编辑部分
-            DottedBorder(
-                color: Colors.grey,
-                strokeWidth: 1,
-                dashPattern: [6, 3], // 虚线样式，6像素实线，3像素间距
-                child: Container(
-                  constraints: BoxConstraints(minHeight: 100),
-                  padding: EdgeInsets.all(5),
-                  child: Column(
+  Widget _cellForRow(conttext, j) {
+    if(j==0){
+      return _HeaderView();
+    }else {
+      var i = j-1;
+      return GestureDetector(
+        child: Container(
+          width: double.infinity,
+          color: Colors.white,
+          padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(padding: EdgeInsets.only(top: 5)),
+              SizedBox(
+                  width: double.infinity,
+                  height: 25.0,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      getItemBottomWidget(i, '订单批号：    ', 'edit1', 'check1'),
-                      getItemBottomWidget(
-                          i, '客户：            ', 'edit2', 'check2'),
-                      getItemBottomWidget(
-                          i, '型号：            ', 'edit3', 'check3'),
-                      getItemBottomWidget(
-                          i, '规格：            ', 'edit4', 'check4'),
-                      getItemBottomWidget(i, '电压等级：    ', 'edit5', 'check5'),
-                      getItemBottomWidget(i, '半制品：        ', 'edit6', 'check6'),
-                      getItemBottomWidget(i, '所属工序：    ', 'edit7', 'check7'),
-                      getItemBottomWidget(
-                          i, '颜色：            ', 'edit8', 'check8'),
-                      getItemBottomWidget(i, '半成品数量：', 'edit9', 'check9'),
-                      getItemBottomWidget(i, '报工日期：    ', 'edit10', 'check10'),
+                      Text(
+                        '线缆（${i + 1}）',
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      checkList[i]['isAdd'] ? Container() : IconButton(
+                        padding: EdgeInsets.zero,
+                        constraints: BoxConstraints(),
+                        icon: Icon(
+                          checkList[i]["final"]
+                              ? Icons.check_box
+                              : Icons.check_box_outline_blank,
+                          size: 22,
+                          color: checkList[i]["final"] ? Colors.green : Colors
+                              .grey,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            if (!checkList[i]["final"]) {
+                              checkList[i]["final"] = true;
+                            } else {
+                              checkList[i]['edit1'].text =
+                                  _modelList[i]['po_no'] ?? '';
+                              checkList[i]['edit2'].text =
+                                  _modelList[i]['customer_name'] ?? '';
+                              checkList[i]['edit3'].text =
+                                  _modelList[i]['model'] ?? '';
+                              checkList[i]['edit4'].text =
+                                  _modelList[i]['spec'] ?? '';
+                              checkList[i]['edit5'].text =
+                                  _modelList[i]['vol'] ?? '';
+                              checkList[i]['edit6'].text =
+                                  _modelList[i]['semi_part_name'] ?? '';
+                              checkList[i]['edit7'].text =
+                                  _modelList[i]['recipe_name'] ?? '';
+                              checkList[i]['edit8'].text =
+                                  _modelList[i]['color'] ?? '';
+                              try {
+                                checkList[i]['edit9'].text =
+                                    _modelList[i]['qty'].toString() ?? '';
+                              } catch (e) {
+                                checkList[i]['edit9'].text = '';
+                              }
+                              checkList[i]['edit10'].text =
+                                  _modelList[i]['result_date'] ?? '';
+
+                              checkList[i]['final'] = false;
+                            }
+                          });
+                        },
+                      ),
+                      Padding(padding: EdgeInsets.only(left: 5)),
+                      checkList[i]['isAdd'] ? Container() : Expanded(
+                          child: Text('是否异常')),
                     ],
-                  ),
-                )),
-          ],
+                  )),
+              Padding(padding: EdgeInsets.only(top: 5)),
+              SizedBox(
+                  width: double.infinity,
+                  height: 20.0,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+
+                      Text(
+                        '线缆归属',
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Padding(padding: EdgeInsets.only(left: 10)),
+                      Expanded(
+                        flex: 1,
+                        child: SizedBox(
+                          height: 25.0,
+                          child: _dropDownWidgetList('请选择', i),
+                        ),
+                      ),
+                      Padding(padding: EdgeInsets.only(right: 30)),
+                      checkList[i]['isAdd'] ? ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,
+                          ),
+                          onPressed: () =>
+                          {
+                            //删除
+                            setState(() {
+                              _modelList.removeAt(i);
+                              checkList.removeAt(i);
+                            }),
+                          },
+                          child: Text(
+                            '删除',
+                            style: TextStyle(fontSize: 12),
+                          )) : Container(),
+                      Padding(padding: EdgeInsets.only(right: 10)),
+                      checkList[i]['final']
+                          ? ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.yellow,
+                          ),
+                          onPressed: () =>
+                          {
+                            //清空
+                            setState(() {
+                              checkList[i]['edit1'] = TextEditingController();
+                              checkList[i]['edit2'] = TextEditingController();
+                              checkList[i]['edit3'] = TextEditingController();
+                              checkList[i]['edit4'] = TextEditingController();
+                              checkList[i]['edit5'] = TextEditingController();
+                              checkList[i]['edit6'] = TextEditingController();
+                              checkList[i]['edit7'] = TextEditingController();
+                              checkList[i]['edit8'] = TextEditingController();
+                              checkList[i]['edit9'] = TextEditingController();
+                              checkList[i]['edit10'] = TextEditingController();
+                            }),
+                          },
+                          child: Text('清空', style: TextStyle(fontSize: 12)))
+                          : Container(),
+
+                    ],
+                  )),
+              Padding(padding: EdgeInsets.only(top: 10)),
+              //编辑部分
+              DottedBorder(
+                  color: Colors.grey,
+                  strokeWidth: 1,
+                  dashPattern: [6, 3], // 虚线样式，6像素实线，3像素间距
+                  child: Container(
+                    constraints: BoxConstraints(minHeight: 100),
+                    padding: EdgeInsets.all(5),
+                    child: Column(
+                      children: [
+                        getItemBottomWidget(
+                            i, '订单批号：    ', 'edit1', 'check1'),
+                        getItemBottomWidget(
+                            i, '客户：            ', 'edit2', 'check2'),
+                        getItemBottomWidget(
+                            i, '型号：            ', 'edit3', 'check3'),
+                        getItemBottomWidget(
+                            i, '规格：            ', 'edit4', 'check4'),
+                        getItemBottomWidget(
+                            i, '电压等级：    ', 'edit5', 'check5'),
+                        getItemBottomWidget(
+                            i, '半制品：        ', 'edit6', 'check6'),
+                        getItemBottomWidget(
+                            i, '所属工序：    ', 'edit7', 'check7'),
+                        getItemBottomWidget(
+                            i, '颜色：            ', 'edit8', 'check8'),
+                        getItemBottomWidget(
+                            i, '半成品数量：', 'edit9', 'check9'),
+                        getItemBottomWidget(
+                            i, '报工日期：    ', 'edit10', 'check10'),
+                      ],
+                    ),
+                  )),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    }
   }
 
   Widget getItemBottomWidget(i, title, editIndex, checkIndex) {
@@ -809,7 +934,7 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
               fontSize: 14,
             ),
           ),
-          _editView20(checkList[i][editIndex]),
+          _editView20(checkList[i][editIndex],checkList[i]['final']),
         ]),
         Padding(padding: EdgeInsets.only(top: 3))
       ],
@@ -869,6 +994,62 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
               onChanged: (value) {
                 setState(() {
                   deptCode = value;
+                  print(value.toString() + '');
+                  for (int i = 0; i < checkList.length; i++) {
+                    checkList[i]['fc_id'] = deptCode;
+                  }
+                });
+              },
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _dropDownWidgetList(String hint,int i) {
+    var value;
+    List<DropdownMenuItem<Object>> items = [];
+    value = checkList[i]['fc_id'];
+    items = depts;
+    return Container(
+      height: 20,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Container(
+            height: 20,
+            decoration: BoxDecoration(
+              //设置边框
+              border: new Border.all(color: Colors.grey, width: 1),
+              //背景颜色
+              color: Colors.white,
+              //设置圆角
+              borderRadius: new BorderRadius.circular((2)),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+            child: DropdownButton(
+              //提示文本
+              hint: Text(hint),
+              underline: Container(height: 0),
+              //下拉列表项
+              items: items,
+              //默认值
+              value: value,
+              //下拉三角大小
+              iconSize: 20.0,
+              //阴影大小
+              elevation: 1,
+              //是否和父容器宽度保持一致（默认false,占一般左右）,通常用这个设置宽度
+              isExpanded: true,
+              //下拉文本样式
+              style: TextStyle(color: Colors.black, fontSize: 12),
+              //下拉改变事件
+              onChanged: (value) {
+                setState(() {
+                  checkList[i]['fc_id'] = value;
                   print(value.toString() + '');
                 });
               },

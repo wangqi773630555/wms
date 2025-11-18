@@ -26,6 +26,8 @@ class SemiFinishedCheck extends StatefulWidget {
 }
 
 class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
+
+  final FocusNode _focusNode = FocusNode();
   //分厂
   List deptList = [];
   List<DropdownMenuItem<Object>> depts = [];
@@ -216,6 +218,8 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
             checkList.clear();
             _modelList.clear();
             fcName = '';
+            _controllerDdph.text='';
+            _focusNode.requestFocus();
           } else {
             Fluttertoast.showToast(msg: data['msg']);
           }
@@ -328,7 +332,7 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 _leftText('订单批号:'),
-                _editView(_controllerDdph, true),
+                _editView1(_controllerDdph, true),
               ],
             ),
             Padding(padding: EdgeInsets.only(top: 5)),
@@ -642,6 +646,63 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
         child: Padding(
           padding: EdgeInsets.only(right: 10),
           child: TextField(
+            enabled: isEnable,
+            maxLines: 1,
+            style: TextStyle(fontSize: 14),
+            controller: _controller,
+            decoration: InputDecoration(
+              fillColor: Colors.white12,
+              filled: true,
+              contentPadding: EdgeInsets.all(5),
+              disabledBorder: OutlineInputBorder(
+                /*边角*/
+                borderRadius: BorderRadius.all(
+                  Radius.circular(2), //边角为5
+                ),
+                borderSide: BorderSide(
+                  color: Colors.grey, //边线颜色为白色
+                  width: 1, //边线宽度为2
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                /*边角*/
+                borderRadius: BorderRadius.all(
+                  Radius.circular(2), //边角为5
+                ),
+                borderSide: BorderSide(
+                  color: Colors.grey, //边线颜色为白色
+                  width: 1, //边线宽度为2
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.grey, //边框颜色为白色
+                  width: 1, //宽度为5
+                ),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(2), //边角为30
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+  Widget _editView1(TextEditingController _controller, isEnable) {
+    return Expanded(
+      flex: 1,
+      child: SizedBox(
+        height: 25.0,
+        child: Padding(
+          padding: EdgeInsets.only(right: 10),
+          child: TextField(
+            onChanged: (value) => {
+              if(_controllerDdph.text.length==18){
+                getSemisByOrder(_controllerDdph.text)
+              }
+            },
+            focusNode: _focusNode,
             enabled: isEnable,
             maxLines: 1,
             style: TextStyle(fontSize: 14),

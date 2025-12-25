@@ -44,18 +44,9 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
   var _selectDateStart = DateTime.now();
 
   List typeList = [];
-  var fcName = '';
-  var qRcode = '';
+  var po_no = '',recipe_name='';
   var dlp_info_id;
 
-  //所属分厂
-  var ssfc="";
-
-  //规格
-  TextEditingController _controllerGg = TextEditingController();
-
-  //盘具编号
-  TextEditingController _controllerPjbh = TextEditingController();
 
   //订单批号
   TextEditingController _controllerDdph = TextEditingController();
@@ -64,8 +55,11 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
 
   List files = [];
 
+  /**
+   * 获取数据
+   */
   getInintData() {
-    DataDao.getProdWoResultSemis(qRcode).then((res) {
+    DataDao.getProdWoResultSemis(_controllerDdph.text.toString()).then((res) {
       setState(() {
         if (res != null && res.result) {
           var data = res.data['data'];
@@ -98,6 +92,8 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
             } catch (e) {}
             TextEditingController eidt10 = TextEditingController();
             eidt10.text = _modelList[i]['result_date'] ?? '';
+            TextEditingController eidt11 = TextEditingController();
+            eidt11.text = _modelList[i]['zpronumber'] ?? '';
 
             map['edit1'] = eidt1;
             map['edit2'] = eidt2;
@@ -109,6 +105,7 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
             map['edit8'] = eidt8;
             map['edit9'] = eidt9;
             map['edit10'] = eidt10;
+            map['edit11'] = eidt11;
             map['final'] = false;
             map['fc_id'] = deptCode;
             map['isAdd'] = false;
@@ -116,45 +113,8 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
           }
 
           //数据填充
-          fcName =  data['dlp']['dept_name']+'-'+data['dlp']['pj']+'-'+data['dlp']['sn'];
-          //deptCode = data['dlp']['dept_code'];
-          ssfc = data['dlp']['dept_name'];
-          _controllerGg.text = data['dlp']['pj'];
-          _controllerPjbh.text = data['dlp']['sn'];
-          dlp_info_id = data['dlp']['dlp_info_id'];
-        }
-      });
-    });
-  }
-
-
-  getSemisByOrder(code){
-    DataDao.getSemisByOrder(code).then((res) {
-      setState(() {
-        if (res != null && res.result) {
-          var data = res.data['data'];
-          if(data['list']!=null){
-            files = data['list'];
-            showCustomDialog(context).then((value) {});
-          }
-        }
-      });
-    });
-  }
-
-
-  loadPara() {
-    DataDao.loadPara().then((res) {
-      setState(() {
-        if (res != null && res.result) {
-          deptList = res.data['data']['depts'];
-          for (int i = 0; i < deptList.length; i++) {
-            DropdownMenuItem<Object> item = DropdownMenuItem(
-              child: Text(deptList[i]['dept_name']),
-              value: deptList[i]['dept_code'],
-            );
-            depts.add(item);
-          }
+          recipe_name =  data['recipe_name'];
+          po_no = data['po_no'];
         }
       });
     });
@@ -176,24 +136,30 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
         return;
       }*/
       var json2 = {};
-        json2['po_no'] = checkList[i]['edit1'].text.toString();
-        json2['customer_name'] = checkList[i]['edit2'].text.toString();
-        json2['model'] = checkList[i]['edit3'].text.toString();
-        json2['spec'] = checkList[i]['edit4'].text.toString();
-        json2['vol'] = checkList[i]['edit5'].text.toString();
-        json2['semi_part_name'] = checkList[i]['edit6'].text.toString();
-        json2['recipe_name'] = checkList[i]['edit7'].text.toString();
-        json2['color'] = checkList[i]['edit8'].text.toString();
-        json2['qty'] = checkList[i]['edit9'].text.toString();
-        json2['result_date'] = checkList[i]['edit10'].text.toString();
+      json2['po_no'] = checkList[i]['edit1'].text.toString();
+      json2['customer_name'] = checkList[i]['edit2'].text.toString();
+      json2['model'] = checkList[i]['edit3'].text.toString();
+      json2['spec'] = checkList[i]['edit4'].text.toString();
+      json2['vol'] = checkList[i]['edit5'].text.toString();
+      json2['semi_part_name'] = checkList[i]['edit6'].text.toString();
+      json2['recipe_name'] = checkList[i]['edit7'].text.toString();
+      json2['color'] = checkList[i]['edit8'].text.toString();
+      json2['qty'] = checkList[i]['edit9'].text.toString();
+      json2['result_date'] = checkList[i]['edit10'].text.toString();
+      json2['zpronumber'] = checkList[i]['edit11'].text.toString();
 
-        //是否异常
-        json2['tag'] = checkList[i]['final']?'1':'0';
-        //线缆归属
-        json2['dept_code'] = checkList[i]['fc_id'];
+      //是否异常
+      json2['tag'] = checkList[i]['final']?'1':'0';
+      //线缆归属
+      json2['dept_code'] = checkList[i]['fc_id'];
+      var wo_zpronumber = '';
+      wo_zpronumber = checkList[i]['wo_zpronumber'] ?? '';
+      if(wo_zpronumber==''){
+        wo_zpronumber =checkList[i]['edit1'].text.toString()+'_'+checkList[i]['edit11'].text.toString();
+      }
 
       var data = {
-        'code': qRcode,
+        'code': _controllerDdph.text.toString(),
         'create_date': startTime,
         'tag': checkList[i]['final']?'0':'1',
         'line_dept_code':checkList[i]['fc_id'],
@@ -201,7 +167,8 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
         'dept_code': deptCode,
         'json1': jsonEncode(_modelList[i]),
         'json2': jsonEncode(json2),
-        'ph':_controllerPjbh.text
+        'wo_zpronumber':wo_zpronumber,
+
       };
       datas.add(data);
     }
@@ -212,12 +179,10 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
           var data = res.data['data'];
           if (data['code'] == 200 || data['code'] == null) {
             Fluttertoast.showToast(msg: data['des']);
-            _controllerPjbh.text = '';
-            _controllerGg.text = '';
-            ssfc='';
             checkList.clear();
             _modelList.clear();
-            fcName = '';
+            po_no = '';
+            recipe_name = '';
             _controllerDdph.text='';
             _focusNode.requestFocus();
           } else {
@@ -227,6 +192,27 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
       });
     });
   }
+
+
+
+  loadPara() {
+    DataDao.loadPara().then((res) {
+      setState(() {
+        if (res != null && res.result) {
+          deptList = res.data['data']['depts'];
+          for (int i = 0; i < deptList.length; i++) {
+            DropdownMenuItem<Object> item = DropdownMenuItem(
+              child: Text(deptList[i]['dept_name']),
+              value: deptList[i]['dept_code'],
+            );
+            depts.add(item);
+          }
+        }
+      });
+    });
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -285,19 +271,8 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
                         if (scanResult?.rawContent != '') {
                           //扫码结束
                           setState(() {
-                            qRcode = scanResult?.rawContent ?? '';
-                            /*  try{
-                                    deptCode = qRcode.toString().split(',')[0];
-                                    _controllerGg.text = qRcode.toString().split(',')[1].split('-')[0];
-                                    _controllerPjbh.text = qRcode.toString().split(',')[1].split('-')[1];
-                                  }catch(e){
-
-                                  }*/
-                            if(qRcode.contains(',')){
-                              getInintData();
-                            }else{
-                              getSemisByOrder(qRcode);
-                            }
+                            _controllerDdph.text = scanResult?.rawContent ?? '';
+                            getInintData();
                           });
                         }
                       }
@@ -336,16 +311,7 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
               ],
             ),
             Padding(padding: EdgeInsets.only(top: 5)),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                _leftText('盘具所属:'),
-                Expanded(child: Text(ssfc),flex: 1,),
-                _leftText('规格:'),
-                _editView(_controllerGg, true),
-              ],
-            ),
+
             Padding(padding: EdgeInsets.only(top: 5)),
             Container(
               padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -355,8 +321,6 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      _leftText('盘具编号:'),
-                      _editView(_controllerPjbh, true),
                       ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.red,
@@ -364,13 +328,12 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
                           onPressed: () => {
                             //重置
                             setState(() {
-                              qRcode = '';
                               //deptCode = null;
                               //startTime = _selectDateStart.toString().substring(0, 10);
-                              _controllerGg.text = '';
-                              _controllerPjbh.text = '';
                               _controllerDdph.text = '';
-                              ssfc = '';
+                              po_no = '';
+                              recipe_name = '';
+                              _focusNode.requestFocus();
                             })
                           },
                           child: Text('重置')),
@@ -381,11 +344,7 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
                           ),
                           onPressed: () => {
                             //搜索
-                            if(_controllerDdph.text==''){
-                              checkSubmit(),
-                            }else{
-                              getSemisByOrder(_controllerDdph.text)
-                            }
+                            getInintData()
                           },
                           child: Text('搜索')),
                       Padding(padding: EdgeInsets.only(right: 10)),
@@ -396,7 +355,7 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
         )
             : Container(),
         Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 10)),
-        fcName==''
+        po_no==''
             ? Container()
             : SizedBox(
             width: double.infinity,
@@ -405,7 +364,7 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 _leftText(
-                  '所检盘具：${fcName}',
+                  '所检订单：${po_no}',
                 ),
                 Expanded(child: Text('')),
 
@@ -415,10 +374,23 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
                       backgroundColor: Colors.blueGrey,
                     ),
                     onPressed: () => {
-                      //搜索
                       addData(),
                     },
                     child: Text('新增')),
+                Padding(padding: EdgeInsets.only(right: 10)),
+              ],
+            )),
+        po_no==''
+            ? Container()
+            : SizedBox(
+            width: double.infinity,
+            height: 25.0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                _leftText(
+                  '所处工序：${recipe_name}',
+                ),
                 Padding(padding: EdgeInsets.only(right: 10)),
               ],
             )),
@@ -506,6 +478,7 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
       'color': '',
       'qty': '0',
       'result_date': _date.toString().substring(0, 10),
+      'zpronumber':'',
     };
 
     TextEditingController eidt1 = TextEditingController();
@@ -530,6 +503,8 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
     } catch (e) {}
     TextEditingController eidt10 = TextEditingController();
     eidt10.text = modelMap['result_date'] ?? '';
+    TextEditingController eidt11 = TextEditingController();
+    eidt11.text = modelMap['zpronumber'] ?? '';
     Map checkMap = {
       'edit1': eidt1,
       'edit2': eidt2,
@@ -541,6 +516,7 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
       'edit8': eidt8,
       'edit9': eidt9,
       'edit10': eidt10,
+      'edit11': eidt11,
       'final':true,
       'fc_id':deptCode,
       'isAdd' :true
@@ -552,27 +528,6 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
     });
   }
 
-  checkSubmit() {
-    /*  if(deptCode==null){
-      Fluttertoast.showToast(msg: '请选择分厂');
-      return;
-    }*/
-    if (_controllerGg.text.isEmpty) {
-      Fluttertoast.showToast(msg: '请输入规格');
-      return;
-    }
-    if (_controllerPjbh.text.isEmpty) {
-      Fluttertoast.showToast(msg: '请输入编号');
-      return;
-    }
-    //deptCode 不作为搜索条件 随便用00占位
-    qRcode = "00" +
-        ',' +
-        _controllerGg.text.toString() +
-        '-' +
-        _controllerPjbh.text.toString();
-    getInintData();
-  }
 
   _showDataBottomPicker() {
     DatePicker.showDatePicker(context,
@@ -699,7 +654,7 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
           child: TextField(
             onChanged: (value) => {
               if(_controllerDdph.text.length==18){
-                getSemisByOrder(_controllerDdph.text)
+                getInintData()
               }
             },
             focusNode: _focusNode,
@@ -975,6 +930,8 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
                             i, '半成品数量：', 'edit9', 'check9'),
                         getItemBottomWidget(
                             i, '报工日期：    ', 'edit10', 'check10'),
+                        getItemBottomWidget(
+                            i, '盘具：            ', 'edit11', 'check11'),
                       ],
                     ),
                   )),
@@ -1141,80 +1098,6 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
     }
   }
 
-  Future showCustomDialog(BuildContext context) async {
-    var result = await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return StatefulBuilder(
-              builder: (BuildContext context, StateSetter setState) {
-                return dialog(setState);
-              });
-        });
-    return result;
-  }
-
-  Widget dialog(setState) {
-    return Center(
-      child: Container(
-        margin: EdgeInsets.all(20),
-        child: Card(
-            child: Padding(
-              padding: EdgeInsets.all(10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: listItem(files, setState),
-              ),
-            )),
-      ),
-    );
-  }
-
-  List<Widget> listItem(list, setState) {
-    List<Widget> _list = [];
-    _list.add(Padding(padding: EdgeInsets.only(top: 10)));
-    _list.add(Text(
-      '此流水卡下现存多盘线缆',
-      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-    ));
-    _list.add(Padding(padding: EdgeInsets.only(top: 10)));
-    for (int i = 0; i < list.length; i++) {
-      Widget item = Container(
-        //设置控
-        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-        margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Expanded(
-              child: TextButton(
-                style: TextButton.styleFrom(
-                  padding: EdgeInsets.all(0), //内边距
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap, //外边距
-                ),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    "${list[i]['dept_name'].toString()}-${list[i]['pj'].toString()}-${list[i]['sn'].toString()}",
-                    style: TextStyle(fontSize: 14, color: Colors.blue),
-                  ),
-                ),
-                onPressed: () {
-                  //列表点击
-                  Navigator.pop(context);
-                  //获取到数据拼装成qRcode 再次获取主列表
-                  qRcode = "${list[i]['dept_name'].toString()},${list[i]['pj'].toString()}-${list[i]['sn'].toString()}";
-                  getInintData();
-                },
-              ),
-            ),
-          ],
-        ),
-      );
-      _list.add(item);
-    }
-    return _list;
-  }
 
   @override
   void dispose() {

@@ -2,8 +2,8 @@
 class UrlConstant {
    //测试环境
    /*static const String host = 'https://gatewaydev.wanmaco.com/'; //登录测试（新框架）
-   static const String host2 = 'http://itest.wanmagroup.com/'; //测试（天屹数据缆）
-   static const String host3 = 'http://dlmestest.wanmagroup.com/api/'; //测试（电缆低压三厂）
+   static const String host2 = 'http://itest.wanmaco.com/'; //测试（天屹数据缆）
+   static const String host3 = 'http://dlmestest.wanmaco.com/api/'; //测试（电缆低压三厂）
    static const String host4 = 'https://public.wanmaco.com/'; //正式*/
 
 
@@ -318,6 +318,11 @@ class UrlConstant {
   //【APP扫码盘库】保存盘点信息
   static saveResult() {
     return '${host}ams/mes-data/semi/saveResult';
+  }
+
+  //盘库列表
+  static getSemisList() {
+    return '${host}ams/mes-data/semi/getSemisList';
   }
 
 

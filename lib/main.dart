@@ -18,6 +18,7 @@ import 'package:wanma_print/page/dianlan_widgit/scan_sign_in_list.dart';
 import 'package:wanma_print/page/dianlan_widgit/search_material.dart';
 import 'package:wanma_print/page/dianlan_widgit/search_material_filtrate.dart';
 import 'package:wanma_print/page/dianlan_widgit/semi_finished_check.dart';
+import 'package:wanma_print/page/dianlan_widgit/semi_list.dart';
 import 'package:wanma_print/page/dianlan_widgit/shelves_down.dart';
 import 'package:wanma_print/page/dianlan_widgit/shelves_up.dart';
 import 'package:wanma_print/page/dianlan_widgit/task_examine_notarize.dart';
@@ -280,6 +281,11 @@ class MyApp extends StatelessWidget {
             SemiFinishedCheck.sName: ((context) => CommonLayer(
               child: SemiFinishedCheck(),
             )),
+            //盘库列表
+            SemiList.sName: ((context) => CommonLayer(
+              child: SemiList(),
+            )),
+
 
           },
         );

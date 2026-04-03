@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:wanma_print/page/dianlan_widgit/semi_list.dart';
 import '../../../common/config/config.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:barcode_scan2/barcode_scan2.dart';
@@ -10,6 +11,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_cupertino_datetime_picker/flutter_cupertino_datetime_picker.dart';
 
 import '../../common/dao/data_dao.dart';
+import '../../common/utils/navigator_utils.dart';
 import '../common_widgit/refresh/custom_refresh_footer.dart';
 import '../common_widgit/refresh/custom_refresh_header.dart';
 import 'package:dotted_border/dotted_border.dart';
@@ -221,7 +223,19 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
         appBar: AppBar(
           title: Text('半制品盘库'),
           centerTitle: true,
-          actions: [],
+            actions: <Widget>[
+              TextButton(
+                  onPressed: () => {
+                    NavigatorUtils.goPage(
+                      context,
+                      SemiList.sName,
+                    )
+                  },
+                  child: Text(
+                    '盘库记录',
+                    style: TextStyle(color: Colors.white),
+                  ))
+            ]
         ),
         body: _ListView());
   }

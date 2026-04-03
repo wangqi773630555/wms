@@ -1838,5 +1838,42 @@ class DataDao {
     }
   }
 
+  /**
+   * 盘库列表
+   */
+  static getSemisList(var code,var create_date) async {
+    Map<String, String> header = {
+      'Authorization': await LocalStorage.get(Config.UA)
+    };
+    String sk = await LocalStorage.get(Config.SET_DL_KEY);
+    Map<String, dynamic> requestParams;
+    requestParams = {
+      "_SK_": sk,
+      "code": code,
+      "create_date":create_date
+    };
+    // print('======-----##$requestParams');
+    var res = await HttpManager.netFetch(
+        '${UrlConstant.getSemisList()}',
+        requestParams,
+        header,
+        Options(method: 'post'));
+    var resultData;
+    if (res != null && res.result) {
+      if (res.data['code'] == 200) {
+        return ResultDao(res.data, res.result);
+      } else {
+        resultData = ResultDao(
+            Code.errorHandleFunction(res.data['code'], res.data['msg'], false),
+            false);
+        return ResultDao(resultData, false);
+      }
+    } else {
+      resultData =
+          ResultDao(Code.errorHandleFunction(res.code, '', false), false);
+      return ResultDao(resultData, false);
+    }
+  }
+
 
 }

@@ -115,4 +115,6 @@ class Config {
   static const PHOTOLIST = "photo_list";
   //半制品盘库
   static const SEMI_FINISHED_CHECK = "semi_finished_check";
+  //盘库列表
+  static const SEMI_LIST = "semi_list";
 }

@@ -410,7 +410,7 @@ class _FragmentHomePageState extends State<FragmentHomePage> with RouteAware {
     if (Config.REFRESH == 1) {
       Config.REFRESH = 0;
       getAppUserList();
-      getAppUserListForCards();
+      //getAppUserListForCards();
     }
     super.didPopNext();
   }

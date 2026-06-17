@@ -312,7 +312,7 @@ class _MenuPageState extends State<MenuPage> {
     UserDao.getAuthorizeResources('').then((res) {
       if (res != null && res.result) {
         var data = res.data['data'];
-        List menu = data?['menus'];
+        List menu = data?['menus']??[];
 
         menuList.addAll(menu);
         setState(() {});

@@ -24,7 +24,7 @@ class WMColors {
   static const int textColorWhite = white;
 
   static const MaterialColor primarySwatch = const MaterialColor(
-      primaryValue,
+    primaryValue,
     const <int, Color>{
       50: const Color(primaryLightValue),
       100: const Color(primaryLightValue),

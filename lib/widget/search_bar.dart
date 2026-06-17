@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 /// normal 为默认情况下使用的样式
 enum SearchBarType { home, normal, homeLight }
 
-class SearchBar extends StatefulWidget {
+class SearchBars extends StatefulWidget {
   final bool? enabled;
   final bool? hideLeft;
   final SearchBarType searchBarType;
@@ -20,27 +20,27 @@ class SearchBar extends StatefulWidget {
   final ValueChanged<String>? onSubmitted;
   final controller;
 
-  const SearchBar(
+  const SearchBars(
       {Key? key,
-      this.enabled = true,
-      this.hideLeft,
-      this.searchBarType = SearchBarType.normal,
-      this.hint,
-      this.defaultText,
-      this.leftButtonClick,
-      this.rightButtonClick,
-      this.speakClick,
-      this.inputBoxClick,
-      this.onChanged,
-      this.onSubmitted,
-      this.controller})
+        this.enabled = true,
+        this.hideLeft,
+        this.searchBarType = SearchBarType.normal,
+        this.hint,
+        this.defaultText,
+        this.leftButtonClick,
+        this.rightButtonClick,
+        this.speakClick,
+        this.inputBoxClick,
+        this.onChanged,
+        this.onSubmitted,
+        this.controller})
       : super(key: key);
 
   @override
   _SearchBarState createState() => _SearchBarState();
 }
 
-class _SearchBarState extends State<SearchBar> {
+class _SearchBarState extends State<SearchBars> {
   bool showClear = false;
   // final TextEditingController _controller = TextEditingController();
   late TextEditingController _controller;
@@ -72,10 +72,10 @@ class _SearchBarState extends State<SearchBar> {
               child: widget.hideLeft ?? false
                   ? null
                   : Icon(
-                      Icons.arrow_back_ios,
-                      color: Colors.grey,
-                      size: 26,
-                    ),
+                Icons.arrow_back_ios,
+                color: Colors.grey,
+                size: 26,
+              ),
             ),
             widget.leftButtonClick),
         Expanded(
@@ -160,58 +160,58 @@ class _SearchBarState extends State<SearchBar> {
               flex: 1,
               child: widget.searchBarType == SearchBarType.normal
                   ? TextField(
-                      controller: _controller,
-                      onChanged: _onChanged,
-                      onSubmitted: (text) {
-                        if (widget.onSubmitted != null) {
-                          widget.onSubmitted!(text);
-                        }
-                      },
-                      autofocus: true,
-                      textInputAction: TextInputAction.search,
-                      style: TextStyle(
-                          fontSize: 18.0,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w300),
-                      //输入文本的样式
-                      decoration: InputDecoration(
-                        contentPadding:
-                            //flutter sdk >= v1.12.1 输入框样式适配
-                            EdgeInsets.only(left: 5, bottom: 10, right: 5),
-                        border: InputBorder.none,
-                        hintText: widget.hint ?? '',
-                        hintStyle: TextStyle(fontSize: 15),
-                      ))
+                  controller: _controller,
+                  onChanged: _onChanged,
+                  onSubmitted: (text) {
+                    if (widget.onSubmitted != null) {
+                      widget.onSubmitted!(text);
+                    }
+                  },
+                  autofocus: true,
+                  textInputAction: TextInputAction.search,
+                  style: TextStyle(
+                      fontSize: 18.0,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w300),
+                  //输入文本的样式
+                  decoration: InputDecoration(
+                    contentPadding:
+                    //flutter sdk >= v1.12.1 输入框样式适配
+                    EdgeInsets.only(left: 5, bottom: 10, right: 5),
+                    border: InputBorder.none,
+                    hintText: widget.hint ?? '',
+                    hintStyle: TextStyle(fontSize: 15),
+                  ))
                   : _wrapTap(
-                      Container(
-                        child: Text(
-                          widget.defaultText ?? "",
-                          style: TextStyle(fontSize: 13, color: Colors.grey),
-                        ),
-                      ),
-                      widget.inputBoxClick)),
+                  Container(
+                    child: Text(
+                      widget.defaultText ?? "",
+                      style: TextStyle(fontSize: 13, color: Colors.grey),
+                    ),
+                  ),
+                  widget.inputBoxClick)),
           !showClear
               ? _wrapTap(
-                  Icon(
-                    null,
-                    size: 22,
-                    color: widget.searchBarType == SearchBarType.normal
-                        ? Colors.blue
-                        : Colors.grey,
-                  ),
-                  widget.speakClick)
-              // Container()
+              Icon(
+                Icons.qr_code_scanner_outlined,
+                size: 22,
+                color: widget.searchBarType == SearchBarType.normal
+                    ? Colors.blue
+                    : Colors.grey,
+              ),
+              widget.speakClick)
+          // Container()
               : _wrapTap(
-                  Icon(
-                    Icons.clear,
-                    size: 22,
-                    color: Colors.grey,
-                  ), () {
-                  setState(() {
-                    _controller.clear();
-                  });
-                  _onChanged('');
-                })
+              Icon(
+                Icons.clear,
+                size: 22,
+                color: Colors.grey,
+              ), () {
+            setState(() {
+              _controller.clear();
+            });
+            _onChanged('');
+          })
         ],
       ),
     );

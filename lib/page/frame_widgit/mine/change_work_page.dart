@@ -153,7 +153,7 @@ class _ChangeWorkPageState extends State<ChangeWorkPage> {
           Expanded(child: Text('')),
           Visibility(child:  ElevatedButton(
             style: ElevatedButton.styleFrom(
-                primary: Colors.black,
+                backgroundColor: Colors.black,
                 padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 textStyle: TextStyle(
                     fontSize: 14,

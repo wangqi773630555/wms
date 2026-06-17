@@ -122,7 +122,7 @@ class _TaskFinishNotarizeState extends State<TaskFinishNotarize> {
                   child: ElevatedButton(
                       style:  ElevatedButton.styleFrom(
                         //backgroundColor: Colors.red,
-                        primary: Colors.red,
+                        backgroundColor: Colors.red,
                       ),
                       onPressed: () => {
                         syncAGVTaskEnd(),

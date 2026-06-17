@@ -142,7 +142,7 @@ class _ScanSignInBodyState extends State<ScanSignInBody> {
                           child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 //backgroundColor: Colors.red,
-                                primary: Colors.black,
+                                backgroundColor: Colors.black,
                               ),
                               onPressed: () async => {
                                     image = await ImagePicker().pickImage(
@@ -243,7 +243,7 @@ class _ScanSignInBodyState extends State<ScanSignInBody> {
                         ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               //backgroundColor: Colors.red,
-                              primary: Colors.red,
+                              backgroundColor: Colors.red,
                             ),
                             onPressed: () => {
                                   if (fileId == null)
@@ -261,7 +261,7 @@ class _ScanSignInBodyState extends State<ScanSignInBody> {
                         ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               //backgroundColor: Colors.red,
-                              primary: Colors.black,
+                              backgroundColor: Colors.black,
                             ),
                             onPressed: () => {_scan()},
                             child: Text('扫码签到')),

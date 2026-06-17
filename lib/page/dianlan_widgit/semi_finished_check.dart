@@ -666,8 +666,9 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
         child: Padding(
           padding: EdgeInsets.only(right: 10),
           child: TextField(
+            autofocus: true,
             onChanged: (value) => {
-              if(_controllerDdph.text.length==18){
+              if(_controllerDdph.text.trim().length==18||_controllerDdph.text.trim().length==16){
                 getInintData()
               }
             },

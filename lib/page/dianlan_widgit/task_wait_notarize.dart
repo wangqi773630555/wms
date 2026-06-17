@@ -192,7 +192,7 @@ class _TaskWaitNotarizeState extends State<TaskWaitNotarize> {
               height: 40.0,
               child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.yellow[700],
+                    backgroundColor: Colors.yellow[700],
                     //change background color of button
                     //change text color of button
                   ),

@@ -64,7 +64,7 @@ class HomeDrawer extends StatelessWidget {
                 itemBuilder: (context, index) {
                   return ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      primary: listColor != null
+                      backgroundColor: listColor != null
                           ? listColor[index]
                           : Theme.of(context).primaryColor,
                       elevation: 20,
@@ -219,7 +219,8 @@ class HomeDrawer extends StatelessWidget {
                                     top: 10.0,
                                     right: 20.0,
                                     bottom: 10.0),
-                                primary: Colors.redAccent,
+                                backgroundColor: Colors.redAccent,
+
                                 textStyle: TextStyle(
                                   color: Color(WMColors.textWhite),
                                   // backgroundColor: Colors.redAccent,

@@ -1,5 +1,6 @@
 name: wanma_print
 description: 万马打印
+install! 'cocoapods', warn_for_unused_master_specs_repo: false
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
@@ -32,55 +33,60 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  shared_preferences: ^2.0.0
+  shared_preferences: ^2.5.3
   flutter_redux: ^0.8.0
   #轮播
   flutter_swiper_null_safety: ^1.0.2
   #加载框样式
   flutter_spinkit: ^5.0.0
   #网络框架
-  dio: ^4.0.0
-  cookie_jar: ^3.0.0
+  dio: ^4.0.6
+  #cookie_jar: ^3.0.0
   dio_cookie_manager: ^2.0.0
-  connectivity: ^3.0.0
+  #connectivity: ^3.0.0
   #事件分发
   event_bus:  ^2.0.0
   #土司
-  fluttertoast: ^8.0.3
+  fluttertoast: ^8.2.8
   #数据库
   # sqflite: ^2.0.0
   #相册与拍照
-  image_picker: ^0.8.1
+  image_picker: ^1.2.1
   #uri
-  url_launcher: ^6.0.20
+  url_launcher: ^6.3.1
   #缓存
-  flutter_cache_manager: ^3.0.0
+  #flutter_cache_manager: ^3.0.0
   #时间格式
   date_format: ^2.0.0
   #选择器
-  flutter_picker: ^2.0.5
+  #flutter_picker: ^2.0.5
   #图表
-  fl_chart: ^0.9.0
+  #fl_chart: ^0.9.0
   #包信息
-  package_info_plus: 1.4.2
+  package_info_plus: ^8.3.0
   #扫码
-  barcode_scan2: ^4.2.1
+  barcode_scan2: ^4.5.0
   #刷新
   flutter_easyrefresh: ^2.2.2
-  path_provider: ^2.0.4
-  permission_handler: ^8.1.6
+  path_provider: ^2.1.5
+  permission_handler: ^11.3.1
   open_file: ^3.2.1
-  file_picker: ^4.4.0
+  file_picker: ^9.0.2
   flutter_cupertino_datetime_picker: ^3.0.0
-  find_dropdown: ^1.0.0
+  #find_dropdown: ^1.0.0
   #jishu
 
   flutter_switch: ^0.3.1
-  package_info: ^2.0.2
+  #package_info: ^2.0.2
   #图片缓存
-  cached_network_image: ^3.0.0
+  cached_network_image: ^3.3.1
   #虚线描边
-  dotted_border: ^1.0.0 # 检查最新版本号以确保兼容性。
+  dotted_border: ^2.1.0 # 检查最新版本号以确保兼容性。
+  #本地库
+  find_dropdown:
+    path: packages/find_dropdown
+  flutter_picker:
+    path: packages/flutter_picker
   #多语言
   flutter_localizations:
     sdk: flutter

@@ -223,7 +223,7 @@ class _LoginPageState extends State<LoginPage> {
                                           } else {
                                             UserDao.getSk().then((res) async {
                                               if (res != null && res.result) {
-                                                String data = res.data['data'];
+                                                String data = res.data['data']??'';
                                                 LocalStorage.save(Config.SET_KEY, data);
 
                                                 UserDao.getDlSk().then((res) async {

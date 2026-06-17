@@ -106,7 +106,7 @@ class _TaskExamineNotarizeState extends State<TaskExamineNotarize> {
                   child: ElevatedButton(
                       style:  ElevatedButton.styleFrom(
                         //backgroundColor: Colors.red,
-                        primary: Colors.red,
+                        backgroundColor: Colors.red,
                       ),
 
                       onPressed: () => {

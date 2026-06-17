@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
-import 'package:connectivity/connectivity.dart';
 import 'package:wanma_print/common/config/config.dart';
 import 'package:wanma_print/common/local/local_storage.dart';
 import 'package:wanma_print/common/net/code.dart';
@@ -47,11 +46,11 @@ class HttpManager {
   static netFetch(url, params, Map<String, String>? header, Options option,
       {noTip = false, download = false}) async {
     //判断网络
-    var connectivityResult = await Connectivity().checkConnectivity();
+   /* var connectivityResult = await Connectivity().checkConnectivity();
     if (connectivityResult == ConnectivityResult.none) {
       return ResultData(Code.errorHandleFunction(Code.NETWORK_ERROR, '', noTip),
           false, Code.NETWORK_ERROR);
-    }
+    }*/
 
     Map<String, String> headers = HashMap();
     if (header != null) {

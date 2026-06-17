@@ -3,7 +3,7 @@ import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:wanma_print/common/dao/data_dao.dart';
-import 'package:wanma_print/widget/search_bar.dart';
+import '../../../../widget/search_bar.dart';
 
 import '../../../../common/utils/navigator_utils.dart';
 
@@ -97,7 +97,7 @@ class _MaterialSearchPageState extends State<MaterialSearchPage> {
       padding: EdgeInsets.only(top: 25),
       height: 80,
       decoration: BoxDecoration(color: Colors.white),
-      child: SearchBar(
+      child: SearchBars(
         controller: _controller,
         hint: '发货单号',
         onChanged: (text) {

@@ -138,7 +138,7 @@ class _TaskReturnNotarizeState extends State<TaskReturnNotarize> {
                 child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       //backgroundColor: Colors.blue,
-                      primary: Colors.blue,
+                      backgroundColor: Colors.blue,
                       //change background color of button
                       //change text color of button
                     ),

@@ -7,9 +7,9 @@ import '../../../common/dao/user_dao.dart';
 import '../../../common/local/local_storage.dart';
 import '../../../common/net/LogUtil.dart';
 import '../../../common/utils/navigator_utils.dart';
-import 'package:package_info/package_info.dart';
 
 import '../../../main.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 
 

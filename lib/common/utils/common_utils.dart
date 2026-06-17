@@ -16,7 +16,17 @@ import 'package:flutter_cupertino_datetime_picker/flutter_cupertino_datetime_pic
 
 class CommonUtils {
   static getThemeData(MaterialColor color) {
-    return ThemeData(primarySwatch: color, platform: TargetPlatform.android);
+    return ThemeData(
+        useMaterial3: false,
+        primarySwatch: color,
+        platform: TargetPlatform.android);
+    /* return ThemeData(
+      useMaterial3: false,
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: color,
+        brightness: Brightness.dark,
+      ),
+    );*/
   }
 
   ///store发送action，更新主题

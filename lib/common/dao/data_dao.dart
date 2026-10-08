@@ -1875,5 +1875,34 @@ class DataDao {
     }
   }
 
+  static loadParas(Map<String, dynamic> requestParams) async {
+    Map<String, String> header = {
+      'Authorization': await LocalStorage.get(Config.UA)
+    };
+    String sk = await LocalStorage.get(Config.SET_DL_KEY);
+    requestParams['_SK_'] = sk;
+    // print('======-----##$requestParams');
+    var res = await HttpManager.netFetch(
+        '${UrlConstant.loadPara()}',
+        requestParams,
+        header,
+        Options(method: 'post'));
+    var resultData;
+    if (res != null && res.result) {
+      if (res.data['code'] == 200) {
+        return ResultDao(res.data, res.result);
+      } else {
+        resultData = ResultDao(
+            Code.errorHandleFunction(res.data['code'], res.data['msg'], false),
+            false);
+        return ResultDao(resultData, false);
+      }
+    } else {
+      resultData =
+          ResultDao(Code.errorHandleFunction(res.code, '', false), false);
+      return ResultDao(resultData, false);
+    }
+  }
+
 
 }

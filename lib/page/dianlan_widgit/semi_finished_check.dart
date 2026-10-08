@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wanma_print/page/dianlan_widgit/semi_list.dart';
+import 'package:wanma_print/page/dianlan_widgit/semi_search.dart';
 import '../../../common/config/config.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:barcode_scan2/barcode_scan2.dart';
@@ -454,13 +455,13 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
             ? Container()
             : Container(
                 color: Colors.white,
-                padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+                padding: EdgeInsets.fromLTRB(0, 5, 0, 20),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Expanded(child: Text('')),
                     SizedBox(
-                      height: 25.0,
+                      height: 30.0,
                       child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.green,
@@ -717,6 +718,86 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
     );
   }
 
+  Widget _editView20Search(TextEditingController _controller,isEnable,searchType,index) {
+    return Expanded(
+      flex: 1,
+      child: SizedBox(
+        height: 26.0,
+        child: Padding(
+          padding: EdgeInsets.only(right: 10),
+          child: TextField(
+            onTap: () async {
+              var result = await Navigator.push(context,
+                  MaterialPageRoute(builder: (context) {
+                    // 在这里传参数
+                    return SemiSearch(
+                      keyword: searchType,
+                    );
+                  }));
+
+              setState(() {
+                if(result!=null) {
+                  if(searchType=='po_no'){
+                    checkList[index]['edit1'].text = result['po_no']??'';
+                    checkList[index]['edit2'].text = result['customer_name']??"";
+                    checkList[index]['edit3'].text = result['model']??'';
+                    checkList[index]['edit4'].text = result['spec']??'';
+                    checkList[index]['edit5'].text = result['vol']??'';
+                    checkList[index]['edit8'].text = result['color']??'';
+                    checkList[index]['edit9'].text = result['qty']==null?'':result['qty'].toString();
+                  }else {
+                    _controller.text = result;
+                  }
+                }
+              });
+            },
+            readOnly: true,
+            enabled: isEnable,
+            maxLines: 1,
+            style: TextStyle(fontSize: 14),
+            controller: _controller,
+            decoration: InputDecoration(
+              suffixIcon: Icon(Icons.search),
+              fillColor: Colors.white12,
+              filled: true,
+              contentPadding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+              disabledBorder: OutlineInputBorder(
+                /*边角*/
+                borderRadius: BorderRadius.all(
+                  Radius.circular(2), //边角为5
+                ),
+                borderSide: BorderSide(
+                  color: Colors.white, //边线颜色为白色
+                  width: 1, //边线宽度为2
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                /*边角*/
+                borderRadius: BorderRadius.all(
+                  Radius.circular(2), //边角为5
+                ),
+                borderSide: BorderSide(
+                  color: Colors.grey, //边线颜色为白色
+                  width: 1, //边线宽度为2
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.grey, //边框颜色为白色
+                  width: 1, //宽度为5
+                ),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(2), //边角为30
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+
   Widget _editView20(TextEditingController _controller,isEnable) {
     return Expanded(
       flex: 1,
@@ -783,70 +864,110 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(padding: EdgeInsets.only(top: 5)),
-              SizedBox(
-                  width: double.infinity,
-                  height: 25.0,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text(
-                        '线缆（${i + 1}）',
-                        style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      checkList[i]['isAdd'] ? Container() : IconButton(
-                        padding: EdgeInsets.zero,
-                        constraints: BoxConstraints(),
-                        icon: Icon(
-                          checkList[i]["final"]
-                              ? Icons.check_box
-                              : Icons.check_box_outline_blank,
-                          size: 22,
-                          color: checkList[i]["final"] ? Colors.green : Colors
-                              .grey,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            if (!checkList[i]["final"]) {
-                              checkList[i]["final"] = true;
-                            } else {
-                              checkList[i]['edit1'].text =
-                                  _modelList[i]['po_no'] ?? '';
-                              checkList[i]['edit2'].text =
-                                  _modelList[i]['customer_name'] ?? '';
-                              checkList[i]['edit3'].text =
-                                  _modelList[i]['model'] ?? '';
-                              checkList[i]['edit4'].text =
-                                  _modelList[i]['spec'] ?? '';
-                              checkList[i]['edit5'].text =
-                                  _modelList[i]['vol'] ?? '';
-                              checkList[i]['edit6'].text =
-                                  _modelList[i]['semi_part_name'] ?? '';
-                              checkList[i]['edit7'].text =
-                                  _modelList[i]['recipe_name'] ?? '';
-                              checkList[i]['edit8'].text =
-                                  _modelList[i]['color'] ?? '';
-                              try {
-                                checkList[i]['edit9'].text =
-                                    _modelList[i]['qty'].toString() ?? '';
-                              } catch (e) {
-                                checkList[i]['edit9'].text = '';
-                              }
-                              checkList[i]['edit10'].text =
-                                  _modelList[i]['result_date'] ?? '';
+              GestureDetector(
+                onTap: () {
+                  // 点击回调
+                  setState(() {
+                    if (!checkList[i]["final"]) {
+                      checkList[i]["final"] = true;
+                    } else {
+                      checkList[i]['edit1'].text =
+                          _modelList[i]['po_no'] ?? '';
+                      checkList[i]['edit2'].text =
+                          _modelList[i]['customer_name'] ?? '';
+                      checkList[i]['edit3'].text =
+                          _modelList[i]['model'] ?? '';
+                      checkList[i]['edit4'].text =
+                          _modelList[i]['spec'] ?? '';
+                      checkList[i]['edit5'].text =
+                          _modelList[i]['vol'] ?? '';
+                      checkList[i]['edit6'].text =
+                          _modelList[i]['semi_part_name'] ?? '';
+                      checkList[i]['edit7'].text =
+                          _modelList[i]['recipe_name'] ?? '';
+                      checkList[i]['edit8'].text =
+                          _modelList[i]['color'] ?? '';
+                      try {
+                        checkList[i]['edit9'].text =
+                            _modelList[i]['qty'].toString() ?? '';
+                      } catch (e) {
+                        checkList[i]['edit9'].text = '';
+                      }
+                      checkList[i]['edit10'].text =
+                          _modelList[i]['result_date'] ?? '';
 
-                              checkList[i]['final'] = false;
-                            }
-                          });
-                        },
-                      ),
-                      Padding(padding: EdgeInsets.only(left: 5)),
-                      checkList[i]['isAdd'] ? Container() : Expanded(
-                          child: Text('是否异常')),
-                    ],
-                  )),
+                      checkList[i]['final'] = false;
+                    }
+                  });
+                },
+                child:  SizedBox(
+                    width: double.infinity,
+                    height: 36.0,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          '线缆（${i + 1}）',
+                          style: TextStyle(
+                              fontSize: 24,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        checkList[i]['isAdd'] ? Container() : IconButton(
+                          padding: EdgeInsets.zero,
+                          constraints: BoxConstraints(),
+                          icon: Icon(
+                            checkList[i]["final"]
+                                ? Icons.check_box
+                                : Icons.check_box_outline_blank,
+                            size: 30,
+                            color: checkList[i]["final"] ? Colors.green : Colors
+                                .grey,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              if (!checkList[i]["final"]) {
+                                checkList[i]["final"] = true;
+                              } else {
+                                checkList[i]['edit1'].text =
+                                    _modelList[i]['po_no'] ?? '';
+                                checkList[i]['edit2'].text =
+                                    _modelList[i]['customer_name'] ?? '';
+                                checkList[i]['edit3'].text =
+                                    _modelList[i]['model'] ?? '';
+                                checkList[i]['edit4'].text =
+                                    _modelList[i]['spec'] ?? '';
+                                checkList[i]['edit5'].text =
+                                    _modelList[i]['vol'] ?? '';
+                                checkList[i]['edit6'].text =
+                                    _modelList[i]['semi_part_name'] ?? '';
+                                checkList[i]['edit7'].text =
+                                    _modelList[i]['recipe_name'] ?? '';
+                                checkList[i]['edit8'].text =
+                                    _modelList[i]['color'] ?? '';
+                                try {
+                                  checkList[i]['edit9'].text =
+                                      _modelList[i]['qty'].toString() ?? '';
+                                } catch (e) {
+                                  checkList[i]['edit9'].text = '';
+                                }
+                                checkList[i]['edit10'].text =
+                                    _modelList[i]['result_date'] ?? '';
+
+                                checkList[i]['final'] = false;
+                              }
+                            });
+                          },
+                        ),
+                        Padding(padding: EdgeInsets.only(left: 5)),
+                        checkList[i]['isAdd'] ? Container() : Expanded(
+                            child: Text('是否异常' ,style: TextStyle(
+                              fontSize: 24,
+                              color: Colors.black,
+                            ))),
+                      ],
+                    )),
+              ),
               Padding(padding: EdgeInsets.only(top: 5)),
               SizedBox(
                   width: double.infinity,
@@ -925,22 +1046,22 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
                     padding: EdgeInsets.all(5),
                     child: Column(
                       children: [
-                        getItemBottomWidget(
-                            i, '订单批号：    ', 'edit1', 'check1'),
+                        getItemBottomWidgetSearch(
+                            i, '订单批号：    ', 'edit1', 'check1','po_no'),
                         getItemBottomWidget(
                             i, '客户：            ', 'edit2', 'check2'),
-                        getItemBottomWidget(
-                            i, '型号：            ', 'edit3', 'check3'),
-                        getItemBottomWidget(
-                            i, '规格：            ', 'edit4', 'check4'),
-                        getItemBottomWidget(
-                            i, '电压等级：    ', 'edit5', 'check5'),
+                        getItemBottomWidgetSearch(
+                            i, '型号：            ', 'edit3', 'check3','model'),
+                        getItemBottomWidgetSearch(
+                            i, '规格：            ', 'edit4', 'check4','spec'),
+                        getItemBottomWidgetSearch(
+                            i, '电压等级：    ', 'edit5', 'check5','vol'),
                         getItemBottomWidget(
                             i, '半制品：        ', 'edit6', 'check6'),
                         getItemBottomWidget(
                             i, '所属工序：    ', 'edit7', 'check7'),
-                        getItemBottomWidget(
-                            i, '颜色：            ', 'edit8', 'check8'),
+                        getItemBottomWidgetSearch(
+                            i, '颜色：            ', 'edit8', 'check8','color'),
                         getItemBottomWidget(
                             i, '半成品数量：', 'edit9', 'check9'),
                         getItemBottomWidget(
@@ -968,6 +1089,23 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
             ),
           ),
           _editView20(checkList[i][editIndex],checkList[i]['final']),
+        ]),
+        Padding(padding: EdgeInsets.only(top: 3))
+      ],
+    );
+  }
+
+  Widget getItemBottomWidgetSearch(i, title, editIndex, checkIndex,searchType) {
+    return Column(
+      children: [
+        Row(children: [
+          Text(
+            '${title}',
+            style: TextStyle(
+              fontSize: 14,
+            ),
+          ),
+          _editView20Search(checkList[i][editIndex],checkList[i]['final'],searchType,i),
         ]),
         Padding(padding: EdgeInsets.only(top: 3))
       ],

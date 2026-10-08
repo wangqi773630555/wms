@@ -44,8 +44,8 @@ class MainActivity: FlutterActivity() {
 
     var i: Int = 0;
     val CHANNEL: String = "hyflapp"
-    val mKeyTextSize = 24
-    val mValueTextSize = 22
+    val mKeyTextSize = 18
+    val mValueTextSize = 16
     val mOffsetX = 210
     var methodChannel_toFlutter: MethodChannel? = null
 
@@ -174,9 +174,9 @@ class MainActivity: FlutterActivity() {
     fun print(name:String, no:String, lot:String, count:String,singleCount:String,id:String) {
 
         // TODO Auto-generated method stub
-        printHelper.printBlankLine(5)
+        printHelper.printBlankLine(1)
         printHelper.PrintStringEx(name, mKeyTextSize, false, true,PrintHelper.PrintType.Centering)
-        printHelper.printBlankLine(5)
+        printHelper.printBlankLine(1)
 
         printHelper.PrintLineInit(mKeyTextSize)
         printHelper.PrintLineStringByType("  标签号", mKeyTextSize, PrintHelper.PrintType.Left, true)
@@ -222,7 +222,7 @@ class MainActivity: FlutterActivity() {
     fun Create2DCode(str: String?): Bitmap? {
         val hints = Hashtable<EncodeHintType, String?>()
         hints[EncodeHintType.CHARACTER_SET] = "UTF-8"
-        val matrix = MultiFormatWriter().encode(str, BarcodeFormat.QR_CODE, 150, 150, hints)
+        val matrix = MultiFormatWriter().encode(str, BarcodeFormat.QR_CODE, 125, 125, hints)
         val width = matrix.width
         val height = matrix.height
         val pixels = IntArray(width * height)

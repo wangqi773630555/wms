@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:wanma_print/page/dianlan_widgit/semi_finished_check_edit.dart';
 import '../../../common/config/config.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 
@@ -222,7 +223,13 @@ class _SemiListState extends State<SemiList> {
               Divider(),
             ],
           ),
-        ),
+        ),onTap: () {
+        //var result = Navigator.pushNamed(context, SemiFinishedCheckEdit.sName, arguments: '1782745664398218');
+        var result = Navigator.pushNamed(context, SemiFinishedCheckEdit.sName, arguments: _modelList[index]['id']);
+        result.then((value) => {
+            getInintData()
+        });
+        },
       );
   }
 

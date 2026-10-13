@@ -1,7 +1,7 @@
 ///接口地址
 class UrlConstant {
    //测试环境
-   /*static const String host = 'https://gatewaydev.wanmaco.com/'; //登录测试（新框架）
+  /* static const String host = 'https://gatewaydev.wanmaco.com/'; //登录测试（新框架）
    static const String host2 = 'http://itest.wanmaco.com/'; //测试（天屹数据缆）
    static const String host3 = 'http://dlmestest.wanmaco.com/api/'; //测试（电缆低压三厂）
    static const String host4 = 'https://public.wanmaco.com/'; //正式*/
@@ -323,6 +323,22 @@ class UrlConstant {
   //盘库列表
   static getSemisList() {
     return '${host}ams/mes-data/semi/getSemisList';
+  }
+
+
+  //加载接口
+  static getResultSemisLoad() {
+    return '${host}ams/mes-data/semi/getResultSemisLoad';
+  }
+
+  //修改接口
+  static updateResultSemis() {
+    return '${host}ams/mes-data/semi/updateResultSemis';
+  }
+
+  //删除接口
+  static delResultSemis() {
+    return '${host}ams/mes-data/semi/delResultSemis';
   }
 
 

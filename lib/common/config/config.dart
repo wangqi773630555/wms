@@ -117,4 +117,6 @@ class Config {
   static const SEMI_FINISHED_CHECK = "semi_finished_check";
   //盘库列表
   static const SEMI_LIST = "semi_list";
+  //半制品盘库（编辑）
+  static const SEMI_FINISHED_CHECK_EDIT = "semi_finished_check_edit";
 }

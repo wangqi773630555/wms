@@ -1905,4 +1905,120 @@ class DataDao {
   }
 
 
+  /**
+   * 加载接口
+   */
+  static getResultSemisLoad(var id) async {
+    Map<String, String> header = {
+      'Authorization': await LocalStorage.get(Config.UA)
+    };
+    String sk = await LocalStorage.get(Config.SET_DL_KEY);
+    Map<String, dynamic> requestParams;
+    requestParams = {
+      "_SK_": sk,
+      "id": id
+    };
+    // print('======-----##$requestParams');
+    var res = await HttpManager.netFetch(
+        '${UrlConstant.getResultSemisLoad()}',
+        requestParams,
+        header,
+        Options(method: 'post'));
+    var resultData;
+    if (res != null && res.result) {
+      if (res.data['code'] == 200) {
+        return ResultDao(res.data, res.result);
+      } else {
+        resultData = ResultDao(
+            Code.errorHandleFunction(res.data['code'], res.data['msg'], false),
+            false);
+        return ResultDao(resultData, false);
+      }
+    } else {
+      resultData =
+          ResultDao(Code.errorHandleFunction(res.code, '', false), false);
+      return ResultDao(resultData, false);
+    }
+  }
+
+  /**
+   * 修改接口
+   */
+  static updateResultSemis(var id,var create_date,var dept_code,var line_dept_code,var list2) async {
+    Map<String, String> header = {
+      'Authorization': await LocalStorage.get(Config.UA)
+    };
+    String sk = await LocalStorage.get(Config.SET_DL_KEY);
+    Map<String, dynamic> requestParams;
+    requestParams = {
+      "_SK_": sk,
+      "id": id,
+      "create_date": create_date,
+      "dept_code": dept_code,
+      "line_dept_code": line_dept_code,
+      "list2": list2,
+
+    };
+    // print('======-----##$requestParams');
+    var res = await HttpManager.netFetch(
+        '${UrlConstant.updateResultSemis()}',
+        requestParams,
+        header,
+        Options(method: 'post'));
+    var resultData;
+    if (res != null && res.result) {
+      if (res.data['code'] == 200) {
+        return ResultDao(res.data, res.result);
+      } else {
+        resultData = ResultDao(
+            Code.errorHandleFunction(res.data['code'], res.data['msg'], false),
+            false);
+        return ResultDao(resultData, false);
+      }
+    } else {
+      resultData =
+          ResultDao(Code.errorHandleFunction(res.code, '', false), false);
+      return ResultDao(resultData, false);
+    }
+  }
+
+
+  /**
+   * 删除
+   */
+  static delResultSemis(var id) async {
+    Map<String, String> header = {
+      'Authorization': await LocalStorage.get(Config.UA)
+    };
+    String sk = await LocalStorage.get(Config.SET_DL_KEY);
+    Map<String, dynamic> requestParams;
+    requestParams = {
+      "_SK_": sk,
+      "id": id
+    };
+    // print('======-----##$requestParams');
+    var res = await HttpManager.netFetch(
+        '${UrlConstant.delResultSemis()}',
+        requestParams,
+        header,
+        Options(method: 'post'));
+    var resultData;
+    if (res != null && res.result) {
+      if (res.data['code'] == 200) {
+        return ResultDao(res.data, res.result);
+      } else {
+        resultData = ResultDao(
+            Code.errorHandleFunction(res.data['code'], res.data['msg'], false),
+            false);
+        return ResultDao(resultData, false);
+      }
+    } else {
+      resultData =
+          ResultDao(Code.errorHandleFunction(res.code, '', false), false);
+      return ResultDao(resultData, false);
+    }
+  }
+
+
+
 }

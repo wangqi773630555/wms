@@ -25,10 +25,17 @@ workflows:
 
       - name: Install CocoaPods dependencies
         script: |
-          find . -name "Podfile" -execdir pod install \;
+          # 兜底：移除任何被缓存或 Flutter 迁移注入的 RunnerTests target。
+          # 本工程 pbxproj 没有该 target，残留会导致 "Unable to find a target named RunnerTests"。
+          perl -0pi -e "s/\n\s*target 'RunnerTests' do.*?\n\s*end\n/\n/s" ios/Podfile
+          grep -n "RunnerTests" ios/Podfile && echo "ERROR: RunnerTests still present" && exit 1 || true
+          cd ios && pod install
 
       - name: Build iOS release without code signing
-        script: flutter build ios --release --no-codesign
+        script: |
+          # flutter build 内部会再跑一次 pod install，构建前再清一次确保干净
+          perl -0pi -e "s/\n\s*target 'RunnerTests' do.*?\n\s*end\n/\n/s" ios/Podfile
+          flutter build ios --release --no-codesign
 
       - name: Pack unsigned IPA
         script: |

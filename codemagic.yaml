@@ -11,7 +11,15 @@ workflows:
 
     scripts:
       - name: Get Flutter packages
-        script: flutter pub get
+        script: |
+          flutter clean
+          flutter pub get
+
+      - name: Rebuild plugin symlinks and clean Pods cache
+        script: |
+          # 删除可能过期的插件软链接与 Pods 缓存，避免旧的 FFI 版插件残留
+          rm -rf ios/.symlinks ios/Pods ios/Podfile.lock
+          flutter pub get
 
       - name: Install CocoaPods dependencies
         script: |

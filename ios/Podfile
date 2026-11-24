@@ -1,7 +1,7 @@
 # 固定纳入版本管理的 Podfile（基于 Flutter 3.29.1 模板）
 # 关键：只保留 Runner target，不声明任何测试 target。本老项目 pbxproj 里
 # 没有单元测试 target，若 Podfile 里出现会导致 pod install 找不到对应 target 而失败。
-platform :ios, '12.0'
+platform :ios, '13.0'
 
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'

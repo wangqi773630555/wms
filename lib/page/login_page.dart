@@ -6,7 +6,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:wanma_print/common/config/config.dart';
 import 'package:wanma_print/common/dao/user_dao.dart';
 import 'package:wanma_print/common/local/local_storage.dart';
-import 'package:wanma_print/common/net/LogUtil.dart';
 import 'package:wanma_print/common/redux/wm_state.dart';
 import 'package:wanma_print/common/utils/common_utils.dart';
 import 'package:wanma_print/common/utils/navigator_utils.dart';
@@ -170,29 +169,25 @@ class _LoginPageState extends State<LoginPage> {
 
                                     userNameFocusNode.unfocus();
                                     passwordFocusNode.unfocus();
-                                    CommonUtils.showLoadingDialog(context);
-                                    // Future.delayed(const Duration(seconds: 1), () {
-                                    //   NavigatorUtils.goHome(context);
-                                    //   return true;
-                                    // });
-                                    if (_userName == null ||
-                                        _userName.length == 0) {
+                                    if (_userName.isEmpty) {
                                       Fluttertoast.showToast(msg: '请输入用户名');
                                       return;
                                     }
-                                    if (_password == null ||
-                                        _password.length == 0) {
+                                    if (_password.isEmpty) {
                                       Fluttertoast.showToast(msg: '请输入密码');
                                       return;
                                     }
 
+                                    CommonUtils.showLoadingDialog(context);
                                     UserDao.login(_userName, _password, appType,
                                             store)
+                                        .timeout(const Duration(seconds: 20))
                                         .then((res) {
-                                          try{
-                                            Navigator.pop(context);
-                                          }catch(e){
-
+                                          // 无论成功失败，先把 loading 关掉，避免一直转圈
+                                          if (mounted) {
+                                            try {
+                                              Navigator.pop(context);
+                                            } catch (e) {}
                                           }
 
                                       if (res != null && res.result) {
@@ -225,22 +220,38 @@ class _LoginPageState extends State<LoginPage> {
                                               if (res != null && res.result) {
                                                 String data = res.data['data']??'';
                                                 LocalStorage.save(Config.SET_KEY, data);
-
-                                                UserDao.getDlSk().then((res) async {
-                                                  if (res != null && res.result) {
-                                                    String data = res.data['data'];
-                                                    LocalStorage.save(Config.SET_DL_KEY, data);
-                                                    preAuthorize();
-                                                    //预授权-授权都成功后在进入首页
-                                                  }
-                                                });
                                               }
+                                              // 即使 getSk 失败也继续走 getDlSk，避免 iOS 上静默卡住
+                                              UserDao.getDlSk().then((res) async {
+                                                if (res != null && res.result) {
+                                                  String data = res.data['data'];
+                                                  LocalStorage.save(Config.SET_DL_KEY, data);
+                                                }
+                                                preAuthorize();
+                                                //预授权-授权都成功后在进入首页
+                                              }).catchError((e) {
+                                                print('LOGIN getDlSk error: $e');
+                                                preAuthorize();
+                                              });
+                                            }).catchError((e) {
+                                              print('LOGIN getSk error: $e');
+                                              preAuthorize();
                                             });
 
                                           }
                                           return true;
                                         });
                                       }
+                                    }).catchError((e) {
+                                      // 请求超时/异常时同样关掉 loading 并提示，防止卡在"请求中"
+                                      if (mounted) {
+                                        try {
+                                          Navigator.pop(context);
+                                        } catch (_) {}
+                                        Fluttertoast.showToast(
+                                            msg: '登录失败，请检查网络后重试');
+                                      }
+                                      print('LOGIN error: $e');
                                     });
                                   },
                                 ),

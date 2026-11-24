@@ -59,9 +59,21 @@ class _MyCardsPageState extends State<MyCardsPage> {
     // TODO: implement build
     mYcontext = context;
     return Scaffold(
-      /** * 切换底部导航栏的时候动态修改body内容 */
-      body: getRootView(),
-    );
+        appBar: AppBar(
+          title: Text('我的卡片'),
+          centerTitle: true,
+          actions: [
+            IconButton(
+              onPressed: () {
+                NavigatorUtils.goPage(context,Config.All_cards);
+              },
+              icon: const Icon(Icons.add),
+              iconSize: 30,
+              color: Colors.white,
+            ),
+          ],
+        ),
+        body: getRootView());
   }
 
   Widget getRootView() {
@@ -73,7 +85,7 @@ class _MyCardsPageState extends State<MyCardsPage> {
       ),
       child: Column(
         children: [
-          _toolBar(),
+          //_toolBar(),
           //标题下面滑动视图
           Expanded(
               child: MediaQuery.removePadding(

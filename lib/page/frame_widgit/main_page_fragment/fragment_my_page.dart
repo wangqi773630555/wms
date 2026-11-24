@@ -71,8 +71,8 @@ class _FragmentMyPageState extends State<FragmentMyPage> with RouteAware{
       width: double.infinity,
       height: double.infinity,
       decoration: new BoxDecoration(
-        color: Color.fromARGB(255, 255, 255, 255),
-          //color: Color(0xFFE0EAFE),
+        //color: Color.fromARGB(255, 255, 255, 255),
+          color: Color(0xFFE0EAFE),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.max,

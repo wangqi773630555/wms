@@ -46,8 +46,11 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     // TODO: implement build
     mYcontext = context;
     return Scaffold(
-      body: getRootView(),
-    );
+        appBar: AppBar(
+          title: Text('修改密码'),
+          centerTitle: true,
+        ),
+        body: getRootView());
   }
 
   Widget getRootView() {
@@ -59,7 +62,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
       ),
       child: Column(
         children: [
-          _toolBar(),
+          //_toolBar(),
           //标题下面滑动视图
           Expanded(
               child: MediaQuery.removePadding(

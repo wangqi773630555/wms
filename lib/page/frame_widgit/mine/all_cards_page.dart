@@ -46,9 +46,11 @@ class _AllCardsPageState extends State<AllCardsPage> {
     // TODO: implement build
     mYcontext = context;
     return Scaffold(
-      /** * 切换底部导航栏的时候动态修改body内容 */
-      body: getRootView(),
-    );
+        appBar: AppBar(
+          title: Text('选择卡片'),
+          centerTitle: true,
+        ),
+        body: getRootView());
   }
 
   Widget getRootView() {
@@ -60,7 +62,7 @@ class _AllCardsPageState extends State<AllCardsPage> {
       ),
       child: Column(
         children: [
-          _toolBar(),
+          //_toolBar(),
           //标题下面滑动视图
           Expanded(
               child: MediaQuery.removePadding(

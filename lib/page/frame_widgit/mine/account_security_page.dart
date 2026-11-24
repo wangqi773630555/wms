@@ -45,8 +45,11 @@ class _AccountSecurityPageState extends State<AccountSecurityPage> {
     // TODO: implement build
     mYcontext = context;
     return Scaffold(
-      body: getRootView(),
-    );
+        appBar: AppBar(
+          title: Text('账号与安全'),
+          centerTitle: true,
+        ),
+        body: getRootView());
   }
 
   Widget getRootView() {
@@ -58,7 +61,7 @@ class _AccountSecurityPageState extends State<AccountSecurityPage> {
       ),
       child: Column(
         children: [
-          _toolBar(),
+          //_toolBar(),
           //标题下面滑动视图
           Expanded(
               child: MediaQuery.removePadding(

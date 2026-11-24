@@ -49,10 +49,13 @@ class _ChangeWorkPageState extends State<ChangeWorkPage> {
   Widget build(BuildContext context) {
     // TODO: implement build
     mYcontext = context;
+
     return Scaffold(
-      /** * 切换底部导航栏的时候动态修改body内容 */
-      body: getRootView(),
-    );
+        appBar: AppBar(
+          title: Text('切换工作'),
+          centerTitle: true,
+        ),
+        body: getRootView());
   }
 
   Widget getRootView() {
@@ -64,7 +67,7 @@ class _ChangeWorkPageState extends State<ChangeWorkPage> {
       ),
       child: Column(
         children: [
-          _toolBar(),
+          //s_toolBar(),
           //标题下面滑动视图
           Expanded(
               child: MediaQuery.removePadding(

@@ -71,8 +71,10 @@ class _FragmentMyPageState extends State<FragmentMyPage> with RouteAware{
       width: double.infinity,
       height: double.infinity,
       decoration: new BoxDecoration(
-        //color: Color.fromARGB(255, 255, 255, 255),
-          color: Color(0xFFE0EAFE),
+          gradient: LinearGradient(
+              begin: Alignment.topCenter, //渐变开始于上面的中间开始
+              end: Alignment.bottomCenter, //渐变结束于下面的中间
+              colors: [Color(0xFFE0EAFE), Color(0x10E0EAFE)]),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.max,

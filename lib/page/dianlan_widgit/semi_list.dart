@@ -173,7 +173,7 @@ class _SemiListState extends State<SemiList> {
                   Text(
                     '${_modelList[index]['part_name']??''}',
                     style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 18,
                         color: Colors.black
                     ),
                   ),
@@ -186,7 +186,7 @@ class _SemiListState extends State<SemiList> {
                   Text(
                     '${_modelList[index]['po_no']??''}-${_modelList[index]['zpronumber']??''}',
                     style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 18,
                         color: Colors.black
                     ),
                   ),
@@ -199,7 +199,7 @@ class _SemiListState extends State<SemiList> {
                   Text(
                     '扫描时间：${_modelList[index]['add_time']??''}',
                     style: TextStyle(
-                        fontSize: 14,
+                        fontSize: 18,
                         color: Colors.black
                     ),
                   ),
@@ -212,7 +212,7 @@ class _SemiListState extends State<SemiList> {
                   Text(
                     '数量：${_modelList[index]['qty']??''}',
                     style: TextStyle(
-                        fontSize: 14,
+                        fontSize: 18,
                         color: Colors.black
                     ),
                   ),

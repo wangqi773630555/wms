@@ -150,7 +150,7 @@ class _SemiSearchState extends State<SemiSearch> {
                                           flex: 3,
                                           child: Container(
                                               padding: const EdgeInsets.fromLTRB(20,10,20,10),
-                                              child: Text(_allData[index] ?? ''))),
+                                              child: Text(_allData[index] ?? '',style: TextStyle(fontSize: 18)))),
                                     ],
                                   ),
                                   Divider(
@@ -196,7 +196,7 @@ class _SemiSearchState extends State<SemiSearch> {
               height: 35,
               child: TextField(
                 autofocus: true,
-                style: TextStyle(fontSize: 14, color: Colors.black),
+                style: TextStyle(fontSize: 18, color: Colors.black),
                 decoration: InputDecoration(
                   hintText: searchText,
                     suffixIcon: Icon(Icons.search),

@@ -229,6 +229,7 @@ class _SemiFinishedCheckEditState extends State<SemiFinishedCheckEdit> {
                 _timeView(startTime ?? '', true),
               ],
             ),
+            Padding(padding: EdgeInsets.only(top: 5)),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -253,7 +254,7 @@ class _SemiFinishedCheckEditState extends State<SemiFinishedCheckEdit> {
             ? Container()
             : SizedBox(
             width: double.infinity,
-            height: 25.0,
+            height: 30.0,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -341,7 +342,7 @@ class _SemiFinishedCheckEditState extends State<SemiFinishedCheckEdit> {
                               delResultSemis();
                             });
                           },
-                          child: Text('删除')),
+                          child: Text('删除',style: TextStyle(fontSize: 18))),
                     ),
                     Padding(padding: EdgeInsets.only(right: 10)),
                     SizedBox(
@@ -354,7 +355,7 @@ class _SemiFinishedCheckEditState extends State<SemiFinishedCheckEdit> {
                                 // submit()
                                 saveResult()
                               },
-                          child: Text('提交')),
+                          child: Text('提交',style: TextStyle(fontSize: 18))),
                     ),
                     Padding(padding: EdgeInsets.only(right: 10)),
                   ],
@@ -399,7 +400,7 @@ class _SemiFinishedCheckEditState extends State<SemiFinishedCheckEdit> {
             },
             child: Container(
               margin: EdgeInsets.only(right: 10),
-              height: 25,
+              height: 30,
               decoration: BoxDecoration(
                 //设置边框
                 border: new Border.all(color: Colors.grey, width: 1),
@@ -415,7 +416,7 @@ class _SemiFinishedCheckEditState extends State<SemiFinishedCheckEdit> {
                     padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
                     child: Text(
                       timeStr,
-                      style: TextStyle(fontSize: 14),
+                      style: TextStyle(fontSize: 18),
                     ),
                   )),
                   Icon(
@@ -433,7 +434,7 @@ class _SemiFinishedCheckEditState extends State<SemiFinishedCheckEdit> {
     return Expanded(
       flex: 1,
       child: SizedBox(
-        height: 26.0,
+        height: 30.0,
         child: Padding(
           padding: EdgeInsets.only(right: 10),
           child: TextField(
@@ -465,7 +466,7 @@ class _SemiFinishedCheckEditState extends State<SemiFinishedCheckEdit> {
             readOnly: true,
             enabled: isEnable,
             maxLines: 1,
-            style: TextStyle(fontSize: 14),
+            style: TextStyle(fontSize: 18),
             controller: _controller,
             decoration: InputDecoration(
               suffixIcon: Icon(Icons.search),
@@ -519,7 +520,7 @@ class _SemiFinishedCheckEditState extends State<SemiFinishedCheckEdit> {
           child: TextField(
             enabled: isEnable,
             maxLines: 1,
-            style: TextStyle(fontSize: 14),
+            style: TextStyle(fontSize: 18),
             controller: _controller,
             decoration: InputDecoration(
               fillColor: Colors.white12,
@@ -690,7 +691,7 @@ class _SemiFinishedCheckEditState extends State<SemiFinishedCheckEdit> {
                       Text(
                         '线缆归属',
                         style: TextStyle(
-                            fontSize: 16,
+                            fontSize: 20,
                             color: Colors.black,
                             fontWeight: FontWeight.bold),
                       ),
@@ -755,7 +756,7 @@ class _SemiFinishedCheckEditState extends State<SemiFinishedCheckEdit> {
           Text(
             '${title}',
             style: TextStyle(
-              fontSize: 14,
+              fontSize: 18,
             ),
           ),
           _editView20(checkList[i][editIndex],checkList[i]['final']),
@@ -772,7 +773,7 @@ class _SemiFinishedCheckEditState extends State<SemiFinishedCheckEdit> {
           Text(
             '${title}',
             style: TextStyle(
-              fontSize: 14,
+              fontSize: 18,
             ),
           ),
           _editView20Search(checkList[i][editIndex],checkList[i]['final'],searchType,i),
@@ -787,7 +788,7 @@ class _SemiFinishedCheckEditState extends State<SemiFinishedCheckEdit> {
       padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
       child: Text(
         value,
-        style: TextStyle(fontSize: 16),
+        style: TextStyle(fontSize: 18),
       ),
     );
   }
@@ -798,12 +799,12 @@ class _SemiFinishedCheckEditState extends State<SemiFinishedCheckEdit> {
     value = deptCode;
     items = depts;
     return Container(
-      height: 25,
+      height: 30,
       child: Stack(
         alignment: Alignment.center,
         children: [
           Container(
-            height: 25,
+            height: 30,
             decoration: BoxDecoration(
               //设置边框
               border: new Border.all(color: Colors.grey, width: 1),
@@ -830,7 +831,7 @@ class _SemiFinishedCheckEditState extends State<SemiFinishedCheckEdit> {
               //是否和父容器宽度保持一致（默认false,占一般左右）,通常用这个设置宽度
               isExpanded: true,
               //下拉文本样式
-              style: TextStyle(color: Colors.black, fontSize: 14),
+              style: TextStyle(color: Colors.black, fontSize: 18),
               //下拉改变事件
               onChanged: (value) {
                 setState(() {
@@ -854,12 +855,12 @@ class _SemiFinishedCheckEditState extends State<SemiFinishedCheckEdit> {
     value = checkList[i]['fc_id'];
     items = depts;
     return Container(
-      height: 20,
+      height: 30,
       child: Stack(
         alignment: Alignment.center,
         children: [
           Container(
-            height: 20,
+            height: 30,
             decoration: BoxDecoration(
               //设置边框
               border: new Border.all(color: Colors.grey, width: 1),
@@ -880,13 +881,13 @@ class _SemiFinishedCheckEditState extends State<SemiFinishedCheckEdit> {
               //默认值
               value: value,
               //下拉三角大小
-              iconSize: 20.0,
+              iconSize: 30.0,
               //阴影大小
               elevation: 1,
               //是否和父容器宽度保持一致（默认false,占一般左右）,通常用这个设置宽度
               isExpanded: true,
               //下拉文本样式
-              style: TextStyle(color: Colors.black, fontSize: 12),
+              style: TextStyle(color: Colors.black, fontSize: 18),
               //下拉改变事件
               onChanged: (value) {
                 setState(() {

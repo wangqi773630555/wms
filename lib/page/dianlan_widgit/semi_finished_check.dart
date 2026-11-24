@@ -235,7 +235,7 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
                   },
                   child: Text(
                     '盘库记录',
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(color: Colors.white,fontSize: 18),
                   ))
             ]
         ),
@@ -297,6 +297,7 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
                 ),
               ],
             ),
+            Padding(padding: EdgeInsets.only(top: 5)),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -318,6 +319,7 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
                 ),
               ],
             ),
+            Padding(padding: EdgeInsets.only(top: 5)),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -333,7 +335,7 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
               padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
               child: SizedBox(
                   width: double.infinity,
-                  height: 25.0,
+                  height: 30.0,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -352,7 +354,7 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
                               _focusNode.requestFocus();
                             })
                           },
-                          child: Text('重置')),
+                          child: Text('重置',style: TextStyle(fontSize: 18))),
                       Padding(padding: EdgeInsets.only(right: 10)),
                       ElevatedButton(
                           style: ElevatedButton.styleFrom(
@@ -362,7 +364,7 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
                             //搜索
                             getInintData()
                           },
-                          child: Text('搜索')),
+                          child: Text('搜索',style: TextStyle(fontSize: 18))),
                       Padding(padding: EdgeInsets.only(right: 10)),
                     ],
                   )),
@@ -375,7 +377,7 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
             ? Container()
             : SizedBox(
             width: double.infinity,
-            height: 25.0,
+            height: 30.0,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -392,7 +394,7 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
                     onPressed: () => {
                       addData(),
                     },
-                    child: Text('新增')),
+                    child: Text('新增',style: TextStyle(fontSize: 18))),
                 Padding(padding: EdgeInsets.only(right: 10)),
               ],
             )),
@@ -471,7 +473,7 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
                                 // submit()
                                 saveResult()
                               },
-                          child: Text('提交')),
+                          child: Text('提交',style: TextStyle(fontSize: 18))),
                     ),
                     Padding(padding: EdgeInsets.only(right: 10)),
                   ],
@@ -579,8 +581,8 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
               _showDataBottomPicker();
             },
             child: Container(
-              margin: EdgeInsets.only(right: 10),
-              height: 25,
+              margin: EdgeInsets.only(right: 15),
+              height: 30,
               decoration: BoxDecoration(
                 //设置边框
                 border: new Border.all(color: Colors.grey, width: 1),
@@ -596,7 +598,7 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
                     padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
                     child: Text(
                       timeStr,
-                      style: TextStyle(fontSize: 14),
+                      style: TextStyle(fontSize: 18),
                     ),
                   )),
                   Icon(
@@ -664,7 +666,7 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
     return Expanded(
       flex: 1,
       child: SizedBox(
-        height: 25.0,
+        height: 30.0,
         child: Padding(
           padding: EdgeInsets.only(right: 10),
           child: TextField(
@@ -677,7 +679,7 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
             focusNode: _focusNode,
             enabled: isEnable,
             maxLines: 1,
-            style: TextStyle(fontSize: 14),
+            style: TextStyle(fontSize: 18),
             controller: _controller,
             decoration: InputDecoration(
               fillColor: Colors.white12,
@@ -723,7 +725,7 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
     return Expanded(
       flex: 1,
       child: SizedBox(
-        height: 26.0,
+        height: 30.0,
         child: Padding(
           padding: EdgeInsets.only(right: 10),
           child: TextField(
@@ -755,7 +757,7 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
             readOnly: true,
             enabled: isEnable,
             maxLines: 1,
-            style: TextStyle(fontSize: 14),
+            style: TextStyle(fontSize: 18),
             controller: _controller,
             decoration: InputDecoration(
               suffixIcon: Icon(Icons.search),
@@ -809,7 +811,7 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
           child: TextField(
             enabled: isEnable,
             maxLines: 1,
-            style: TextStyle(fontSize: 14),
+            style: TextStyle(fontSize: 18),
             controller: _controller,
             decoration: InputDecoration(
               fillColor: Colors.white12,
@@ -972,7 +974,7 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
               Padding(padding: EdgeInsets.only(top: 5)),
               SizedBox(
                   width: double.infinity,
-                  height: 20.0,
+                  height: 30.0,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
@@ -980,7 +982,7 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
                       Text(
                         '线缆归属',
                         style: TextStyle(
-                            fontSize: 16,
+                            fontSize: 20,
                             color: Colors.black,
                             fontWeight: FontWeight.bold),
                       ),
@@ -988,7 +990,7 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
                       Expanded(
                         flex: 1,
                         child: SizedBox(
-                          height: 25.0,
+                          height: 30.0,
                           child: _dropDownWidgetList('请选择', i),
                         ),
                       ),
@@ -1031,7 +1033,7 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
                               checkList[i]['edit10'] = TextEditingController();
                             }),
                           },
-                          child: Text('清空', style: TextStyle(fontSize: 12)))
+                          child: Text('清空', style: TextStyle(fontSize: 18)))
                           : Container(),
 
                     ],
@@ -1086,7 +1088,7 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
           Text(
             '${title}',
             style: TextStyle(
-              fontSize: 14,
+              fontSize: 18,
             ),
           ),
           _editView20(checkList[i][editIndex],checkList[i]['final']),
@@ -1103,7 +1105,7 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
           Text(
             '${title}',
             style: TextStyle(
-              fontSize: 14,
+              fontSize: 18,
             ),
           ),
           _editView20Search(checkList[i][editIndex],checkList[i]['final'],searchType,i),
@@ -1118,7 +1120,7 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
       padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
       child: Text(
         value,
-        style: TextStyle(fontSize: 16),
+        style: TextStyle(fontSize: 18),
       ),
     );
   }
@@ -1129,12 +1131,12 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
     value = deptCode;
     items = depts;
     return Container(
-      height: 25,
+      height: 30,
       child: Stack(
         alignment: Alignment.center,
         children: [
           Container(
-            height: 25,
+            height: 30,
             decoration: BoxDecoration(
               //设置边框
               border: new Border.all(color: Colors.grey, width: 1),
@@ -1161,7 +1163,7 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
               //是否和父容器宽度保持一致（默认false,占一般左右）,通常用这个设置宽度
               isExpanded: true,
               //下拉文本样式
-              style: TextStyle(color: Colors.black, fontSize: 14),
+              style: TextStyle(color: Colors.black, fontSize: 18),
               //下拉改变事件
               onChanged: (value) {
                 setState(() {
@@ -1185,12 +1187,12 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
     value = checkList[i]['fc_id'];
     items = depts;
     return Container(
-      height: 20,
+      height: 30,
       child: Stack(
         alignment: Alignment.center,
         children: [
           Container(
-            height: 20,
+            height: 30,
             decoration: BoxDecoration(
               //设置边框
               border: new Border.all(color: Colors.grey, width: 1),
@@ -1211,13 +1213,13 @@ class _SemiFinishedCheckState extends State<SemiFinishedCheck> {
               //默认值
               value: value,
               //下拉三角大小
-              iconSize: 20.0,
+              iconSize: 30.0,
               //阴影大小
               elevation: 1,
               //是否和父容器宽度保持一致（默认false,占一般左右）,通常用这个设置宽度
               isExpanded: true,
               //下拉文本样式
-              style: TextStyle(color: Colors.black, fontSize: 12),
+              style: TextStyle(color: Colors.black, fontSize: 18),
               //下拉改变事件
               onChanged: (value) {
                 setState(() {

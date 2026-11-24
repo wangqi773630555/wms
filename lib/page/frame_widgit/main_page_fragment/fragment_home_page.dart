@@ -72,7 +72,7 @@ class _FragmentHomePageState extends State<FragmentHomePage> with RouteAware {
               colors: [Color(0xFFE0EAFE), Color(0x10E0EAFE)])),
       child: Column(
         children: [
-          Padding(padding: EdgeInsets.fromLTRB(0, 26, 0, 0)),
+          Padding(padding: EdgeInsets.fromLTRB(0, 40, 0, 0)),
           Container(
             padding: EdgeInsets.all(5),
             //背景色，注意不能和decoration的color同时使用

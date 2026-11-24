@@ -81,7 +81,7 @@ class _FragmentMyPageState extends State<FragmentMyPage> with RouteAware{
           Container(
             width: double.infinity,
             color: Color(0xFFE0EAFE),
-            padding: EdgeInsets.fromLTRB(5, 30, 5, 5),
+            padding: EdgeInsets.fromLTRB(5, 40, 5, 5),
             //背景色，注意不能和decoration的color同时使用
             child: Text(
               '我的',

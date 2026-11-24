@@ -248,8 +248,13 @@ class _LoginPageState extends State<LoginPage> {
                                         try {
                                           Navigator.pop(context);
                                         } catch (_) {}
+                                        String errMsg = e.toString();
+                                        if (errMsg.length > 80) {
+                                          errMsg = errMsg.substring(0, 80);
+                                        }
                                         Fluttertoast.showToast(
-                                            msg: '登录失败，请检查网络后重试');
+                                            msg: '登录失败：$errMsg',
+                                            toastLength: Toast.LENGTH_LONG);
                                       }
                                       print('LOGIN error: $e');
                                     });

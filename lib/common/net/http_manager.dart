@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:dio/adapter.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:wanma_print/common/config/config.dart';
@@ -33,6 +35,18 @@ class HttpManager {
           receiveTimeout: RECEIVE_TIMEOUT,
           headers: header);
       _dio = Dio(orgOption);
+      // iOS 上对证书链校验严格；服务器未下发完整中间证书时会被系统拒绝连接，
+      // 表现为请求一直失败/超时（Android 通常能容忍）。这里仅在 iOS 放宽证书校验。
+      if (Platform.isIOS) {
+        final adapter = _dio!.httpClientAdapter;
+        if (adapter is DefaultHttpClientAdapter) {
+          adapter.onHttpClientCreate = (client) {
+            client.badCertificateCallback =
+                (X509Certificate cert, String host, int port) => true;
+            return client;
+          };
+        }
+      }
       _dio?.interceptors.add(CookieManager(CookieJar()));
     }
     return _dio;

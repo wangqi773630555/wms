@@ -18,11 +18,11 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 version: 1.0.31+32
 
-# 修复 iOS Release 真机登录报 "Couldn't resolve native function
-# 'DOBJC_initializeApi'"（path_provider_foundation 2.4.x FFI 实现的已知 bug，
-# 见 flutter/flutter#178915）。强制回退到 method-channel 实现，Android 不受影响。
+# 固定 path_provider_foundation 到 2.4.2（Dart 3.7 / Flutter 3.29 兼容，纯 method-channel 实现）。
+# 注意：2.5.x 要求 Dart 3.9 / Flutter 3.35+，本工程 Flutter 3.29.1（Dart 3.7）编译会报
+# "language version 3.9 is too high"；锁 3.29.1 后 SPM 桥接已禁用，无需升级到 2.5.x。
 dependency_overrides:
-  path_provider_foundation: 2.5.1
+  path_provider_foundation: 2.4.2
 
 environment:
   sdk: ">=2.12.0 <3.0.0"

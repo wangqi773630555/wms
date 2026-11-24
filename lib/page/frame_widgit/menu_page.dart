@@ -37,16 +37,30 @@ class _MenuPageState extends State<MenuPage> {
   Widget build(BuildContext context) {
     // TODO: implement build
     mYcontext = context;
+
     return Scaffold(
-      /*appBar: AppBar(
-          elevation: 0,
+        appBar: AppBar(
+          title: Text('我的应用'),
           centerTitle: true,
-          backgroundColor: Colors.transparent,
-          title: Text("")
-      ),*/
-      /** * 切换底部导航栏的时候动态修改body内容 */
-      body: getRootView(),
-    );
+           actions: [
+             TextButton(
+               onPressed: () {
+                 setState(() {
+                   visible = !visible;
+                 });
+               },
+               child: Text(
+                 visible ? '取消' : '编辑',
+                 textAlign: TextAlign.center,
+                 style: TextStyle(
+                     fontSize: 16,
+                     fontWeight: FontWeight.bold,
+                     color: Colors.white),
+               ),
+             ),
+           ],
+        ),
+        body: getRootView());
   }
 
   Widget getRootView() {
@@ -58,7 +72,7 @@ class _MenuPageState extends State<MenuPage> {
       ),
       child: Column(
         children: [
-          _toolBar(),
+          //_toolBar(),
           //标题下面滑动视图
           Expanded(
               child: MediaQuery.removePadding(

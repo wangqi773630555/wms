@@ -77,7 +77,7 @@ class _FragmentHomePageState extends State<FragmentHomePage> with RouteAware {
             padding: EdgeInsets.all(5),
             //背景色，注意不能和decoration的color同时使用
             child: Text(
-              '首页',
+              '首 页',
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),

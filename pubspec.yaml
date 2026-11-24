@@ -18,6 +18,12 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 version: 1.0.31+32
 
+# 修复 iOS Release 真机登录报 "Couldn't resolve native function
+# 'DOBJC_initializeApi'"（path_provider_foundation 2.4.x FFI 实现的已知 bug，
+# 见 flutter/flutter#178915）。强制回退到 method-channel 实现，Android 不受影响。
+dependency_overrides:
+  path_provider_foundation: 2.5.1
+
 environment:
   sdk: ">=2.12.0 <3.0.0"
 

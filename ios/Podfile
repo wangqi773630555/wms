@@ -30,6 +30,9 @@ require File.expand_path(File.join('packages', 'flutter_tools', 'bin', 'podhelpe
 flutter_ios_podfile_setup
 
 target 'Runner' do
+  # DKPhotoGallery(Swift) 依赖 SDWebImage(ObjC，无 module map)，静态库集成时需要
+  # 生成 module map，否则 pod install 报 "cannot yet be integrated as static libraries"。
+  use_modular_headers!
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
   # 故意不声明任何测试 target：项目 pbxproj 里没有对应 target。
 end
